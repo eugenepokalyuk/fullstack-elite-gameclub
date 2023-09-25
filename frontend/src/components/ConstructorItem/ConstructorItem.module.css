@@ -1,7 +1,3 @@
-.article {
-    background: yellowgreen;
-}
-
 .button {
     display: flex;
     gap: 8px;
@@ -19,6 +15,14 @@
     background: #d76c0f;
 }
 
+.buttonBooked {
+    background: #dc143c;
+}
+
+.buttonBooked:hover {
+    cursor: pointer;
+    background: #bf1033;
+}
 
 .article {
     display: flex;
@@ -27,18 +31,19 @@
     align-items: center;
 
     width: 100%;
-    /* padding-bottom: 56.25%; */
-    /* соотношение сторон 16:9 */
     position: relative;
     background-color: #ccc;
-    /* цвет фона для демонстрации */
+
+    border-radius: 8px;
+}
+
+.article:hover {
+    background: #ddd;
 }
 
 .article:before {
     content: '';
     display: block;
-    /* padding-top: 56.25%; */
-    /* соотношение сторон 16:9 */
 }
 
 .article img {
@@ -48,7 +53,14 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* чтобы сохранять пропорции изображения */
+}
+
+.articleBooking {
+    background: #ef7912;
+}
+
+.articleBooking:hover {
+    background: #d76c0f;
 }
 
 .item {
@@ -56,5 +68,82 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    height: 100%;
+}
+
+.item h2,
+p {
+    margin: 0;
+}
+
+.item h2 {
+    padding: 4px;
+}
+
+.m1 {
+    margin: calc(1 * 4px);
+}
+
+.mr2 {
+    margin-right: calc(2 * 4px);
+}
+
+.ml2 {
+    margin-left: calc(2 * 4px);
+}
+
+.mt2 {
+    margin-top: calc(2 * 4px);
+}
+
+.mt4 {
+    margin-top: calc(4 * 4px);
+}
+
+.mb4 {
+    margin-bottom: calc(4 * 4px);
+}
+
+.card {
+    padding: 10px;
+}
+
+.card input {
+    margin: 4px;
+
+    width: 100%;
+
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid #ef7912;
+    padding: 8px 16px;
+    background: #ddd;
+    color: #000;
+
+    border-radius: 16px;
+}
+
+.flexRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.buttonSettings {
+    background: none;
+    border: none;
+}
+
+.buttonSettings:hover {
+    background: none;
+    border: none;
+    color: #ef7912;
+}
+
+.flexVertCenter {
+    align-items: center;
 }
