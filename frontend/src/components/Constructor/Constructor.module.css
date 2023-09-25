@@ -1,0 +1,6 @@
+.section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    /* автоматический перенос на следующую строку при необходимости */
+    grid-gap: 20px;
+}

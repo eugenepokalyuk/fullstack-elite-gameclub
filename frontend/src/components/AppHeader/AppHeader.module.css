@@ -1,0 +1,24 @@
+.header {
+    background: #1c1c21;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 100px;
+}
+
+.imageContainer {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.imageContainer img {
+    width: 100%;
+    height: 100%;
+}
+
+.nav h1 {
+    color: #fff;
+}
