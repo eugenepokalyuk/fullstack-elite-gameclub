@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Constructor.module.css';
 import ConstructorItem from '../ConstructorItem/ConstructorItem';
-const Constructor = () => {
-    let array = [
+import ConstructorPlayStation from '../ConstructorPlayStation/ConstructorPlayStation';
+const Constructor: FC = () => {
+    let array: any = [
         { name: "1" },
         { name: "2" },
         { name: "3" },
@@ -36,13 +37,16 @@ const Constructor = () => {
     ];
 
     return (
-        <section className={styles.section}>
-            {array.map((item, index) => {
-                return (
-                    <ConstructorItem name={item.name} index={index} />
-                )
-            })}
-        </section>
+        <>
+            <section className={styles.section}>
+                {array.length > 0 && array.map((item: any, index: number) => {
+                    return (
+                        <ConstructorItem name={item.name} index={index + 1} key={index} />
+                    )
+                })}
+            </section>
+            {/* <ConstructorPlayStation /> */}
+        </>
     );
 }
 
