@@ -1,5 +1,6 @@
 .header {
     background: #1c1c21;
+    margin-bottom: 16px;
 }
 
 .nav {
@@ -21,4 +22,29 @@
 
 .nav h1 {
     color: #fff;
+}
+
+.mr4 {
+    margin-right: calc(4 * 4px);
+}
+
+.linksContainer {
+    margin-right: auto;
+}
+
+.link {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 32px;
+
+    font-weight: 800;
+}
+
+.link:hover {
+    color: #ef7912;
+}
+
+.user {
+    color: #fff;
+    margin-right: 32px;
 }
