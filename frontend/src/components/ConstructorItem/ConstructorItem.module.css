@@ -1,149 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+
+    width: 225px;
+    height: 150px;
+
+    border-radius: 8px;
+    transition: 300ms;
+}
+
+.card:hover {
+    scale: 1.05;
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.headerStatementBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: nowrap;
+
+    font-size: 12pt;
+    font-weight: 600;
+}
+
+.headerIndexBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 12pt;
+
+    background: #ef7912;
+    width: 16px;
+    height: 16px;
+
+    border-radius: 100%;
+
+    padding: 8px;
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* background: #999; */
+
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    height: 100%;
+}
+
+.cardBody p {
+    color: #000;
+}
+
+.articleOnline {
+    background-color: #008080;
+}
+
+.articleOnline:hover {
+    background-color: #006c6c;
+}
+
+.articleBooking {
+    background: #d76c0f;
+}
+
+.articleBooking:hover {
+    background: #b85c0c;
+}
+
+.articleTech {
+    background: #dc143c;
+}
+
+.articleTech:hover {
+    background: #bc1032;
+}
+
 .button {
     display: flex;
     gap: 8px;
     align-items: center;
     border: none;
-    padding: 8px 16px;
-    background: #ef7912;
+    padding: 4px 8px;
+    margin: 4px 8px;
+    background: #ccc;
+    /* background: #ef7912; */
     color: #000;
 
-    border-radius: 16px;
+    border-radius: 8px;
+    width: 100%;
 }
 
 .button:hover {
     cursor: pointer;
-    background: #d76c0f;
-}
-
-.buttonBooked {
-    background: #dc143c;
-}
-
-.buttonBooked:hover {
-    cursor: pointer;
-    background: #bf1033;
-}
-
-.article {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-    position: relative;
-    background-color: #ccc;
-
-    border-radius: 8px;
-}
-
-.article:hover {
     background: #ddd;
+    /* background: #d76c0f; */
 }
 
-.article:before {
-    content: '';
-    display: block;
-}
-
-.article img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.articleBooking {
-    background: #ef7912;
-}
-
-.articleBooking:hover {
-    background: #d76c0f;
-}
-
-.item {
+.flex {
     display: flex;
+}
+
+.flexColumn {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-.item h2,
-p {
-    margin: 0;
-}
-
-.item h2 {
-    padding: 4px;
-}
-
-.m1 {
-    margin: calc(1 * 4px);
-}
-
-.mr2 {
-    margin-right: calc(2 * 4px);
-}
-
-.ml2 {
-    margin-left: calc(2 * 4px);
-}
-
-.mt2 {
-    margin-top: calc(2 * 4px);
-}
-
-.mt4 {
-    margin-top: calc(4 * 4px);
-}
-
-.mb4 {
-    margin-bottom: calc(4 * 4px);
-}
-
-.card {
-    padding: 10px;
-}
-
-.card input {
-    margin: 4px;
-
-    width: 100%;
-
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    border: 1px solid #ef7912;
-    padding: 8px 16px;
-    background: #ddd;
-    color: #000;
-
-    border-radius: 16px;
 }
 
 .flexRow {
-    display: flex;
     flex-direction: row;
+}
+
+.flexCenter {
+    justify-content: center;
+    align-items: center;
 }
 
 .w100 {
     width: 100%;
 }
 
-.buttonSettings {
-    background: none;
-    border: none;
+.w50 {
+    width: 50%;
 }
 
-.buttonSettings:hover {
-    background: none;
+.editingInput {
+    background: #ccc;
+    /* background: #d76c0f; */
     border: none;
-    color: #ef7912;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
 }
 
-.flexVertCenter {
-    align-items: center;
+.m1 {
+    margin: calc(1 * 4px);
+}
+
+.mr1 {
+    margin-right: calc(1 * 4px);
 }

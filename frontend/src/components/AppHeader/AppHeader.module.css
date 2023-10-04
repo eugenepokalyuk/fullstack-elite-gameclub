@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .header {
     background: #1c1c21;
     margin-bottom: 16px;
@@ -47,4 +53,9 @@
 .user {
     color: #fff;
     margin-right: 32px;
+}
+
+.linkActive {
+    font-weight: 900;
+    color: #ef7912;
 }
