@@ -37,7 +37,7 @@ export const Store: FC = () => {
     };
 
     return (
-        <div className={`${styles.storeContainer} ${styles.mt4}`}>
+        <article className={`${styles.storeContainer} ${styles.mt4}`}>
             <div className={styles.card}>
                 <table className={styles.table}>
                     <thead>
@@ -106,6 +106,6 @@ export const Store: FC = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </article>
     );
 };

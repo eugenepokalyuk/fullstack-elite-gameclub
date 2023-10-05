@@ -14,13 +14,13 @@ const Constructor: FC = () => {
     }, []);
 
     return (
-        <section className={styles.section}>
+        <article className={styles.section}>
             {computersData.length > 0 && computersData.map((item: any, index: number) => {
                 return (
                     <ConstructorItem item={item} index={index + 1} key={index} />
                 )
             })}
-        </section>
+        </article>
     );
 }
 

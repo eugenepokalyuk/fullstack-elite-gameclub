@@ -94,6 +94,14 @@
     background: #bc1032;
 }
 
+.articleOffline {
+    background: #666;
+}
+
+.articleOffline:hover {
+    /* background: #333; */
+}
+
 .button {
     display: flex;
     gap: 8px;

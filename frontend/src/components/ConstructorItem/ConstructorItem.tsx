@@ -7,9 +7,9 @@ type Props = {
     item: {
         _id: number,
         name: string,
-        type: string,
-        descriptions?: {
-            money: number,
+        status: string,
+        details?: {
+            price: number,
             time: {
                 from: {
                     hours: number,
@@ -19,7 +19,8 @@ type Props = {
                     hours: number,
                     minutes: number
                 }
-            }
+            },
+            reason: string
         }
     },
     index: number
@@ -34,19 +35,31 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
     const [, setIsPausing] = useState<boolean>(false);
     const [, setIsAccepteed] = useState<boolean>(false);
 
-    const handlePlayClick = () => {
-        setIsEditing(true);
-    }
     const handleSettingsClick = () => {
         setIsSettings(false);
     }
     const handleCancelClick = () => {
         setIsEditing(false);
     }
-    const handleAcceptClick = () => {
-
-        setIsAccepteed(true);
+    const handlePlayClick = () => {
+        setIsEditing(true);
+        console.log('play');
     }
+    const handleAcceptClick = (index: any) => {
+        setIsAccepteed(true);
+
+        let data = {
+            "id": index,
+            "price": money,
+            "time": {
+                hours,
+                minutes
+            }
+        }
+
+        console.log(data);
+    }
+
     const handlePauseClick = () => {
         setIsPausing(true);
     }
@@ -75,7 +88,7 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
                 </div>
 
                 <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-                    <button className={`${styles.button} ${styles.mr1}`} onClick={handleAcceptClick}>
+                    <button className={`${styles.button} ${styles.mr1}`} onClick={() => handleAcceptClick(index)}>
                         <FontAwesomeIcon icon={faCheck} />
                         Принять
                     </button>
@@ -90,9 +103,27 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
         )
     }
 
-    const computerStatement = (type: string) => {
-        switch (type) {
-            case "tech":
+    const computerStatement = (item: any) => {
+        switch (item.status) {
+            case "offline":
+                return (
+                    <article className={`${styles.card} ${styles.articleOffline}`}>
+
+                        <div className={styles.cardHeader}>
+                            <span className={styles.headerStatementBox}>Выключен</span>
+                            <span className={styles.headerIndexBox}>{index}</span>
+                        </div>
+
+                        <div className={styles.cardBody}>
+                            {/* Empty */}
+                        </div>
+
+                        <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
+
+                        </div>
+                    </article>
+                )
+            case "techWorks":
                 return (
                     <article className={`${styles.card} ${styles.articleTech}`}>
 
@@ -103,6 +134,7 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
 
                         <div className={styles.cardBody}>
                             {/* Empty */}
+                            <p>{item.details.reason}</p>
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
@@ -136,7 +168,7 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
 
                     </article>
                 )
-            case "booked":
+            case "playing":
                 return (
                     <article className={`${styles.card} ${styles.articleBooking}`}>
 
@@ -149,15 +181,15 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
 
                             <div>
                                 <p>
-                                    Оплачено: <span className={styles.textBold}>{item.descriptions?.money} руб.</span>
+                                    Оплачено: <span className={styles.textBold}>{item.details?.price} руб.</span>
                                 </p>
 
                                 <p>
-                                    Начало <span className={styles.textBold}>{item.descriptions?.time.from.hours}:{item.descriptions?.time.from.minutes}</span>
+                                    Начало <span className={styles.textBold}>{item.details?.time.from.hours}:{item.details?.time.from.minutes}</span>
                                 </p>
 
                                 <p>
-                                    Конец <span className={styles.textBold}>{item.descriptions?.time.until.hours}:{item.descriptions?.time.until.minutes}</span>
+                                    Конец <span className={styles.textBold}>{item.details?.time.until.hours}:{item.details?.time.until.minutes}</span>
                                 </p>
                             </div>
 
@@ -184,7 +216,7 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
 
     return (
         <>
-            {computerStatement(item.type)}
+            {computerStatement(item)}
         </>
     )
 }

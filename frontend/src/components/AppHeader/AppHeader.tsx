@@ -18,8 +18,11 @@ const AppHeader = () => {
     return (
         <header className={styles.header}>
             <nav className={styles.nav}>
+
                 <div className={styles.imageContainer}>
-                    <img src={image} alt="elite logo" />
+                    <NavLink to="/">
+                        <img src={image} alt="elite logo" />
+                    </NavLink>
                 </div>
 
                 <div className={styles.linksContainer}>
@@ -40,7 +43,12 @@ const AppHeader = () => {
                     </NavLink>
                 </div>
 
-                <FontAwesomeIcon icon={faUser} size="2x" className={styles.user} />
+                <div className={styles.imageContainer}>
+                    <NavLink to="/login">
+                        <FontAwesomeIcon icon={faUser} size="2x" className={styles.user} />
+                    </NavLink>
+                </div>
+
             </nav>
         </header>
     );
