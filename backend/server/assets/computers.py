@@ -8,20 +8,21 @@ def get_pc_data():
     for pc in data:
         if pc['status'] == 'playing':
             order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [pc['_id']])[0]
-            pc['price'] = order['price']
             start = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
             finish = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
-            pc['time'] = {
-                'from': {
-                    'hours': int(start.strftime('%H')),
-                    'minutes': int(start.strftime('%M'))
-                },
-                'until': {
-                    'hours': int(finish.strftime('%H')),
-                    'minutes': int(finish.strftime('%M'))
+            pc['details'] = {
+                'price': order['price'],
+                'time': {
+                    'from': {
+                        'hours': int(start.strftime('%H')),
+                        'minutes': int(start.strftime('%M'))
+                    },
+                    'until': {
+                        'hours': int(finish.strftime('%H')),
+                        'minutes': int(finish.strftime('%M'))
+                    }
                 }
             }
-            # pause = datetime.strptime(pc['pause'], '%y-%m-%d %H:%M')
     return data
 
 
