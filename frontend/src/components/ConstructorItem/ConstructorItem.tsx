@@ -56,55 +56,70 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
                 minutes
             }
         }
-
-        console.log(data);
     }
-
     const handlePauseClick = () => {
         setIsPausing(true);
     }
 
-    if (isEditing) {
-        return (
-            <article className={`${styles.card} ${styles.articleOnline}`}>
+    // if (isEditing) {
+    //     return (
+    //         <article className={`${styles.card} ${styles.articleOnline}`}>
 
-                <div className={styles.cardHeader}>
-                    <span className={styles.headerStatementBox}>Бронирование</span>
-                    <span className={styles.headerIndexBox}>{index}</span>
-                </div>
+    //             <div className={styles.cardHeader}>
+    //                 <span className={styles.headerStatementBox}>Бронирование</span>
+    //                 <span className={styles.headerIndexBox}>{index}</span>
+    //             </div>
 
-                <div className={styles.cardBody}>
-                    <div className={`${styles.flex} ${styles.flexColumn} ${styles.w100}`}>
-                        <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
-                            <input className={`${styles.editingInput} ${styles.w50} ${styles.mr1}`} type="text" value={hours} onChange={(event) => setHours(event.target.value)} placeholder='Час' />
-                            <input className={`${styles.editingInput} ${styles.w50}`} type="text" value={minutes} onChange={(event) => setMinutes(event.target.value)} placeholder='Минута' />
-                        </div>
+    //             <div className={styles.cardBody}>
+    //                 <div className={`${styles.flex} ${styles.flexColumn} ${styles.w100}`}>
+    //                     <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
+    //                         <input className={`${styles.editingInput} ${styles.w50} ${styles.mr1}`} type="text" value={hours} onChange={(event) => setHours(event.target.value)} placeholder='Час' />
+    //                         <input className={`${styles.editingInput} ${styles.w50}`} type="text" value={minutes} onChange={(event) => setMinutes(event.target.value)} placeholder='Минута' />
+    //                     </div>
 
-                        <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
-                            <input className={`${styles.editingInput} ${styles.mr1}`} type="text" value={money} onChange={(event) => setMoney(event.target.value)} placeholder='Деньги' maxLength={6} />
-                            руб.
-                        </div>
-                    </div>
-                </div>
+    //                     <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
+    //                         <input className={`${styles.editingInput} ${styles.mr1}`} type="text" value={money} onChange={(event) => setMoney(event.target.value)} placeholder='Деньги' maxLength={6} />
+    //                         руб.
+    //                     </div>
+    //                 </div>
+    //             </div>
 
-                <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-                    <button className={`${styles.button} ${styles.mr1}`} onClick={() => handleAcceptClick(index)}>
-                        <FontAwesomeIcon icon={faCheck} />
-                        Принять
-                    </button>
+    //             <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
+    //                 <button className={`${styles.button} ${styles.mr1}`} onClick={() => handleAcceptClick(index)}>
+    //                     <FontAwesomeIcon icon={faCheck} />
+    //                     Принять
+    //                 </button>
 
-                    <button className={`${styles.button}`} onClick={handleCancelClick}>
-                        <FontAwesomeIcon icon={faCancel} />
-                        Отменить
-                    </button>
-                </div>
+    //                 <button className={`${styles.button}`} onClick={handleCancelClick}>
+    //                     <FontAwesomeIcon icon={faCancel} />
+    //                     Отменить
+    //                 </button>
+    //             </div>
 
-            </article>
-        )
-    }
+    //         </article>
+    //     )
+    // }
 
     const computerStatement = (item: any) => {
         switch (item.status) {
+            case "pause":
+                return (
+                    <article className={`${styles.card} ${styles.articleOffline}`}>
+
+                        <div className={styles.cardHeader}>
+                            <span className={styles.headerStatementBox}>На паузе</span>
+                            <span className={styles.headerIndexBox}>{index}</span>
+                        </div>
+
+                        <div className={styles.cardBody}>
+                            {/* Empty */}
+                        </div>
+
+                        <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
+
+                        </div>
+                    </article>
+                )
             case "offline":
                 return (
                     <article className={`${styles.card} ${styles.articleOffline}`}>
