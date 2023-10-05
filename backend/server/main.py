@@ -4,9 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from assets import models
 from assets import computers
 
-
 app = FastAPI()
-
 
 @app.get("/ping")
 def ping():
