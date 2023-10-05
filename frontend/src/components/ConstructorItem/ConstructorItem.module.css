@@ -1,5 +1,105 @@
-.article {
-    background: yellowgreen;
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+
+    width: 225px;
+    height: 150px;
+
+    border-radius: 8px;
+    transition: 300ms;
+}
+
+.card:hover {
+    scale: 1.05;
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.headerStatementBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: nowrap;
+
+    font-size: 12pt;
+    font-weight: 600;
+}
+
+.headerIndexBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 12pt;
+
+    background: #ef7912;
+    width: 16px;
+    height: 16px;
+
+    border-radius: 100%;
+
+    padding: 8px;
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* background: #999; */
+
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    height: 100%;
+}
+
+.cardBody p {
+    color: #000;
+}
+
+.articleOnline {
+    background-color: #008080;
+}
+
+.articleOnline:hover {
+    background-color: #006c6c;
+}
+
+.articleBooking {
+    background: #d76c0f;
+}
+
+.articleBooking:hover {
+    background: #b85c0c;
+}
+
+.articleTech {
+    background: #dc143c;
+}
+
+.articleTech:hover {
+    background: #bc1032;
+}
+
+.articleOffline {
+    background: #666;
+}
+
+.articleOffline:hover {
+    /* background: #333; */
 }
 
 .button {
@@ -7,54 +107,60 @@
     gap: 8px;
     align-items: center;
     border: none;
-    padding: 8px 16px;
-    background: #ef7912;
+    padding: 4px 8px;
+    margin: 4px 8px;
+    background: #ccc;
+    /* background: #ef7912; */
     color: #000;
 
-    border-radius: 16px;
+    border-radius: 8px;
+    width: 100%;
 }
 
 .button:hover {
     cursor: pointer;
-    background: #d76c0f;
+    background: #ddd;
+    /* background: #d76c0f; */
 }
 
-
-.article {
+.flex {
     display: flex;
+}
+
+.flexColumn {
     flex-direction: column;
+}
+
+.flexRow {
+    flex-direction: row;
+}
+
+.flexCenter {
     justify-content: center;
     align-items: center;
+}
 
+.w100 {
     width: 100%;
-    /* padding-bottom: 56.25%; */
-    /* соотношение сторон 16:9 */
-    position: relative;
-    background-color: #ccc;
-    /* цвет фона для демонстрации */
 }
 
-.article:before {
-    content: '';
-    display: block;
-    /* padding-top: 56.25%; */
-    /* соотношение сторон 16:9 */
+.w50 {
+    width: 50%;
 }
 
-.article img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* чтобы сохранять пропорции изображения */
+.editingInput {
+    background: #ccc;
+    /* background: #d76c0f; */
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
 }
 
-.item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+.m1 {
+    margin: calc(1 * 4px);
+}
+
+.mr1 {
+    margin-right: calc(1 * 4px);
 }
