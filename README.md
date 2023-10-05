@@ -1,46 +1,13 @@
-# Getting Started with Create React App
+# Суть проекта:
+Разработка панели управления для компьютерного клуба, предоставляющей возможность управлять рабочими местами и проводить финансовый учет. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Панель позволит сотрудникам клуба с одного рабочего компьютера устанавливать доступное время игры/работы за каждым компьютером или PlayStation 5 внутри клуба. Она также предоставит информацию о выручке за смену, сумме наличных в кассе, а также содержать базу данных сотрудников и посетителей клуба. Дополнительно, панель будет иметь базу данных с текущими товарами (напитки, еда), которые предлагаются на продажу.
 
-## Available Scripts
+# Описание панели:
+На панели управления будет представлена следующая информация и функциональность:
 
-In the project directory, you can run:
+  1. Финансовая информация: Пользовательский интерфейс будет содержать информацию о выручке за смену, а также сумме наличных в кассе. Кроме того, сотрудники смогут редактировать эту информацию в случае необходимости.
 
-### `npm start`
+  2. Управление игровыми местами: Панель будет отображать список из 30 игровых компьютеров, а также PlayStation 5. Для каждого устройства можно будет задать доступное время для игры/работы и установить цену за этот период. Кроме того, сотрудники смогут предоставлять скидки в процентах для определенных устройств или периодов времени.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+  3. Управление товарами: Панель будет предоставлять возможность добавлять, продавать и списывать различные товары, такие как напитки и еда. Это позволит управлять запасами, отслеживать продажи и поддерживать актуальные данные о наличии товаров.
