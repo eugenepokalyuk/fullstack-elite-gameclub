@@ -13,7 +13,7 @@ def get_pc_data():
             'status': pc['status'],
         }
 
-        if pc['status'] == 'playing':
+        if pc['status'] == 'playing' or pc['status'] == 'pause':
             order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [pc['id']])[0]
             start = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
             finish = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
@@ -30,7 +30,7 @@ def get_pc_data():
                     }
                 }
             }
-            
+
         if pc['status'] == 'techWorks':
             cur_pc['details'] = {
                 'reason': pc['description']
@@ -76,10 +76,12 @@ def continue_play(pc_id):
 
         now = datetime.now()
         delta = now - start_time
+        total_seconds = delta.total_seconds()
+
         finish_new = (finish_old + delta).strftime('%Y-%m-%d %H:%M')
 
-        hours = delta.days * 24 + delta.seconds // 3600
-        minutes = (delta % 3600) // 60
+        hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
         pause = f'h:{hours};m:{minutes}'
         
         session_id = order['id']

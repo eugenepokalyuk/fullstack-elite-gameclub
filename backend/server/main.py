@@ -4,16 +4,19 @@ from fastapi.encoders import jsonable_encoder
 from assets import models
 from assets import computers
 
+
 app = FastAPI()
-# start /B uvicorn app:main
-# default port is 8000
 
 
 @app.get("/ping")
 def ping():
-    data = computers.get_pc_data()
-    return data
-
+    try:
+        data = computers.get_pc_data()
+        return JSONResponse(content=data, status_code=200)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content='', status_code=400)
+    
 
 @app.patch("/play")
 def play(data: models.Play):
