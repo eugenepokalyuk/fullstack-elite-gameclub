@@ -3,14 +3,21 @@ from datetime import *
 
 def get_pc_data():
     db = SQLiteDB()
-    data = db.execute_select_query('select id as "_id", status, name from pcs')
+    data = db.execute_select_query('select * from pcs')
+    reponseArray = []
 
     for pc in data:
+        cur_pc = {
+            '_id': pc['id'],
+            'name': pc['name'],   
+            'status': pc['status'],
+        }
+
         if pc['status'] == 'playing':
-            order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [pc['_id']])[0]
+            order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [pc['id']])[0]
             start = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
             finish = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
-            pc['details'] = {
+            cur_pc['details'] = {
                 'price': order['price'],
                 'time': {
                     'from': {
@@ -23,7 +30,15 @@ def get_pc_data():
                     }
                 }
             }
-    return data
+            
+        if pc['status'] == 'techWorks':
+            cur_pc['details'] = {
+                'reason': pc['description']
+            }
+
+        reponseArray.append(cur_pc)
+
+    return reponseArray
 
 
 def play(time, price, pc_id):
