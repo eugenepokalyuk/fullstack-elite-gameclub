@@ -1,0 +1,4 @@
+fastpai
+uvicorn
+pydantic
+sqlite3
