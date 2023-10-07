@@ -1,23 +1,36 @@
 import sqlite3
 import os.path
 
-db_path = "./data/playground.db"
+db_path_pc = "./data/computers.db"
+db_path_store = "./data/store.db"
 
 
 class SQLiteDB:
-    def __init__(self):
-        self.db_name = db_path
+    def __init__(self, db_type=''):
+
+        if db_type == 'store':
+            self.db_name = db_path_store
+        if db_type == 'pc':
+            self.db_name = db_path_pc
+
         self.conn = None
 
-        # check file exists
-        if not os.path.exists(db_path):
-            # create if not exists
-            with open(db_path, 'x'): pass
+        # check dir exists
+        if not os.path.exists('./data'):
+            os.mkdir('./data')
+
+        for path in [db_path_pc, db_path_store]:
+            # check file exists
+            if not os.path.exists(path):
+                # create if not exists
+                with open(path, 'x'): pass
 
         self.connect()  # Automatically connect to the database upon object creation.
-        
-        self.create_tables()
 
+        if db_type == 'store':
+            self.init_tables_store()
+        if db_type == 'pc':
+            self.init_tables_pc()
 
     def connect(self):
         try:
@@ -68,8 +81,7 @@ class SQLiteDB:
         #     self.close()
 
 
-    def create_tables(self):
-        # create tables if not exists
+    def init_tables_pc(self):
 
         self.execute_update_query('CREATE TABLE IF NOT EXISTS "pcs" (\
                                     "id"	INTEGER NOT NULL UNIQUE,\
@@ -94,6 +106,38 @@ class SQLiteDB:
             self.execute_update_query(f"INSERT OR IGNORE INTO pcs(id,name,status) VALUES({i},'PC-{i}','online')")
 
 
+    def init_tables_store(self):
+
+        self.execute_update_query('CREATE TABLE IF NOT EXISTS "storefront" (\
+                                    "id"	INTEGER UNIQUE,\
+                                    "name"	TEXT,\
+                                    "qty"	INTEGER NOT NULL,\
+                                    "price"	NUMERIC,\
+	                                "hide"	INTEGER,\
+                                    PRIMARY KEY("id" AUTOINCREMENT)\
+                                );')
+        
+        self.execute_update_query('CREATE TABLE IF NOT EXISTS "sold" (\
+                                    "id"	INTEGER,\
+                                    "item_id"	INTEGER,\
+                                    "qty"	TEXT,\
+                                    "total"	NUMERIC,\
+                                    "payment"	TEXT,\
+                                    "sell_date"	TEXT,\
+                                    PRIMARY KEY("id" AUTOINCREMENT)\
+                                );')
+        
+        self.execute_update_query('CREATE TABLE IF NOT EXISTS "supplies" (\
+                                    "id"	INTEGER,\
+                                    "item_id"	INTEGER,\
+                                    "qty"	INTEGER,\
+                                    "add_date"	TEXT,\
+                                    PRIMARY KEY("id" AUTOINCREMENT)\
+                                );')
+        
+
     def close(self):
         if self.conn:
             self.conn.close()
+
+
