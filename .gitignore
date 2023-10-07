@@ -6,8 +6,7 @@
 .pnp.js
 
 #backend
-.db
-/data
+*.db
 __pycache__
 
 # testing
