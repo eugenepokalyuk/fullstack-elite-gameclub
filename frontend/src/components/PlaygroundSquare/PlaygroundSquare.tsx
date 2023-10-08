@@ -22,20 +22,22 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
     // const [gridPositionFrom, setGridPositionFrom] = useState<number>();
     // const [gridPositionTo, setGridPositionTo] = useState<number>();
 
-    // const handleClick = (id: number) => {
-    // const compId = playground?.find((item) => item.id === id);
-    // console.log("handleClick", { id, compId })
-    // }
+    const handleClick = (id1: number) => {
+        const compId = playground?.find((item) => item.grid_id === id);
+        console.log("handleClick", { id, id1, compId })
+    }
+
+    const compId = playground?.find((item) => item.grid_id === id);
 
     return (
         <div
-            className={`${styles.square}`}
-            // className={`${styles.square} ${id === playground?.id && styles.squareOccupied}`}
+            // className={`${styles.square}`}
+            className={`${styles.square} ${id === compId?.grid_id && styles.squareOccupied}`}
             draggable
             onDragStart={(e) => onDragStart(e, id)}
             onDragOver={(e) => onDragOver(e)}
             onDrop={(e) => onDrop(e, id)}
-        // onClick={() => { handleClick(id) }}
+            onClick={() => { handleClick(id) }}
         />
     );
 };
