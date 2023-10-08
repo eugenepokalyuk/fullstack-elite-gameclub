@@ -12,11 +12,9 @@ import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCE
 type Props = {
     computer: TComputer,
     index: number,
-    // position: { x: number, y: number },
 };
 
 const ConstructorItem: FC<Props> = ({ computer, index }) => {
-    // const ConstructorItem: FC<Props> = ({ computer, index, position }) => {
     const dispatch = useAppDispatch();
     const [isLoading,] = useState<boolean>(false);
     const [isModalOpen, setModalOpen] = useState<boolean>(false);

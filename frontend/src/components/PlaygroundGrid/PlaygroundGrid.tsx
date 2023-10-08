@@ -3,33 +3,43 @@ import styles from './PlaygroundGrid.module.css';
 import { TComputer } from '../../services/types/types';
 import PlaygroundSquare from '../PlaygroundSquare/PlaygroundSquare';
 import { fetchComputerGridReplace, fetchComputersData } from '../../utils/api';
-import { useAppDispatch } from '../../services/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
 
-const PlaygroundGrid: FC<{ playground: TComputer[] }> = ({ playground }) => {
-    const gridSize = 200;
-    const squareSize = 18;
-    const [squares, setSquares] = useState<{ id: number; position: { x: number; y: number } }[]>([]);
-
-    const [gridPositionFrom, setGridPositionFrom] = useState<number>();
-    const [gridPositionTo, setGridPositionTo] = useState<number>();
-
+const PlaygroundGrid: FC = () => {
     const dispatch = useAppDispatch();
+
+    const playground = useAppSelector(
+        (store) => store.playground.computers
+    );
+
+    const gridSize = 200;
+    const [squares, setSquares] = useState<{ id: number }[]>([]);
+    const [dragStart, setDragStart] = useState<number>();
+    // const [newPlayground, setNewPlayground] = useState<string[]>();
 
     useEffect(() => {
         const initialSquares = Array.from({ length: gridSize }, (_, index) => {
-            const x = (index % gridSize) * squareSize;
-            const y = Math.floor(index / gridSize) * squareSize;
-            return { id: index, position: { x, y } };
+            return { id: index };
         });
-
         setSquares(initialSquares);
     }, []);
 
-    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-        setGridPositionFrom(id);
+    useEffect(() => {
+        fetchComputersData()
+            .then(res => {
+                dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+                // setNewPlayground(res);
+            })
+            .catch(error => {
+                dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+            });
+    }, [dispatch])
 
-        e.dataTransfer.setData("text/plain", id.toString());
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
+        if (id) {
+            setDragStart(id);
+        }
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -38,70 +48,32 @@ const PlaygroundGrid: FC<{ playground: TComputer[] }> = ({ playground }) => {
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>, id: number) => {
         e.preventDefault();
-        const squareId = Number(e.dataTransfer.getData("text/plain"));
 
-        const updatedSquares = squares.map((square) => {
-            if (square.id === squareId) {
-                return {
-                    ...square,
-                    position: { x: e.clientX, y: e.clientY },
-                };
-            }
-            return square;
-        });
+        if (id) {
+            fetchComputerGridReplace(dragStart, id);
 
-        setSquares(updatedSquares);
-
-        fetchComputerGridReplace(gridPositionFrom, id);
-
-        dispatch({ type: FETCH_COMPUTERS_REQUEST });
-
-        fetchComputersData()
-            .then(res => {
-                dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
-            })
-            .catch(error => {
-                dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
-            });
-
-        // console.log("squares", squares.find((item) => {
-        // item
-        // }))
-
-        // dispatch({ type: FETCH_COMPUTERS_REQUEST });
-        // fetchComputersData()
-        //     .then(res => {
-        //         dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
-        //     })
-        //     .catch(error => {
-        //         dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
-        //     });
+            dispatch({ type: FETCH_COMPUTERS_REQUEST });
+            fetchComputersData()
+                .then(res => {
+                    dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+                })
+                .catch(error => {
+                    dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+                });
+        }
     };
-
-    // useEffect(() => {
-    //     dispatch({ type: FETCH_COMPUTERS_REQUEST });
-    //     fetchComputersData()
-    //         .then(res => {
-    //             dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
-    //         })
-    //         .catch(error => {
-    //             dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
-    //         });
-    // }, [dispatch])
 
     const renderSquares = () => {
         return squares.map((square) => {
             return (
-                <div key={square.id}>
-                    <PlaygroundSquare
-                        id={square.id}
-                        position={square.position}
-                        onDragStart={handleDragStart}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                        playground={playground}
-                    />
-                </div>
+                <PlaygroundSquare
+                    key={square.id}
+                    id={square.id}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    playground={playground}
+                />
             );
         });
     };

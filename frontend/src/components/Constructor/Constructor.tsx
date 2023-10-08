@@ -4,13 +4,9 @@ import { useAppSelector } from '../../services/hooks/hooks';
 import PlaygroundGrid from '../PlaygroundGrid/PlaygroundGrid';
 
 const Constructor: FC = () => {
-    const playground = useAppSelector(
-        (store) => store.playground.computers
-    );
-
     return (
         <article className={styles.section}>
-            <PlaygroundGrid playground={playground} />
+            <PlaygroundGrid />
         </article>
     );
 }

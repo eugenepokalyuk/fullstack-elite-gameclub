@@ -217,17 +217,22 @@ export const fetchWarehouseShowItem = async (id: number | undefined) => {
 }
 // fetchComputerGridReplace
 export const fetchComputerGridReplace = async (id: number | undefined, gridId: any) => {
-    const endpoint = routePlayground + `/edit/grid`;
-    const options = {
-        method: "PATCH",
-        headers: {
-            'Content-Type': 'application/json',
-            auth: 123
-        },
-        body: JSON.stringify({
-            id: id,
-            grid_id: gridId
-        })
+    try {
+        if (id && gridId) {
+            const endpoint = routePlayground + `/edit/grid`;
+            const options = {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    auth: 123
+                },
+                body: JSON.stringify({
+                    id: id,
+                    grid_id: gridId
+                })
+            }
+            return request(endpoint, options);
+        }
+    } catch (error) {
     }
-    return request(endpoint, options);
 }

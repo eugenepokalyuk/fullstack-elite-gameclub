@@ -4,6 +4,10 @@
     border: 2px dashed #ef7912;
     border-radius: 16px;
     user-select: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .square:hover {
