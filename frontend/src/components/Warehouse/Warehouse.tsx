@@ -132,10 +132,8 @@ export const Warehouse: FC = () => {
                                 <ul>
                                     {selectedItems.map((itemId) => {
                                         const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
-
                                         return (
                                             <li key={item.id}>
-                                                <p>id: <span className={styles.selectedOption}>{item.id}</span></p>
                                                 <p>Название: <span className={styles.selectedOption}>{item.name}</span></p>
                                                 <p>Стоимость: <span className={styles.selectedOption}>{item.price}</span></p>
                                                 <p>Кол-во: <span className={styles.selectedOption}>{item.qty}</span></p>
@@ -166,16 +164,9 @@ export const Warehouse: FC = () => {
                                 )
                             })}
 
-
-
-
                             <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleEditItemClick} disabled={selectedItems.length === 0}>
                                 Изменить
                             </button>
-
-                            {/* <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleSaveEditedItemClick} disabled={selectedItems.length === 0}>
-                                Сохранить
-                            </button> */}
                         </div>
 
                     </div>

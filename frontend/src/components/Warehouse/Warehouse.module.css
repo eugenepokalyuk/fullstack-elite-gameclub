@@ -11,11 +11,15 @@ li {
 
     display: flex;
     flex-direction: column;
-    height: 250px;
+    height: 300px;
 }
 
 .cartBody {
     height: 90%;
+}
+
+.cartBody ul {
+    padding: 0;
 }
 
 .cartFooter {

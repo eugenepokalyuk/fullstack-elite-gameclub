@@ -3,6 +3,7 @@ import { TComputer, TPlayBody } from "../services/types/types";
 const ApiUrlPath = 'http://localhost:8000';
 const routeStore = "/store";
 const routePlayground = "/pc";
+const routeStat = "/stat";
 
 const request = (endpoint: string, options: any) => {
     const url = `${ApiUrlPath}${endpoint}`;
@@ -235,4 +236,35 @@ export const fetchComputerGridReplace = async (id: number | undefined, gridId: a
         }
     } catch (error) {
     }
+}
+export const fetchStatPC = async (from: string, until: string) => {
+    const endpoint = routeStat + `/pc`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+        body: JSON.stringify({
+            From: from,
+            Until: until
+        })
+    }
+    return request(endpoint, options);
+}
+
+export const fetchStatStore = async (from: string, until: string) => {
+    const endpoint = routeStat + `/store`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+        body: JSON.stringify({
+            From: from,
+            Until: until
+        })
+    }
+    return request(endpoint, options);
 }
