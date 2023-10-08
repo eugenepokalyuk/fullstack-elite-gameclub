@@ -119,3 +119,8 @@ def get_status(pc_id):
     db = SQLiteDB('pc')
     status = db.execute_select_query('select status from pcs where id=?', [ pc_id ])
     return status[0]['status']
+
+
+def set_grid_id(pc_id, grid_id):
+    db = SQLiteDB('pc')
+    db.execute_update_query('update pcs set grid_id=? where id=?', [ grid_id, pc_id ])

@@ -38,6 +38,11 @@ class StartTechWorks(BaseModel):
     reason: str = Field(description="Причина")
 
 
+class GridId(BaseModel):
+    id: int = Field(description="ID девайса")
+    grid_id: int = Field(description="Новый GridID")
+
+
 class ResponsePing(BaseModel):
     id: int = Field(description="PC ID")
     name: str = Field(description="PC name")
