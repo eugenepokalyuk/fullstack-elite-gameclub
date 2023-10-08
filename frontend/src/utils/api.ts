@@ -1,4 +1,4 @@
-const ApiUrlPath = 'http://localhost:8003';
+const ApiUrlPath = 'http://localhost:8000';
 
 const request = (endpoint: string, options: any) => {
     const url = `${ApiUrlPath}${endpoint}`;
