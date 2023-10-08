@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
 import styles from './PlaygroundGrid.module.css';
-import { TComputer } from '../../services/types/types';
 import PlaygroundSquare from '../PlaygroundSquare/PlaygroundSquare';
 import { fetchComputerGridReplace, fetchComputersData } from '../../utils/api';
 import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
@@ -8,7 +7,6 @@ import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCE
 
 const PlaygroundGrid: FC = () => {
     const dispatch = useAppDispatch();
-
     const playground = useAppSelector(
         (store) => store.playground.computers
     );
@@ -16,7 +14,6 @@ const PlaygroundGrid: FC = () => {
     const gridSize = 200;
     const [squares, setSquares] = useState<{ id: number }[]>([]);
     const [dragStart, setDragStart] = useState<number>();
-    // const [newPlayground, setNewPlayground] = useState<string[]>();
 
     useEffect(() => {
         const initialSquares = Array.from({ length: gridSize }, (_, index) => {
@@ -29,7 +26,6 @@ const PlaygroundGrid: FC = () => {
         fetchComputersData()
             .then(res => {
                 dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
-                // setNewPlayground(res);
             })
             .catch(error => {
                 dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
@@ -64,18 +60,16 @@ const PlaygroundGrid: FC = () => {
     };
 
     const renderSquares = () => {
-        return squares.map((square) => {
-            return (
-                <PlaygroundSquare
-                    key={square.id}
-                    id={square.id}
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    playground={playground}
-                />
-            );
-        });
+        return squares.map((square) => (
+            <PlaygroundSquare
+                key={square.id}
+                id={square.id}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                playground={playground}
+            />
+        ));
     };
 
     return (

@@ -4,7 +4,15 @@ import styles from './ComputerDetails.module.css';
 
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
 import { fetchContinue, fetchFinish, fetchPause, fetchPlay, fetchTechOff, fetchTechOn } from '../../utils/api';
-
+import {
+    COMPUTER_STATUS_PLAY,
+    COMPUTER_STATUS_PAUSE,
+    COMPUTER_STATUS_FINISH,
+    COMPUTER_STATUS_CONTINUE,
+    COMPUTER_STATUS_TECH_ON,
+    COMPUTER_STATUS_TECH_OFF,
+    COMPUTER_STATUS_INFO
+} from '../../utils/constants';
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [price, setPrice] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
@@ -15,17 +23,6 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-
-    const computerStatusPlay = "Play";
-    const computerStatusFinish = "Finish";
-    const computerStatusPause = "Pause";
-    const computerStatusContinue = "Continue";
-    const computerStatusTechOff = "TechOff";
-
-    // useEffect(() => {
-    //     dispatch(fetchPlayRequest());
-    //     dispatch(updatePlayNumber(computer.id));
-    // }, [dispatch, computer]);
 
     const handleAcceptClick = (computer: TComputer) => {
         let computerData = {
@@ -114,7 +111,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
-    const detailsBody = (computer: TComputer) => {
+    const detailsBody = () => {
         if (finish) {
             return (
                 <>
@@ -134,7 +131,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
 
         return (
             <>
-                {statement === computerStatusPlay
+                {statement === COMPUTER_STATUS_PLAY
                     ?
                     <>
                         <h3>Бронирование компьютера</h3>
@@ -159,7 +156,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             <button className={styles.listInputSubmit} onClick={() => handleAcceptClick(computer)}>Принять</button>
                         </div>
                     </>
-                    : statement === computerStatusFinish ?
+                    : statement === COMPUTER_STATUS_FINISH ?
                         <>
                             <h3>Завершение сеанса компьютера</h3>
 
@@ -178,7 +175,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                 <button onClick={() => handleFinishClick(computer)}>Подтвердить</button>
                             </div>
                         </>
-                        : statement === computerStatusPause
+                        : statement === COMPUTER_STATUS_FINISH
                             ? <>
                                 <h3>Хотите поставить сеанс компьютера на паузу?</h3>
 
@@ -190,7 +187,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                     <button onClick={() => handlePauseClick(computer)}>Подтвердить</button>
                                 </div>
                             </>
-                            : statement === computerStatusContinue
+                            : statement === COMPUTER_STATUS_CONTINUE
                                 ? <>
                                     <h3>Хотите сеанс компьютера снять с паузы?</h3>
 
@@ -202,7 +199,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                         <button onClick={() => handleContinueClick(computer)}>Подтвердить</button>
                                     </div>
                                 </>
-                                : statement === computerStatusTechOff
+                                : statement === COMPUTER_STATUS_TECH_OFF
                                     ? <>
                                         <h3>Хотите компьютер снять с тех. обслуживания?</h3>
 
@@ -214,19 +211,58 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                             <button onClick={() => handleTechOffClick(computer)}>Подтвердить</button>
                                         </div>
                                     </>
-                                    : <>Пока ничего</>
+                                    : statement === COMPUTER_STATUS_INFO
+                                        ? <>
+                                            <h3>INFO</h3>
+
+                                            <ul className={styles.cardList}>
+
+                                            </ul>
+
+                                            <div>
+                                                {/* <button onClick={() => handleTechOffClick(computer)}>Подтвердить</button> */}
+                                            </div>
+                                        </>
+                                        : <>Пока ничего</>
                 }
             </>
         )
     }
 
+    // const detailsContainer = () => {
+    //     if (finish) {
+    //         return (
+    //             <>
+    //                 <h2>{finishDescription}</h2>
+    //             </>
+    //         )
+    //     }
+
+    //     if (error) {
+    //         return (
+    //             <>
+    //                 <h2>Неопознанная Ошибка!</h2>
+    //                 <p>Запиши свои действия и опиши проблеум программисту!</p>
+    //             </>
+    //         )
+    //     }
+
+    //     return (
+    //         <>
+    //             {computer.status}
+    //             {computer.status && }
+    //         </>
+
+    //     )
+    // }
+
     return (
         <article>
-            <h2 className={`${styles.textShadows} text text_type_digits-large mb-8`} data-cy="orderNumber">
+            {/* <h2 className={`${styles.textShadows} text text_type_digits-large mb-8`} data-cy="orderNumber">
                 {computer.name}
-            </h2>
+            </h2> */}
             <div className={styles.card}>
-                {detailsBody(computer)}
+                {detailsBody()}
             </div>
 
         </article>

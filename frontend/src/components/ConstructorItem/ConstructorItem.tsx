@@ -8,7 +8,15 @@ import ComputerDetails from '../ComputerDetails/ComputerDetails';
 import { TComputer } from '../../services/types/types';
 import { useAppDispatch } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
-
+import {
+    COMPUTER_STATUS_PLAY,
+    COMPUTER_STATUS_PAUSE,
+    COMPUTER_STATUS_FINISH,
+    COMPUTER_STATUS_CONTINUE,
+    COMPUTER_STATUS_TECH_ON,
+    COMPUTER_STATUS_TECH_OFF,
+    COMPUTER_STATUS_INFO
+} from '../../utils/constants';
 type Props = {
     computer: TComputer,
     index: number,
@@ -19,13 +27,6 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
     const [isLoading,] = useState<boolean>(false);
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
-
-    const PLAY = "Play";
-    const PAUSE = "Pause";
-    const FINISH = "Finish";
-    const CONTINUE = "Continue";
-    const TECH_OFF = "TechOff";
-    const TECH_ON = "TechOn";
 
     const closeModal = () => {
         dispatch({ type: FETCH_COMPUTERS_REQUEST });
@@ -42,27 +43,27 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
 
     const handlePlayClick = () => {
         setModalOpen(true);
-        setStatement(PLAY);
+        setStatement(COMPUTER_STATUS_PLAY);
     }
     const handlePauseClick = () => {
         setModalOpen(true);
-        setStatement(PAUSE);
+        setStatement(COMPUTER_STATUS_PAUSE);
     }
     const handleFinishClick = () => {
         setModalOpen(true);
-        setStatement(FINISH);
+        setStatement(COMPUTER_STATUS_FINISH);
     }
     const handleContinueClick = () => {
         setModalOpen(true);
-        setStatement(CONTINUE);
+        setStatement(COMPUTER_STATUS_CONTINUE);
     }
     const handleTechOffClick = () => {
         setModalOpen(true);
-        setStatement(TECH_OFF);
+        setStatement(COMPUTER_STATUS_TECH_OFF);
     }
     const handleTechOnClick = () => {
         setModalOpen(true);
-        setStatement(TECH_ON);
+        setStatement(COMPUTER_STATUS_TECH_ON);
     }
 
     const computerStatement = (item: any) => {
