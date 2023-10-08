@@ -14,7 +14,7 @@ def get_pc_stat(data: model.Stat):
         return JSONResponse(content=resp_data, status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.post('/store')
@@ -24,4 +24,4 @@ def get_store_stat(data: model.Stat):
         return JSONResponse(content=resp_data, status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)

@@ -18,7 +18,7 @@ def ping():
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
     
 
 @router.patch("/play")
@@ -28,10 +28,10 @@ def play(data: models.Play):
     """
     try:
         pc.play(data.time, data.price, data.id)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.patch("/pause")
@@ -41,10 +41,10 @@ def pause(id: int = Query(description="ID девайса")):
     """
     try:
         pc.pause(id)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.patch("/continue")
@@ -54,10 +54,10 @@ def continue_play(id: int = Query(description="ID девайса")):
     """
     try:
         pc.continue_play(id)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.patch("/finish")
@@ -67,10 +67,10 @@ def finish(data: models.Finish):
     """
     try:
         pc.finish(data.id, data.price)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.patch('/techworks/start')
@@ -80,10 +80,10 @@ def start_tech_works(data: models.StartTechWorks):
     """
     try:
         pc.start_tech_works(data.id, data.reason)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
 
 
 @router.patch('/techworks/stop')
@@ -93,10 +93,10 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
     """
     try:
         pc.stop_tech_works(id)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
     
 
 @router.patch('/edit/grid')
@@ -106,7 +106,7 @@ def set_grid_id_for_pc(data: models.GridId):
     """
     try:
         pc.set_grid_id(data.id, data.grid_id)
-        return JSONResponse(content=None, status_code=200)
+        return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=None, status_code=400)
+        return JSONResponse(content='', status_code=400)
