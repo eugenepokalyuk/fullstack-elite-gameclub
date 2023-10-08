@@ -7,6 +7,7 @@
 
 #backend
 *.db
+.db
 __pycache__
 
 # testing
