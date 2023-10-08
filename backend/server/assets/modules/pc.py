@@ -125,3 +125,13 @@ def get_status(pc_id):
 def set_grid_id(pc_id, grid_id):
     db = SQLiteDB('pc')
     db.execute_update_query('update pcs set grid_id=? where id=?', [ grid_id, pc_id ])
+
+
+def set_pc_name(pc_id, name):
+    db = SQLiteDB('pc')
+    db.execute_update_query('update pcs set name=? where id=?', [ name, pc_id ])
+
+
+def remove_pc(pc_id):
+    db = SQLiteDB('pc')
+    db.execute_update_query('delete from pcs where id=?', [ pc_id ])

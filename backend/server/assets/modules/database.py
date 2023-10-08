@@ -106,9 +106,10 @@ class SQLiteDB:
                                     PRIMARY KEY("id" AUTOINCREMENT)\
                                 );')
         
-        for i in range(1,31):
+        for i in range(1,32):
             self.execute_update_query(f"INSERT OR IGNORE INTO pcs(id, name, status, grid_id) VALUES(?,?,?,?)",
                                       [i, f'PC-{i}', 'online', i])
+            self.execute_update_query('update pcs set name=? where id=?', [ 'ps5', 31 ])
 
 
     def init_tables_store(self):

@@ -43,6 +43,11 @@ class GridId(BaseModel):
     grid_id: int = Field(description="Новый GridID")
 
 
+class EditName(BaseModel):
+    id: int = Field(description="ID девайса")
+    name: str = Field(description="Новое имя девайса")
+
+
 class ResponsePing(BaseModel):
     id: int = Field(description="PC ID")
     name: str = Field(description="PC name")
