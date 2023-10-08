@@ -6,12 +6,15 @@ db_path_store = "./data/store.db"
 
 
 class SQLiteDB:
-    def __init__(self, db_type=''):
+    def __init__(self, db_type=None):
 
         if db_type == 'store':
             self.db_name = db_path_store
         if db_type == 'pc':
             self.db_name = db_path_pc
+        if db_type is None:
+            raise Exception("Unknown database")
+        
 
         self.conn = None
 
@@ -87,6 +90,7 @@ class SQLiteDB:
                                     "id"	INTEGER NOT NULL UNIQUE,\
                                     "name"	TEXT NOT NULL,\
 	                                "status"	TEXT NOT NULL,\
+	                                "grid_id"	TEXT NOT NULL UNIQUE,\
                                     "ip"	TEXT,\
                                     "description"	TEXT,\
                                     PRIMARY KEY("id")\
@@ -103,7 +107,8 @@ class SQLiteDB:
                                 );')
         
         for i in range(1,31):
-            self.execute_update_query(f"INSERT OR IGNORE INTO pcs(id,name,status) VALUES({i},'PC-{i}','online')")
+            self.execute_update_query(f"INSERT OR IGNORE INTO pcs(id, name, status, grid_id) VALUES(?,?,?,?)",
+                                      [i, f'PC-{i}', 'online', i])
 
 
     def init_tables_store(self):
@@ -139,5 +144,3 @@ class SQLiteDB:
     def close(self):
         if self.conn:
             self.conn.close()
-
-

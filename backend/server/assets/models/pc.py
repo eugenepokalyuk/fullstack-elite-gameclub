@@ -42,4 +42,5 @@ class ResponsePing(BaseModel):
     id: int = Field(description="PC ID")
     name: str = Field(description="PC name")
     status: str = Field(description="PC status")
+    grid_id: int = Field(description="Grid ID")
     details: Details = Field(None, description="Информация о текущей услуге")

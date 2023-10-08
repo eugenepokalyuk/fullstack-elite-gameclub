@@ -40,8 +40,7 @@ def add_item(data: models.CreateProduct):
     Добавить новую позицию на склад
     """
     try:
-        json = jsonable_encoder(data)
-        new_item_id = store.create_product(json['name'], json['price'])
+        new_item_id = store.create_product(data.name, data.price)
         return JSONResponse(content={'id': new_item_id}, status_code=200)
     except Exception as e:
         print(e)
@@ -54,8 +53,7 @@ def edit_item_name(data: models.EditItemName):
     Изменить название
     """
     try:
-        json = jsonable_encoder(data)
-        store.change_name(json['id'], json['name'])
+        store.change_name(data.id, data.name)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
@@ -68,8 +66,7 @@ def edit_item_price(data: models.EditItemPrice):
     Изменить цену
     """
     try:
-        json = jsonable_encoder(data)
-        store.change_price(json['id'], json['price'])
+        store.change_price(data.id, data.price)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
@@ -108,8 +105,7 @@ def sell_items(data: models.SellProducts):
     Продажа позиций
     """
     try:
-        json = jsonable_encoder(data)
-        store.sell_products(json['items'], json['payment'])
+        store.sell_products(data.items, data.payment)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
@@ -122,8 +118,7 @@ def supply(data: models.SupplyProducts):
     Оформить поставку
     """
     try:
-        json = jsonable_encoder(data)
-        store.supply(json['items'])
+        store.supply(data.items)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)

@@ -19,10 +19,10 @@ app.add_middleware(
 )
 
 
-app.include_router(pc.router, prefix="/pc", tags=["pc"])
-app.include_router(store.router, prefix="/store", tags=["store"])
-app.include_router(stat.router, prefix="/stat", tags=["stat"])
+app.include_router(pc.router, prefix="/pc", tags=["Computers"])
+app.include_router(store.router, prefix="/store", tags=["Storefront"])
+app.include_router(stat.router, prefix="/stat", tags=["Statistic"])
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
