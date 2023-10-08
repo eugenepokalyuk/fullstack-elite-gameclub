@@ -88,3 +88,4 @@ def supply(items_array):
         db.execute_update_query('insert into supplies (item_id, qty, add_date) values(?,?,?)', 
                                 [ item['id'], item['qty'], now ])
         db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item['id'] ])
+        

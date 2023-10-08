@@ -27,8 +27,7 @@ def play(data: models.Play):
     Начать игровое время компьютера
     """
     try:
-        json = jsonable_encoder(data)
-        pc.play(json['time'], json['price'], json['id'])
+        pc.play(data.time, data.price, data.id)
         return JSONResponse(content=None, status_code=200)
     except Exception as e:
         print(e)
@@ -67,8 +66,7 @@ def finish(data: models.Finish):
     Закончить игровое время
     """
     try:
-        json = jsonable_encoder(data)
-        pc.finish(json['id'], json['price'])
+        pc.finish(data.id, data.price)
         return JSONResponse(content=None, status_code=200)
     except Exception as e:
         print(e)
@@ -81,8 +79,7 @@ def start_tech_works(data: models.StartTechWorks):
     Объявить о технических работах
     """
     try:
-        json = jsonable_encoder(data)
-        pc.start_tech_works(json['id'], json['reason'])
+        pc.start_tech_works(data.id, data.reason)
         return JSONResponse(content=None, status_code=200)
     except Exception as e:
         print(e)
@@ -100,3 +97,4 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
     except Exception as e:
         print(e)
         return JSONResponse(content=None, status_code=400)
+    

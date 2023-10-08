@@ -12,6 +12,7 @@ def get_pc_data():
             'id': pc['id'],
             'name': pc['name'],   
             'status': pc['status'],
+            'grid_id': pc['grid_id']
         }
 
         if pc['status'] == 'playing' or pc['status'] == 'pause':
@@ -22,12 +23,12 @@ def get_pc_data():
                 'price': order['price'],
                 'time': {
                     'from': {
-                        'hours': int(start.strftime('%H')),
-                        'minutes': int(start.strftime('%M'))
+                        'hours': int(start.hour),
+                        'minutes': int(start.minute)
                     },
                     'until': {
-                        'hours': int(finish.strftime('%H')),
-                        'minutes': int(finish.strftime('%M'))
+                        'hours': int(finish.hour),
+                        'minutes': int(finish.minute)
                     }
                 }
             }
