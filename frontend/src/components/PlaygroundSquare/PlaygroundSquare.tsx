@@ -1,48 +1,41 @@
+import { useState } from "react";
 import { TComputer } from "../../services/types/types";
 import styles from './PlaygroundSquare.module.css';
 
 interface SquareProps {
     id: number;
     position: { x: number; y: number };
-    // onDragStart: Function;
-    // onDragOver: Function;
-    // onDrop: Function;
-    // occupied: boolean;
-    computer: TComputer | undefined;
+    onDragStart: Function;
+    onDragOver: Function;
+    onDrop: Function;
+    playground: TComputer[] | undefined
 }
 
 const PlaygroundSquare: React.FC<SquareProps> = ({
     id,
     position,
-    computer
-    // onDragStart,
-    // onDragOver,
-    // onDrop,
-    // occupied,
+    onDragStart,
+    onDragOver,
+    onDrop,
+    playground
 }) => {
-    const style = {
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        // background: `green`
-    };
+    // const [gridPositionFrom, setGridPositionFrom] = useState<number>();
+    // const [gridPositionTo, setGridPositionTo] = useState<number>();
 
-    const handleClick = (e: any, id: number) => {
-        console.log("handleClick", { e, computer })
-    }
-
-    // const squareClasses = `${occupied} ? ${styles.square} ${styles.occupied} : ${styles.square}`; // применяем класс styles.occupied в зависимости от занятости
-    // const squareClasses = occupied ? styles.square : styles.squareOccupied; // применяем класс styles.occupied в зависимости от занятости
+    // const handleClick = (id: number) => {
+    // const compId = playground?.find((item) => item.id === id);
+    // console.log("handleClick", { id, compId })
+    // }
 
     return (
         <div
-            // className={squareClasses}
-            className={styles.square}
-            // draggable
-            // onDragStart={(e) => onDragStart(e, id)}
-            // onDragOver={(e) => onDragOver(e)}
-            // onDrop={(e) => onDrop(e, id)}
-            onClick={(e) => { handleClick(e, id) }}
-            style={style}
+            className={`${styles.square}`}
+            // className={`${styles.square} ${id === playground?.id && styles.squareOccupied}`}
+            draggable
+            onDragStart={(e) => onDragStart(e, id)}
+            onDragOver={(e) => onDragOver(e)}
+            onDrop={(e) => onDrop(e, id)}
+        // onClick={() => { handleClick(id) }}
         />
     );
 };

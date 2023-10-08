@@ -2,6 +2,7 @@ export type TComputer = {
     id: number,
     name: string,
     status: string,
+    grid_id: number,
     details?: {
         price: number,
         time: {
