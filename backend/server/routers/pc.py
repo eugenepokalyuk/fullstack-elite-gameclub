@@ -98,3 +98,15 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
         print(e)
         return JSONResponse(content=None, status_code=400)
     
+
+@router.patch('/edit/grid')
+def set_grid_id_for_pc(data: models.GridId):
+    """
+    Изменить местоположение ПК
+    """
+    try:
+        pc.set_grid_id(data.id, data.grid_id)
+        return JSONResponse(content=None, status_code=200)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content=None, status_code=400)
