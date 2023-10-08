@@ -1,21 +1,16 @@
 import React, { FC, useState, useEffect } from 'react';
 import styles from "./Store.module.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCreditCard, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem } from '../../services/types/types';
 import { fetchStoreSell } from '../../utils/api';
+import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 
 export const Store: FC = () => {
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [paymentType, setPaymentType] = useState<string>("card");
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
-
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
-
-    const CARD = "card";
-    const CASH = "cash";
 
     useEffect(() => {
         // При изменении выбранных товаров пересчитываем общую стоимость и общее количество
@@ -54,10 +49,6 @@ export const Store: FC = () => {
         });
     };
 
-    const handlePaymentTypeChange = (type: string) => {
-        setPaymentType(type);
-    };
-
     const handleAddToCart = () => {
         const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id))
             .map((item: TStoreItem) => {
@@ -73,11 +64,9 @@ export const Store: FC = () => {
         fetchStoreSell(data)
             .then(res => {
                 console.log({ res })
-                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
                 console.log({ error })
-                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
         // setModalOpen(false);
         setSelectedItems([]);
@@ -139,22 +128,7 @@ export const Store: FC = () => {
                 </div>
 
                 <div className={styles.cartFooter}>
-
-                    <div className={`${styles.switcher}`}>
-                        <button
-                            className={`${styles.paymentButton} ${paymentType === "card" ? styles.activeButton : styles.nonActiveButton}`}
-                            onClick={() => handlePaymentTypeChange(CARD)}
-                        >
-                            <FontAwesomeIcon icon={faCreditCard} /> Безналичный
-                        </button>
-                        <button
-                            className={`${styles.paymentButton} ${paymentType === "cash" ? styles.activeButton : styles.nonActiveButton}`}
-                            onClick={() => handlePaymentTypeChange(CASH)}
-                        >
-                            <FontAwesomeIcon icon={faCoins} /> Наличный
-                        </button>
-                    </div>
-
+                    <PaymentSwitcher />
                     <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleAddToCart} disabled={selectedItems.length === 0}>
                         Оплатить
                         <span>
@@ -162,6 +136,7 @@ export const Store: FC = () => {
                         </span>
                     </button>
                 </div>
+
             </div>
         </article>
     );

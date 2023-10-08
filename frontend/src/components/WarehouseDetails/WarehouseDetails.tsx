@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import styles from './WarehouseDetails.module.css';
 import { useAppSelector } from '../../services/hooks/hooks';
-
 import { TStoreItem, WarehouseDetailsProps } from '../../services/types/types';
 import { fetchWarehouseAddItem, fetchWarehouseAddSupply, fetchWarehouseEditItemName, fetchWarehouseEditItemPrice, fetchWarehouseHideItem, fetchWarehouseItem, fetchWarehouseShowItem } from '../../utils/api';
 
@@ -9,19 +8,14 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const [itemName, setItemName] = useState<string>('');
     const [itemPrice, setItemPrice] = useState<number>();
     const [itemId, setItemId] = useState<number>();
-
     const [itemNewName, setItemNewName] = useState<string>('');
     const [itemNewPrice, setItemNewPrice] = useState<number>();
-
     const [loading, isLoading] = useState<boolean>(false);
-
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-
     const storeItems = useAppSelector((store) => store.store.items);
     const warehouseSelectedItem = useAppSelector((store) => store.warehouse.item);
-
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
 
     useEffect(() => {
@@ -33,7 +27,7 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 setItemPrice(price);
             })
             .catch(error => {
-                console.log({ error });
+                // console.log({ error });
             });
     }, [])
 
@@ -42,11 +36,9 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             .then(res => {
                 setFinish(true);
                 setFinishDescription(`Товар "${itemName}" по цене ${itemPrice} руб. успешно добавлен на склад`);
-                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
                 setError(true)
-                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
     }
 
@@ -62,25 +54,23 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             .then(res => {
                 setFinish(true);
                 setFinishDescription(`Приход товаров успешно добавлен`);
-                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
                 setError(true)
-                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
     }
 
-    const handleIncrement = (itemId: any) => {
+    const handleIncrement = (itemId: number, number: number) => {
         setItemCounts((prevCounts) => ({
             ...prevCounts,
-            [itemId]: (prevCounts[itemId] || 0) + 1
+            [itemId]: (prevCounts[itemId] || 0) + number
         }));
     };
 
-    const handleDecrement = (itemId: number) => {
+    const handleDecrement = (itemId: number, number: number) => {
         setItemCounts((prevCounts) => {
             const currentCount = prevCounts[itemId] || 0;
-            const updatedCount = Math.max(0, currentCount - 1);
+            const updatedCount = Math.max(0, currentCount - number);
             return {
                 ...prevCounts,
                 [itemId]: updatedCount
@@ -94,11 +84,9 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 .then(res => {
                     setFinish(true);
                     setFinishDescription(`Название товара успешно изменено`);
-                    // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
                 })
                 .catch(error => {
                     setError(true)
-                    // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
                 });
         }
         if (itemNewPrice) {
@@ -106,11 +94,9 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 .then(res => {
                     setFinish(true);
                     setFinishDescription(`Стоимость товара успешно изменена`);
-                    // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
                 })
                 .catch(error => {
                     setError(true)
-                    // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
                 });
         }
     }
@@ -120,11 +106,9 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             .then(res => {
                 setFinish(true);
                 setFinishDescription(`Товар успешно удален`);
-                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
                 setError(true)
-                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
     }
     const handleShowItem = () => {
@@ -132,22 +116,16 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             .then(res => {
                 setFinish(true);
                 setFinishDescription(`Товар успешно восстановлен`);
-                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
                 setError(true)
-                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
     }
-
-
 
     const detailsBody = () => {
         if (finish) {
             return (
-                <>
-                    <p className={styles.mt4}>{finishDescription}</p>
-                </>
+                <p className={styles.mt4}>{finishDescription}</p>
             )
         }
 
@@ -191,11 +169,21 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                         <ul className={`${styles.cardList} ${styles.cardScroll}`}>
                             {storeItems.map((item: TStoreItem) => {
                                 return (
-                                    <li className={`${styles.listItem} ${styles.alignLeft}`} key={item.id}>
-                                        {item.name}
-                                        <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id)}>-</button>
-                                        {itemCounts[item.id] || 0}
-                                        <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id)}>+</button>
+                                    <li className={`${styles.listItem} ${styles.supplyContainer} ${styles.alignLeft}`} key={item.id}>
+                                        <div className={styles.containerTitle}>
+                                            {item.name}
+                                        </div>
+                                        <div className={styles.containerCounter}>
+                                            <div className={styles.symbolsCircleContainer}>
+                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 5)}>-5</button>
+                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 1)}>-</button>
+                                            </div>
+                                            {itemCounts[item.id] || 0}
+                                            <div className={styles.symbolsCircleContainer}>
+                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 1)}>+</button>
+                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 5)}>+5</button>
+                                            </div>
+                                        </div>
                                     </li>
                                 )
                             })}
@@ -264,7 +252,6 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 return (
                     <p className={styles.mt4}>Данная опиця не найдена</p>
                 )
-                break;
         }
     }
 

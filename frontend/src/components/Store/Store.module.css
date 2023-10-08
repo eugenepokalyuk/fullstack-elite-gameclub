@@ -51,7 +51,6 @@ li {
 
 .selectedRow {
     background-color: #ef7912;
-    /* Ваш выбранный цвет фона */
 }
 
 .table {
@@ -67,7 +66,6 @@ li {
 th,
 td {
     padding: 8px;
-    /* border-bottom: 1px solid #ddd; */
 }
 
 th {
@@ -80,7 +78,6 @@ button {
     padding: 8px;
     border-radius: 8px;
     background-color: #ef7912;
-    /* Ваш цвет кнопки */
     color: white;
     border: none;
     cursor: pointer;
@@ -88,7 +85,6 @@ button {
 
 button:disabled {
     background-color: #1c1c21;
-    /* Ваш цвет отключенной кнопки */
     cursor: not-allowed;
 }
 
@@ -106,51 +102,6 @@ button:disabled {
 
 .mt4 {
     margin-top: calc(4 * 4px);
-}
-
-.switcher {
-    display: flex;
-    align-items: center;
-    background: #ef7912;
-    border-radius: 8px;
-    gap: 16px;
-}
-
-.paymentButton {
-    background-color: transparent;
-    border: none;
-    padding: 5px;
-    /* margin-right: 10px; */
-    cursor: pointer;
-
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-}
-
-.paymentButton:focus {
-    outline: none;
-}
-
-.paymentButton>svg {
-    font-size: 20px;
-}
-
-/*  */
-.activeButton {
-    color: #fff;
-    background: #b85c0c;
-}
-
-.nonActiveButton {
-    color: #b85c0c;
-}
-
-.activeButton>svg {
-    color: inherit;
 }
 
 .symbolsCircle {

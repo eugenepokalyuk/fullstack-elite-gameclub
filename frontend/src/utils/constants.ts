@@ -4,9 +4,8 @@ export const STORE_PATH = "/store";
 export const STAT_PATH = "/stat";
 export const WAREHOUSE_PATH = "/warehouse";
 
-
 export const COMPUTER_STATUS_PLAY = "Play";
-// export const COMPUTER_STATUS_PAUSE = "Pause";
+export const COMPUTER_STATUS_PAUSE1 = "Pause";
 export const COMPUTER_STATUS_FINISH = "Finish";
 export const COMPUTER_STATUS_CONTINUE = "Continue";
 export const COMPUTER_STATUS_TECH_ON = "TechOn";
@@ -18,3 +17,12 @@ export const COMPUTER_STATUS_OFFLINE = "offline";
 export const COMPUTER_STATUS_TECH = "techWorks";
 export const COMPUTER_STATUS_PLAYING = "playing";
 export const COMPUTER_STATUS_PAUSE = "pause";
+
+export const CARD = "card";
+export const CASH = "cash";
+
+export const ADD_ITEM = "addItem"
+export const ADD_SUPPLY = "addSupply"
+export const EDIT_ITEM = "editItem"
+export const HIDE_ITEM = "hideItem"
+export const SHOW_ITEM = "showItem"

@@ -1,0 +1,42 @@
+.switcher {
+    display: flex;
+    align-items: center;
+    background: #ef7912;
+    border-radius: 8px;
+    gap: 16px;
+}
+
+.paymentButton {
+    background-color: transparent;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.paymentButton:focus {
+    outline: none;
+}
+
+.paymentButton>svg {
+    font-size: 20px;
+}
+
+.activeButton {
+    color: #fff;
+    background: #b85c0c;
+}
+
+.nonActiveButton {
+    color: #b85c0c;
+}
+
+.activeButton>svg {
+    color: inherit;
+}

@@ -7,10 +7,7 @@ import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCE
 
 const PlaygroundGrid: FC = () => {
     const dispatch = useAppDispatch();
-    const playground = useAppSelector(
-        (store) => store.playground.computers
-    );
-
+    const playground = useAppSelector((store) => store.playground.computers);
     const gridSize = 200;
     const [squares, setSquares] = useState<{ id: number }[]>([]);
     const [dragStart, setDragStart] = useState<number>();
@@ -33,9 +30,8 @@ const PlaygroundGrid: FC = () => {
     }, [dispatch])
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-        if (id) {
+        if (id)
             setDragStart(id);
-        }
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {

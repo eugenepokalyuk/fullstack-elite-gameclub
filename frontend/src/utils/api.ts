@@ -101,7 +101,6 @@ export const fetchTechOn = async (id: number, reason: string) => {
     }
     return request(endpoint, options);
 }
-// fetchStoreData
 export const fetchStoreData = async () => {
     const endpoint = routeStore + "/items";
     const options = {
@@ -216,7 +215,6 @@ export const fetchWarehouseShowItem = async (id: number | undefined) => {
     }
     return request(endpoint, options);
 }
-// fetchComputerGridReplace
 export const fetchComputerGridReplace = async (id: number | undefined, gridId: any) => {
     try {
         if (id && gridId) {
@@ -252,7 +250,6 @@ export const fetchStatPC = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
-
 export const fetchStatStore = async (from: string, until: string) => {
     const endpoint = routeStat + `/store`;
     const options = {

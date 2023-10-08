@@ -1,4 +1,3 @@
-/* ef7912 */
 .textShadows {
     text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
 }
@@ -49,6 +48,14 @@
     margin-top: calc(4 * 4px);
 }
 
+.symbolsCircleContainer {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin: 4px;
+    padding: 4px;
+}
+
 .symbolsCircle {
     display: flex;
     justify-content: center;
@@ -56,15 +63,15 @@
 
     width: 25px;
     height: 25px;
-    margin: 8px;
-    padding: 8px;
+    margin: 2px;
 
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .alignLeft {
     justify-content: flex-start;
 }
+
 .alignRight {
     justify-content: flex-end;
 }
@@ -83,4 +90,23 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.supplyContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.supplyContainer .containerTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.supplyContainer .containerCounter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }

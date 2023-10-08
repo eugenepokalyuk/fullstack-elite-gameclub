@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './AppHeader.module.css';
 import image from '../../images/logo.jpeg'
 import { NavLink, useMatch } from 'react-router-dom';
@@ -12,9 +11,6 @@ const AppHeader = () => {
     const storeRoute = useMatch(STORE_PATH);
     const warehouseRoute = useMatch(WAREHOUSE_PATH);
     const statRoute = useMatch(STAT_PATH);
-
-    // const link = ({ isActive }: { isActive: boolean }) =>
-    // isActive ? `${styles.link} text_color_primary` : `${styles.link}`;
 
     return (
         <header className={styles.header}>

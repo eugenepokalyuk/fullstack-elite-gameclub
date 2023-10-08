@@ -5,19 +5,15 @@ import { HomePage } from '../../pages/HomePage/HomePage';
 import { SettingsPage } from '../../pages/SettingsPage/SettingsPage';
 import { StorePage } from '../../pages/StorePage/StorePage';
 import { StatPage } from '../../pages/StatPage/StatPage';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
 import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH } from '../../utils/routePath';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { fetchComputersData, fetchStoreData } from '../../utils/api';
 import { useAppDispatch } from "../../services/hooks/hooks";
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
-
 import Modal from '../Modal/Modal';
 import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
-import { Warehouse } from '../Warehouse/Warehouse';
 import { WarehousePage } from '../../pages/WarehousePage/WarehousePage';
 
 const App = () => {

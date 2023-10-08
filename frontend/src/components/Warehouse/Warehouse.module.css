@@ -46,7 +46,6 @@ li {
 
 .cartFooter .editButton:disabled {
     background-color: #1c1c21;
-    /* Ваш цвет отключенной кнопки */
     cursor: not-allowed;
 }
 
@@ -62,7 +61,6 @@ li {
 
 .cartFooter .deleteButton:disabled {
     background-color: #1c1c21;
-    /* Ваш цвет отключенной кнопки */
     cursor: not-allowed;
 }
 
@@ -76,7 +74,7 @@ li {
     color: #fff;
     padding: 8px 0px;
     border-radius: 8px;
-    height: 70vh;
+    height: 60vh;
 
     overflow-y: scroll;
 }
@@ -88,7 +86,6 @@ li {
 
 .selectedRow {
     background-color: #ef7912;
-    /* Ваш выбранный цвет фона */
 }
 
 .table {
@@ -104,7 +101,6 @@ li {
 th,
 td {
     padding: 8px;
-    /* border-bottom: 1px solid #ddd; */
 }
 
 th {
@@ -117,20 +113,14 @@ button {
     padding: 8px;
     border-radius: 8px;
     background-color: #ef7912;
-    /* Ваш цвет кнопки */
     color: white;
     border: none;
     cursor: pointer;
     font-weight: 900;
 }
 
-.textBlack {
-    color: #000;
-}
-
 button:disabled {
     background-color: #1c1c21;
-    /* Ваш цвет отключенной кнопки */
     cursor: not-allowed;
 }
 
@@ -166,7 +156,6 @@ button:disabled {
     background-color: transparent;
     border: none;
     padding: 5px;
-    /* margin-right: 10px; */
     cursor: pointer;
 
     width: 100%;
@@ -185,7 +174,6 @@ button:disabled {
     font-size: 20px;
 }
 
-/*  */
 .activeButton {
     color: #fff;
     background: #b85c0c;

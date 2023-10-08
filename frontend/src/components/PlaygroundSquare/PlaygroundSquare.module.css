@@ -1,7 +1,7 @@
 .square {
     width: 50px;
     height: 50px;
-    border: 2px dashed #ef7912;
+    border: 2px dashed #ef791250;
     border-radius: 16px;
     user-select: none;
 
@@ -29,32 +29,80 @@
     border: 2px solid #ef7912;
 }
 
-/*  */
 .bgOnline {
-    /* background: greenyellow; */
     background: #ef7912;
+    border-color: #ef7912;
+}
+
+.bgOnline:hover {
+    background: #ef791280;
+    border-color: #ef791280;
 }
 
 .bgOffline {
     background: #333;
-    /* background: #333; */
+    border-color: #333;
+}
+
+.bgOffline:hover {
+    background: #33333380;
+    border-color: #33333380;
 }
 
 .bgPlay {
     background: crimson;
+    border-color: crimson;
+}
+
+.bgPlay:hover {
+    background: #dc143c80;
+    border-color: #dc143c80;
 }
 
 .bgTech {
-    background: black;
-    /* background: red; */
+    background: #000000;
+    border-color: #000000;
+}
+
+.bgTech:hover {
+    background: 00000000;
+    border-color: 00000000;
 }
 
 .bgPause {
-    background: yellow;
+    background: #ffff00;
+    border-color: #ffff00;
+    color: #333;
+}
+
+.bgPause:hover {
+    background: #ffff0080;
+    border-color: #ffff0080;
+    color: #333;
 }
 
 .bgFree {
     background: transparent;
 }
 
-/*  */
+.warningArticle {
+    animation: blinkAnimation 1s infinite;
+}
+
+@keyframes blinkAnimation {
+    0% {
+        background-color: #dc143c;
+    }
+
+    50% {
+        background-color: #63081a;
+    }
+
+    100% {
+        background-color: #dc143c;
+    }
+}
+
+.warningArticle:hover {
+    background: green;
+}

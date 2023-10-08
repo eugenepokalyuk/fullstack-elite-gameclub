@@ -1,13 +1,6 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(20, 1fr);
-    /* grid-template-rows: repeat(12, 1fr); */
-    /* width: 100%; */
-    /* width: 800px; */
-    /* или указывайте желаемую ширину сетки */
-    /* height: 800px; */
-    /* или указывайте желаемую высоту сетки */
-
     gap: 10px;
 }
 

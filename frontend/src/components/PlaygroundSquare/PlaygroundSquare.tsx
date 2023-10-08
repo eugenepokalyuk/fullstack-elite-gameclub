@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { TComputer } from "../../services/types/types";
+import React, { useState } from "react";
+import { SquareProps, TComputer } from "../../services/types/types";
 import styles from './PlaygroundSquare.module.css';
 import { useAppDispatch } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from "../../services/actions/computers";
@@ -8,27 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Modal from "../Modal/Modal";
 import ComputerDetails from "../ComputerDetails/ComputerDetails";
-import {
-    COMPUTER_STATUS_PLAY,
-    COMPUTER_STATUS_PAUSE,
-    COMPUTER_STATUS_FINISH,
-    COMPUTER_STATUS_CONTINUE,
-    COMPUTER_STATUS_TECH_ON,
-    COMPUTER_STATUS_TECH_OFF,
-    COMPUTER_STATUS_INFO,
-    COMPUTER_STATUS_ONLINE,
-    COMPUTER_STATUS_OFFLINE,
-    COMPUTER_STATUS_PLAYING,
-    COMPUTER_STATUS_TECH
-} from '../../utils/constants';
-
-interface SquareProps {
-    id: number;
-    onDragStart: Function;
-    onDragOver: Function;
-    onDrop: Function;
-    playground: TComputer[] | any;
-}
+import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_INFO, COMPUTER_STATUS_ONLINE, COMPUTER_STATUS_OFFLINE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_TECH, COMPUTER_STATUS_TECH_OFF } from '../../utils/constants';
 
 const PlaygroundSquare: React.FC<SquareProps> = ({
     id,
@@ -55,32 +35,6 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
         setModalOpen(false);
     };
 
-
-    const handlePlayClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_PLAY);
-    }
-    const handlePauseClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_PAUSE);
-    }
-    const handleFinishClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_FINISH);
-    }
-    const handleContinueClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_CONTINUE);
-    }
-    const handleTechOffClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_TECH_OFF);
-    }
-    const handleTechOnClick = () => {
-        setModalOpen(true);
-        setStatement(COMPUTER_STATUS_TECH_ON);
-    }
-
     const handleClick = (computer: TComputer) => {
         setModalOpen(true);
         switch (computer.status) {
@@ -88,15 +42,25 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                 setModalOpen(true);
                 setStatement(COMPUTER_STATUS_PLAY);
                 break;
-
+            case COMPUTER_STATUS_PLAYING:
+                setModalOpen(true);
+                setStatement(COMPUTER_STATUS_PLAYING);
+                break;
+            case COMPUTER_STATUS_PAUSE:
+                setModalOpen(true);
+                setStatement(COMPUTER_STATUS_CONTINUE);
+                break;
+            case COMPUTER_STATUS_TECH:
+                setModalOpen(true);
+                setStatement(COMPUTER_STATUS_TECH_OFF);
+                break;
             default:
                 setStatement(COMPUTER_STATUS_INFO);
                 break;
         }
     }
 
-    const computer: TComputer = playground?.find((item: any) => item.grid_id === id);
-
+    const computer: TComputer = playground?.find((item: TComputer) => item.grid_id === id);
 
     const backgroundClass =
         computer?.status === COMPUTER_STATUS_ONLINE
@@ -111,10 +75,29 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                             ? styles.bgPause
                             : styles.bgFree
 
+    const currentTime = new Date(); // получаем текущее время
+
+    const untilTime = new Date(); // создаем объект для времени из переменной
+    computer?.details && untilTime.setHours(Number(computer?.details?.time.until.hours));
+    computer?.details && untilTime.setMinutes(Number(computer?.details?.time.until.minutes));
+
+    const timeDifference = untilTime.getTime() - currentTime.getTime(); // разница в миллисекундах между текущим временем и временем до которого нужно подсчитывать
+
+    const timeThreshold = 15 * 60 * 1000; // пороговое значение в миллисекундах, например, 30 минут
+    const isApproaching = timeDifference <= timeThreshold; // флаг, указывающий, подходит ли время к текущему
+
+    const articleClassName = `${isApproaching ? styles.warningArticle : ''}`;
+
     return (
         <>
             <div
-                className={`${styles.square} ${id === computer?.grid_id && styles.squareOccupied} ${backgroundClass}`}
+                className={`
+                    ${styles.square} 
+                    ${id === computer?.grid_id && styles.squareOccupied} 
+                    ${backgroundClass} 
+                    ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}`
+                }
+
                 draggable
                 onDragStart={(e) => onDragStart(e, computer?.id)}
                 onDragOver={(e) => onDragOver(e)}

@@ -53,3 +53,11 @@ export interface ModalProps {
 export interface ModalOverlayProps {
     onClose: () => void;
 }
+
+export interface SquareProps {
+    id: number;
+    onDragStart: Function;
+    onDragOver: Function;
+    onDrop: Function;
+    playground: TComputer[] | any;
+}
