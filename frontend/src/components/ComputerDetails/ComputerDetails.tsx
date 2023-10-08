@@ -3,7 +3,7 @@ import styles from './ComputerDetails.module.css';
 // import { fetchOrderNumberRequest, updateOrderNumber } from '../../services/actions/orderDetails';
 
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
-import { fetchContinue, fetchFinish, fetchPause, fetchPlay } from '../../utils/api';
+import { fetchContinue, fetchFinish, fetchPause, fetchPlay, fetchTechOff, fetchTechOn } from '../../utils/api';
 
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [price, setPrice] = useState<number>(0);
@@ -20,6 +20,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const computerStatusFinish = "Finish";
     const computerStatusPause = "Pause";
     const computerStatusContinue = "Continue";
+    const computerStatusTechOff = "TechOff";
 
     // useEffect(() => {
     //     dispatch(fetchPlayRequest());
@@ -79,6 +80,32 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             .then(res => {
                 setFinish(true);
                 setFinishDescription("Сеанс снят с паузы");
+                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+            })
+            .catch(error => {
+                setError(true)
+                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+            });
+    }
+
+    const handleTechOffClick = (computer: TComputer) => {
+        fetchTechOff(computer.id)
+            .then(res => {
+                setFinish(true);
+                setFinishDescription("ПК снят с тех. обслуживания");
+                // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+            })
+            .catch(error => {
+                setError(true)
+                // dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+            });
+    }
+
+    const handleTechOnClick = (computer: TComputer, reason: string) => {
+        fetchTechOn(computer.id, reason)
+            .then(res => {
+                setFinish(true);
+                setFinishDescription("ПК отправлен на тех. обслуживание");
                 // dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
             .catch(error => {
@@ -175,7 +202,19 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                         <button onClick={() => handleContinueClick(computer)}>Подтвердить</button>
                                     </div>
                                 </>
-                                : <>Пока ничего</>
+                                : statement === computerStatusTechOff
+                                    ? <>
+                                        <h3>Хотите компьютер снять с тех. обслуживания?</h3>
+
+                                        <ul className={styles.cardList}>
+
+                                        </ul>
+
+                                        <div>
+                                            <button onClick={() => handleTechOffClick(computer)}>Подтвердить</button>
+                                        </div>
+                                    </>
+                                    : <>Пока ничего</>
                 }
             </>
         )

@@ -8,16 +8,26 @@ import ComputerDetails from '../ComputerDetails/ComputerDetails';
 import { TComputer } from '../../services/types/types';
 import { useAppDispatch } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
+
 type Props = {
     computer: TComputer,
-    index: number
+    index: number,
+    // position: { x: number, y: number },
 };
 
 const ConstructorItem: FC<Props> = ({ computer, index }) => {
+    // const ConstructorItem: FC<Props> = ({ computer, index, position }) => {
     const dispatch = useAppDispatch();
-    const [isLoading, ] = useState<boolean>(false);
+    const [isLoading,] = useState<boolean>(false);
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
+
+    const PLAY = "Play";
+    const PAUSE = "Pause";
+    const FINISH = "Finish";
+    const CONTINUE = "Continue";
+    const TECH_OFF = "TechOff";
+    const TECH_ON = "TechOn";
 
     const closeModal = () => {
         dispatch({ type: FETCH_COMPUTERS_REQUEST });
@@ -34,20 +44,27 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
 
     const handlePlayClick = () => {
         setModalOpen(true);
-        setStatement("Play");
+        setStatement(PLAY);
     }
     const handlePauseClick = () => {
         setModalOpen(true);
-        setStatement("Pause");
+        setStatement(PAUSE);
     }
     const handleFinishClick = () => {
         setModalOpen(true);
-        setStatement("Finish");
+        setStatement(FINISH);
     }
-
     const handleContinueClick = () => {
         setModalOpen(true);
-        setStatement("Continue");
+        setStatement(CONTINUE);
+    }
+    const handleTechOffClick = () => {
+        setModalOpen(true);
+        setStatement(TECH_OFF);
+    }
+    const handleTechOnClick = () => {
+        setModalOpen(true);
+        setStatement(TECH_ON);
     }
 
     const computerStatement = (item: any) => {
@@ -55,14 +72,12 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
             case "pause":
                 return (
                     <article className={`${styles.card} ${styles.articleOffline}`}>
-
-                        <div className={styles.cardHeader}>
+                        {/* <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>На паузе</span>
                             <span className={styles.headerIndexBox}>{index}</span>
                         </div>
 
                         <div className={styles.cardBody}>
-                            {/* Empty */}
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
@@ -70,61 +85,54 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
                                 <FontAwesomeIcon icon={faStopCircle} />
                                 Продолжить
                             </button>
-                        </div>
+                        </div> */}
                     </article>
                 )
             case "offline":
                 return (
                     <article className={`${styles.card} ${styles.articleOffline}`}>
-
-                        <div className={styles.cardHeader}>
+                        {/* <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>Выключен</span>
                             <span className={styles.headerIndexBox}>{index}</span>
                         </div>
 
                         <div className={styles.cardBody}>
-                            {/* Empty */}
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
 
-                        </div>
+                        </div> */}
                     </article>
                 )
             case "techWorks":
                 return (
                     <article className={`${styles.card} ${styles.articleTech}`}>
-
-                        <div className={styles.cardHeader}>
+                        {/* <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>Тех. неполадки</span>
                             <span className={styles.headerIndexBox}>{index}</span>
                         </div>
 
                         <div className={styles.cardBody}>
-                            {/* Empty */}
                             <p>{item.details.reason}</p>
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-                            <button className={styles.button}>
-                                {/* <button className={styles.button} onClick={handleSettingsClick}> */}
+                            <button className={styles.button} onClick={handleTechOffClick}>
                                 <FontAwesomeIcon icon={faStop} />
                                 Возобновить работу
                             </button>
-                        </div>
+                        </div> */}
                     </article>
                 )
             case "online":
                 return (
                     <article className={`${styles.card} ${styles.articleOnline}`}>
-
-                        <div className={styles.cardHeader}>
+                        {/* <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>Свободен</span>
                             <span className={styles.headerIndexBox}>{index}</span>
                         </div>
 
                         <div className={styles.cardBody}>
-                            {/* Empty */}
                         </div>
 
 
@@ -133,8 +141,7 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
                                 <FontAwesomeIcon icon={faPlayCircle} />
                                 Играть
                             </button>
-                        </div>
-
+                        </div> */}
                     </article>
                 )
             case "playing":
@@ -153,14 +160,12 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
 
                 return (
                     <article className={articleClassName}>
-
-                        <div className={styles.cardHeader}>
+                        {/* <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>Занят</span>
                             <span className={styles.headerIndexBox}>{index}</span>
                         </div>
 
                         <div className={styles.cardBody}>
-
                             <div>
                                 <p>
                                     Оплачено: <span className={styles.textBold}>{item.details?.price} руб.</span>
@@ -187,8 +192,7 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
                                 <FontAwesomeIcon icon={faUnlock} />
                                 Завершить
                             </button>
-                        </div>
-
+                        </div> */}
                     </article>
                 )
             default:
@@ -198,7 +202,7 @@ const ConstructorItem: FC<Props> = ({ computer, index }) => {
 
     return (
         <section>
-            {computerStatement(computer)}
+            {/* {computerStatement(computer)} */}
             {isLoading && (
                 <Modal onClose={closeModal}>
                     <div className={styles.modalContent}>

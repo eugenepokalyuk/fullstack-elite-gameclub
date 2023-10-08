@@ -1,0 +1,22 @@
+.square {
+    width: 50px;
+    height: 50px;
+    border: 2px dashed #ef7912;
+    border-radius: 16px;
+    user-select: none;
+}
+
+.squareOccupied {
+    width: 50px;
+    height: 50px;
+    background-color: hotpink;
+    border: 2px dashed #ef7912;
+    background: #ef7912;
+    border-radius: 16px;
+    user-select: none;
+}
+
+.square:hover {
+    background: #333;
+    cursor: pointer;
+}

@@ -74,6 +74,32 @@ export const fetchFinish = async (computer: TComputer, newPrice: number | undefi
     }
     return request(endpoint, options);
 }
+export const fetchTechOff = async (id: number) => {
+    const endpoint = routePlayground + `/techworks/stop?id=${id}`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+    }
+    return request(endpoint, options);
+}
+export const fetchTechOn = async (id: number, reason: string) => {
+    const endpoint = routePlayground + `/techworks/start`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+        body: JSON.stringify({
+            id: id,
+            reason: reason
+        })
+    }
+    return request(endpoint, options);
+}
 // fetchStoreData
 export const fetchStoreData = async () => {
     const endpoint = routeStore + "/items";

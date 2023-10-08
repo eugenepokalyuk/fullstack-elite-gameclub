@@ -13,3 +13,43 @@
     justify-content: center;
     gap: 8px 16px;
 }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    /* width: 100%; */
+    /* width: 800px; */
+    /* или указывайте желаемую ширину сетки */
+    /* height: 800px; */
+    /* или указывайте желаемую высоту сетки */
+
+    gap: 10px;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+    border: 2px dashed #ef7912;
+    border-radius: 16px;
+    user-select: none;
+}
+
+.squareOccupied {
+    width: 50px;
+    height: 50px;
+    background-color: hotpink;
+    border: 2px dashed #ef7912;
+    background: #ef7912;
+    border-radius: 16px;
+    user-select: none;
+}
+
+.square:hover {
+    background: #333;
+    cursor: pointer;
+}
+
+.occupied {
+    background: #ef7912;
+}
