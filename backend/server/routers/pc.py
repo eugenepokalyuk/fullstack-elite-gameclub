@@ -99,6 +99,19 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
         return JSONResponse(content='', status_code=400)
     
 
+@router.patch('/edit/name')
+def edit_pc_name(data: models.EditName):
+    """ 
+    Изменить имя девайса
+    """
+    try:
+        pc.set_pc_name(data.id, data.name)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content='', status_code=400)
+    
+
 @router.patch('/edit/grid')
 def set_grid_id_for_pc(data: models.GridId):
     """
@@ -106,6 +119,18 @@ def set_grid_id_for_pc(data: models.GridId):
     """
     try:
         pc.set_grid_id(data.id, data.grid_id)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content='', status_code=400)
+    
+@router.delete('/remove')
+def remove_device(id: int = Query(description="ID Удаляемого девайса")):
+    """
+    Удалить девайс
+    """
+    try:
+        pc.remove_pc(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
