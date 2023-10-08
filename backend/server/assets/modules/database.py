@@ -37,7 +37,7 @@ class SQLiteDB:
 
     def connect(self):
         try:
-            self.conn = sqlite3.connect(self.db_name)
+            self.conn = sqlite3.connect(self.db_name, timeout=10)
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
             raise e
