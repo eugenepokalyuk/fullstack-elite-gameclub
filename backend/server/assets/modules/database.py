@@ -7,7 +7,7 @@ db_path_store = "./data/store.db"
 
 class SQLiteDB:
     def __init__(self, db_type=None):
-
+        sqlite3.SQLITE_BUSY_TIMEOUT = 10
         if db_type == 'store':
             self.db_name = db_path_store
         if db_type == 'pc':
