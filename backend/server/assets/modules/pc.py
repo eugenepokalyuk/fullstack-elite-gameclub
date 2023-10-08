@@ -44,11 +44,12 @@ def get_pc_data():
 
 
 def play(time, price, pc_id):
+    print(time, price, pc_id)
     db = SQLiteDB('pc')
     status = get_status(pc_id)
     if status == 'online':
-        hours = time['hours']
-        minutes = time['minutes']
+        hours = time.hours
+        minutes = time.minutes
         now = datetime.now()
         start = now.strftime('%Y-%m-%d %H:%M')
         finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime('%Y-%m-%d %H:%M')

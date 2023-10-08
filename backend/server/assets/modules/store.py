@@ -58,21 +58,20 @@ def sell_products(items_array, payment_type):
     warehouse = {item['id']: {'qty': int(item['qty']), 'price': float(item['price'])} for item in products}
 
     for item in items_array:
-        i_id = item['id']
-        i_qty = int(item['qty'])
-        if i_id in warehouse and warehouse[i_id]['qty'] >= i_qty:
+        i_qty = int(item.qty)
+        if item.id in warehouse and warehouse[item.id]['qty'] >= i_qty:
             pass
         else:
             raise Exception("Not enough products")
 
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
     for item in items_array:
-        new_qty = int(warehouse[item['id']]['qty']) - int(item['qty'])
-        price = warehouse[item['id']]['price']
-        total_sum = int(item['qty']) * price
+        new_qty = int(warehouse[item.id]['qty']) - int(item.qty)
+        price = warehouse[item.id]['price']
+        total_sum = int(item.qty) * price
         db.execute_update_query('insert into sold (item_id, qty, total, payment, sell_date) values(?,?,?,?,?)', 
-                                [ item['id'], item['qty'], total_sum, payment_type, now ])
-        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item['id'] ])
+                                [ item.id, item.qty, total_sum, payment_type, now ])
+        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item.id ])
 
 
 # Поставка
@@ -82,10 +81,11 @@ def supply(items_array):
     warehouse = {item['id']: int(item['qty']) for item in products}
 
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
+    
     for item in items_array:
-        old_qty = warehouse[item['id']]
-        new_qty = old_qty + int(item['qty'])
+        old_qty = warehouse[item.id]
+        new_qty = old_qty + int(item.qty)
         db.execute_update_query('insert into supplies (item_id, qty, add_date) values(?,?,?)', 
-                                [ item['id'], item['qty'], now ])
-        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item['id'] ])
+                                [ item.id, item.qty, now ])
+        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item.id ])
         
