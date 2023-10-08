@@ -90,7 +90,7 @@ class SQLiteDB:
                                     "id"	INTEGER NOT NULL UNIQUE,\
                                     "name"	TEXT NOT NULL,\
 	                                "status"	TEXT NOT NULL,\
-	                                "grid_id"	TEXT NOT NULL UNIQUE,\
+	                                "grid_id"	INTEGER NOT NULL UNIQUE,\
                                     "ip"	TEXT,\
                                     "description"	TEXT,\
                                     PRIMARY KEY("id")\
