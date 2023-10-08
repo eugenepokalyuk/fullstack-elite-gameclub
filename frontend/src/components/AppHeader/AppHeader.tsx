@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './AppHeader.module.css';
 import image from '../../images/logo.jpeg'
 import { NavLink, useMatch } from 'react-router-dom';
-import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH } from '../../utils/routePath';
+import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH } from '../../utils/routePath';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,6 +10,7 @@ const AppHeader = () => {
     const homeRoute = useMatch(DEFAULT_PATH);
     const settingsRoute = useMatch(SETTINGS_PATH);
     const storeRoute = useMatch(STORE_PATH);
+    const warehouseRoute = useMatch(WAREHOUSE_PATH);
     const statRoute = useMatch(STAT_PATH);
 
     // const link = ({ isActive }: { isActive: boolean }) =>
@@ -32,6 +33,10 @@ const AppHeader = () => {
 
                     <NavLink to="/store" className={`${styles.link} ${storeRoute ? styles.linkActive : styles.link}`}>
                         Магазин
+                    </NavLink>
+
+                    <NavLink to="/warehouse" className={`${styles.link} ${warehouseRoute ? styles.linkActive : styles.link}`}>
+                        Склад
                     </NavLink>
 
                     <NavLink to="/stat" className={`${styles.link} ${statRoute ? styles.linkActive : styles.link}`}>

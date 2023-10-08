@@ -1,104 +1,54 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ConstructorItem.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlayCircle, faUnlock, faCancel, faCheck, faStop, faPause } from '@fortawesome/free-solid-svg-icons';
-
+import { faPlayCircle, faUnlock, faStopCircle, faStop, faPauseCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { fetchComputersData } from '../../utils/api';
+import Modal from '../Modal/Modal';
+import ComputerDetails from '../ComputerDetails/ComputerDetails';
+import { TComputer } from '../../services/types/types';
+import { useAppDispatch } from '../../services/hooks/hooks';
+import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
 type Props = {
-    item: {
-        _id: number,
-        name: string,
-        status: string,
-        details?: {
-            price: number,
-            time: {
-                from: {
-                    hours: number,
-                    minutes: number
-                },
-                until: {
-                    hours: number,
-                    minutes: number
-                }
-            },
-            reason: string
-        }
-    },
+    computer: TComputer,
     index: number
 };
 
-const ConstructorItem: FC<Props> = ({ item, index }) => {
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [hours, setHours] = useState<string>('');
-    const [minutes, setMinutes] = useState<string>('');
-    const [money, setMoney] = useState<string>('');
-    const [, setIsSettings] = useState<boolean>(false);
-    const [, setIsPausing] = useState<boolean>(false);
-    const [, setIsAccepteed] = useState<boolean>(false);
+const ConstructorItem: FC<Props> = ({ computer, index }) => {
+    const dispatch = useAppDispatch();
+    const [isLoading, ] = useState<boolean>(false);
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+    const [statement, setStatement] = useState<string>('');
 
-    const handleSettingsClick = () => {
-        setIsSettings(false);
-    }
-    const handleCancelClick = () => {
-        setIsEditing(false);
-    }
+    const closeModal = () => {
+        dispatch({ type: FETCH_COMPUTERS_REQUEST });
+
+        fetchComputersData()
+            .then(res => {
+                dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+            })
+            .catch(error => {
+                dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+            });
+        setModalOpen(false);
+    };
+
     const handlePlayClick = () => {
-        setIsEditing(true);
-        console.log('play');
-    }
-    const handleAcceptClick = (index: any) => {
-        setIsAccepteed(true);
-
-        let data = {
-            "id": index,
-            "price": money,
-            "time": {
-                hours,
-                minutes
-            }
-        }
+        setModalOpen(true);
+        setStatement("Play");
     }
     const handlePauseClick = () => {
-        setIsPausing(true);
+        setModalOpen(true);
+        setStatement("Pause");
+    }
+    const handleFinishClick = () => {
+        setModalOpen(true);
+        setStatement("Finish");
     }
 
-    // if (isEditing) {
-    //     return (
-    //         <article className={`${styles.card} ${styles.articleOnline}`}>
-
-    //             <div className={styles.cardHeader}>
-    //                 <span className={styles.headerStatementBox}>Бронирование</span>
-    //                 <span className={styles.headerIndexBox}>{index}</span>
-    //             </div>
-
-    //             <div className={styles.cardBody}>
-    //                 <div className={`${styles.flex} ${styles.flexColumn} ${styles.w100}`}>
-    //                     <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
-    //                         <input className={`${styles.editingInput} ${styles.w50} ${styles.mr1}`} type="text" value={hours} onChange={(event) => setHours(event.target.value)} placeholder='Час' />
-    //                         <input className={`${styles.editingInput} ${styles.w50}`} type="text" value={minutes} onChange={(event) => setMinutes(event.target.value)} placeholder='Минута' />
-    //                     </div>
-
-    //                     <div className={`${styles.flex} ${styles.flexRow} ${styles.flexCenter} ${styles.m1}`}>
-    //                         <input className={`${styles.editingInput} ${styles.mr1}`} type="text" value={money} onChange={(event) => setMoney(event.target.value)} placeholder='Деньги' maxLength={6} />
-    //                         руб.
-    //                     </div>
-    //                 </div>
-    //             </div>
-
-    //             <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-    //                 <button className={`${styles.button} ${styles.mr1}`} onClick={() => handleAcceptClick(index)}>
-    //                     <FontAwesomeIcon icon={faCheck} />
-    //                     Принять
-    //                 </button>
-
-    //                 <button className={`${styles.button}`} onClick={handleCancelClick}>
-    //                     <FontAwesomeIcon icon={faCancel} />
-    //                     Отменить
-    //                 </button>
-    //             </div>
-
-    //         </article>
-    //     )
-    // }
+    const handleContinueClick = () => {
+        setModalOpen(true);
+        setStatement("Continue");
+    }
 
     const computerStatement = (item: any) => {
         switch (item.status) {
@@ -116,7 +66,10 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-
+                            <button className={styles.button} onClick={handleContinueClick}>
+                                <FontAwesomeIcon icon={faStopCircle} />
+                                Продолжить
+                            </button>
                         </div>
                     </article>
                 )
@@ -153,7 +106,8 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
                         </div>
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
-                            <button className={styles.button} onClick={handleSettingsClick}>
+                            <button className={styles.button}>
+                                {/* <button className={styles.button} onClick={handleSettingsClick}> */}
                                 <FontAwesomeIcon icon={faStop} />
                                 Возобновить работу
                             </button>
@@ -184,8 +138,21 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
                     </article>
                 )
             case "playing":
+                const currentTime = new Date(); // получаем текущее время
+
+                const untilTime = new Date(); // создаем объект для времени из переменной
+                untilTime.setHours(item.details?.time.until.hours);
+                untilTime.setMinutes(item.details?.time.until.minutes);
+
+                const timeDifference = untilTime.getTime() - currentTime.getTime(); // разница в миллисекундах между текущим временем и временем до которого нужно подсчитывать
+
+                const timeThreshold = 5 * 60 * 1000; // пороговое значение в миллисекундах, например, 30 минут
+                const isApproaching = timeDifference <= timeThreshold; // флаг, указывающий, подходит ли время к текущему
+
+                const articleClassName = `${styles.card} ${styles.articleBooking} ${isApproaching ? styles.warningArticle : ''}`;
+
                 return (
-                    <article className={`${styles.card} ${styles.articleBooking}`}>
+                    <article className={articleClassName}>
 
                         <div className={styles.cardHeader}>
                             <span className={styles.headerStatementBox}>Занят</span>
@@ -212,11 +179,11 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
 
                         <div className={`${styles.cardFooter} ${styles.flex} ${styles.flexRow} ${styles.flexCenter}`}>
                             <button className={`${styles.button}`} onClick={handlePauseClick}>
-                                <FontAwesomeIcon icon={faPause} />
+                                <FontAwesomeIcon icon={faPauseCircle} />
                                 Пауза
                             </button>
 
-                            <button className={`${styles.button}`} onClick={handleAcceptClick}>
+                            <button className={`${styles.button}`} onClick={handleFinishClick}>
                                 <FontAwesomeIcon icon={faUnlock} />
                                 Завершить
                             </button>
@@ -230,9 +197,35 @@ const ConstructorItem: FC<Props> = ({ item, index }) => {
     }
 
     return (
-        <>
-            {computerStatement(item)}
-        </>
+        <section>
+            {computerStatement(computer)}
+            {isLoading && (
+                <Modal onClose={closeModal}>
+                    <div className={styles.modalContent}>
+                        <h1 className="text text_type_main-large mb-8">Оформляем заказ</h1>
+                        <p className="text text_type_main-medium text_color_inactive mb-8">
+                            Подождите пожалуйста, примерное время ожидание 15 сек.
+                        </p>
+                        <FontAwesomeIcon
+                            icon={faSpinner}
+                            spin
+                            size="5x"
+                            className={`${styles.faSpinner}`}
+                        />
+                    </div>
+                </Modal>
+            )}
+
+            {isModalOpen && (
+                <Modal onClose={closeModal} header={computer.name}>
+                    {computer ? (
+                        <ComputerDetails computer={computer} statement={statement} />
+                    ) : (
+                        <p className="text text_type_main-medium text_color_inactive">Ошибка при создании заказа. Попробуйте еще раз.</p>
+                    )}
+                </Modal>
+            )}
+        </section>
     )
 }
 

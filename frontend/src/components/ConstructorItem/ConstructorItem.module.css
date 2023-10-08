@@ -164,3 +164,25 @@
 .mr1 {
     margin-right: calc(1 * 4px);
 }
+
+.warningArticle {
+    animation: blinkAnimation 1s infinite;
+}
+
+@keyframes blinkAnimation {
+    0% {
+        background-color: #dc143c;
+    }
+
+    50% {
+        background-color: #a90d2c;
+    }
+
+    100% {
+        background-color: #dc143c;
+    }
+}
+
+.warningArticle:hover {
+    background: green;
+}

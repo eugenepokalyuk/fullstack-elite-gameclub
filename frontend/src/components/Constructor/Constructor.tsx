@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './Constructor.module.css';
 import ConstructorItem from '../ConstructorItem/ConstructorItem';
-import ConstructorPlayStation from '../ConstructorPlayStation/ConstructorPlayStation';
 import { useAppSelector } from '../../services/hooks/hooks';
-
+import { TComputer } from '../../services/types/types';
 const Constructor: FC = () => {
     const playground = useAppSelector(
         (store) => store.playground.computers
@@ -11,9 +10,9 @@ const Constructor: FC = () => {
 
     return (
         <article className={styles.section}>
-            {playground.length > 0 && playground.map((item: any, index: number) => {
+            {playground.length > 0 && playground.map((computer: TComputer, index: number) => {
                 return (
-                    <ConstructorItem item={item} index={index + 1} key={index} />
+                    <ConstructorItem computer={computer} index={index + 1} key={index} />
                 )
             })}
         </article>

@@ -1,0 +1,201 @@
+li {
+    list-style-type: none;
+}
+
+.cart {
+    width: 40%;
+    background: #333;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+}
+
+.cartBody {
+    height: 90%;
+}
+
+.cartFooter {
+    padding: 8px 0px;
+}
+
+.cartFooter .submitButton {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cartFooter .editButton {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    background: teal;
+}
+
+.cartFooter .editButton:disabled {
+    background-color: #1c1c21;
+    /* Ваш цвет отключенной кнопки */
+    cursor: not-allowed;
+}
+
+.cartFooter .deleteButton {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    background: crimson;
+}
+
+.cartFooter .deleteButton:disabled {
+    background-color: #1c1c21;
+    /* Ваш цвет отключенной кнопки */
+    cursor: not-allowed;
+}
+
+.cart li {
+    color: #ddd;
+}
+
+.card {
+    width: 60%;
+    background: #333;
+    color: #fff;
+    padding: 8px 0px;
+    border-radius: 8px;
+    height: 70vh;
+
+    overflow-y: scroll;
+}
+
+.cart h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.selectedRow {
+    background-color: #ef7912;
+    /* Ваш выбранный цвет фона */
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.storeContainer {
+    display: flex;
+    gap: 16px;
+}
+
+th,
+td {
+    padding: 8px;
+    /* border-bottom: 1px solid #ddd; */
+}
+
+th {
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 1px solid #ef7912;
+}
+
+button {
+    padding: 8px;
+    border-radius: 8px;
+    background-color: #ef7912;
+    /* Ваш цвет кнопки */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.textBlack {
+    color: #000;
+}
+
+button:disabled {
+    background-color: #1c1c21;
+    /* Ваш цвет отключенной кнопки */
+    cursor: not-allowed;
+}
+
+.ml2 {
+    margin-left: calc(2 * 4px);
+}
+
+.mb2 {
+    margin-bottom: calc(2 * 4px);
+}
+
+.mt2 {
+    margin-top: calc(2 * 4px);
+}
+
+.mt4 {
+    margin-top: calc(4 * 4px);
+}
+
+.mr4 {
+    margin-right: calc(4 * 4px);
+}
+
+.switcher {
+    display: flex;
+    align-items: center;
+    background: #ef7912;
+    border-radius: 8px;
+    gap: 16px;
+}
+
+.paymentButton {
+    background-color: transparent;
+    border: none;
+    padding: 5px;
+    /* margin-right: 10px; */
+    cursor: pointer;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.paymentButton:focus {
+    outline: none;
+}
+
+.paymentButton>svg {
+    font-size: 20px;
+}
+
+/*  */
+.activeButton {
+    color: #fff;
+    background: #b85c0c;
+}
+
+.nonActiveButton {
+    color: #b85c0c;
+}
+
+.activeButton>svg {
+    color: inherit;
+}
+
+.selectedOption {
+    font-weight: 900;
+    color: #ef7912;
+}

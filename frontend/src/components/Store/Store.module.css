@@ -13,17 +13,12 @@ li {
     flex-direction: column;
 }
 
-.cartHeader {
-    height: 10%;
-}
-
 .cartBody {
     height: 80%;
 }
 
 .cartFooter {
     padding: 8px 0px;
-    height: 20%;
 }
 
 .cartFooter .submitButton {
@@ -44,6 +39,9 @@ li {
     color: #fff;
     padding: 8px 0px;
     border-radius: 8px;
+    height: 70vh;
+
+    overflow-y: scroll;
 }
 
 .cart h2 {
@@ -153,4 +151,24 @@ button:disabled {
 
 .activeButton>svg {
     color: inherit;
+}
+
+.symbolsCircle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 25px;
+    height: 25px;
+    margin: 8px;
+    padding: 8px;
+
+    font-size: 24px;
+}
+
+.cartRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }

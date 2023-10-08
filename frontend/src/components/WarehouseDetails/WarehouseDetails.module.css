@@ -1,0 +1,86 @@
+/* ef7912 */
+.textShadows {
+    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cardList {
+    margin: 16px 0px;
+}
+
+.listItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+}
+
+.listItem .listText {
+    margin-right: 8px;
+}
+
+.listItem .listInput {
+    cursor: text;
+    border: 1px solid #ef7912;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.listItem .listInput:disabled {
+    color: #ef7912;
+    cursor: not-allowed;
+}
+
+.listItem .listInputSubmit {
+    width: 100%;
+}
+
+.mr1 {
+    margin-right: calc(1 * 4px);
+}
+
+.mt4 {
+    margin-top: calc(4 * 4px);
+}
+
+.symbolsCircle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 25px;
+    height: 25px;
+    margin: 8px;
+    padding: 8px;
+
+    font-size: 24px;
+}
+
+.alignLeft {
+    justify-content: flex-start;
+}
+.alignRight {
+    justify-content: flex-end;
+}
+
+.cardScroll {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.ml2 {
+    margin-left: calc(2 * 4px);
+}
+
+.flexBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

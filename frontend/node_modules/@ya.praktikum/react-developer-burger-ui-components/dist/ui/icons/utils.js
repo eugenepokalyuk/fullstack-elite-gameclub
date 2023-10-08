@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.getIconColor=void 0;var getIconColor=function getIconColor(type){return"".concat(type==='secondary'?'#8585AD':type==='error'?'#E52B1A':type==='success'?'#00CCCC':'#F2F2F3');};exports.getIconColor=getIconColor;

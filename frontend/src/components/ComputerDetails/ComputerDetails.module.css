@@ -1,0 +1,41 @@
+/* ef7912 */
+.textShadows {
+    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cardList {
+    margin: 16px 0px;
+}
+
+.listItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+}
+
+.listItem .listText {
+    margin-right: 8px;
+}
+
+.listItem .listInput {
+    cursor: text;
+    border: 1px solid #ef7912;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.listItem .listInputSubmit {
+    width: 100%;
+}
+
+.mr1 {
+    margin-right: calc(1 * 4px);
+}
