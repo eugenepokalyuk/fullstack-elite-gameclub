@@ -239,7 +239,7 @@ export const fetchComputerGridReplace = async (id: number | undefined, gridId: a
     } catch (error) {
     }
 }
-export const fetchStatPC = async (from: string, until: string) => {
+export const fetchComputerStatData = async (from: string, until: string) => {
     const endpoint = routeStat + `/pc`;
     const options = {
         method: "POST",
@@ -254,7 +254,7 @@ export const fetchStatPC = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
-export const fetchStatStore = async (from: string, until: string) => {
+export const fetchStoreStatData = async (from: string, until: string) => {
     const endpoint = routeStat + `/store`;
     const options = {
         method: "POST",
@@ -269,17 +269,6 @@ export const fetchStatStore = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
-export const fetchSettings = async (computer: TComputer) => {
-    const endpoint = routePlayground + `/`;
-    const options = {
-        method: "PATCH",
-        headers: {
-            'Content-Type': 'application/json',
-            auth: 123
-        },
-    }
-    return request(endpoint, options);
-}
 export const fetchRemoveComputer = async (computer: TComputer) => {
     const endpoint = routePlayground + `/remove?id=${computer.id}`;
     const options = {
@@ -288,6 +277,21 @@ export const fetchRemoveComputer = async (computer: TComputer) => {
             'Content-Type': 'application/json',
             auth: 123
         },
+    }
+    return request(endpoint, options);
+}
+export const fetchEditComputerName = async (computer: TComputer, name: string) => {
+    const endpoint = routePlayground + `/edit/name`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+        body: JSON.stringify({
+            id: computer.id,
+            name: name
+        })
     }
     return request(endpoint, options);
 }
