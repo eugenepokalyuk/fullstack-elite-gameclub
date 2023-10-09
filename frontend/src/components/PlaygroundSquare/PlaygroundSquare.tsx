@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { SquareProps, TComputer } from "../../services/types/types";
 import styles from './PlaygroundSquare.module.css';
+import { SquareProps, TComputer } from "../../services/types/types";
 import { useAppDispatch } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from "../../services/actions/computers";
 import { fetchComputersData } from "../../utils/api";
