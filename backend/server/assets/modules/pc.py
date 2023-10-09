@@ -20,6 +20,7 @@ def get_pc_data():
             start = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
             finish = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
             cur_pc['details'] = {
+                'payment': order['payment'],
                 'price': order['price'],
                 'time': {
                     'from': {
@@ -43,8 +44,7 @@ def get_pc_data():
     return reponseArray
 
 
-def play(time, price, pc_id):
-    print(time, price, pc_id)
+def play(time, price, pc_id, payment_type):
     db = SQLiteDB('pc')
     status = get_status(pc_id)
     if status == 'online':
@@ -53,7 +53,7 @@ def play(time, price, pc_id):
         now = datetime.now()
         start = now.strftime('%Y-%m-%d %H:%M')
         finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime('%Y-%m-%d %H:%M')
-        db.execute_update_query('insert into orders(pc_id,start,finish,price) values(?,?,?,?)', [ pc_id, start, finish, price ])
+        db.execute_update_query('insert into orders(pc_id,start,finish,price,payment) values(?,?,?,?,?)', [ pc_id, start, finish, price, payment_type ])
         db.execute_update_query("update pcs set status='playing' where id=?", [ pc_id ])
     else:
         raise Exception("PC Status is not online")

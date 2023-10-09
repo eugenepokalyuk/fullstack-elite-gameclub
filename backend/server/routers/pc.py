@@ -27,7 +27,7 @@ def play(data: models.Play):
     Начать игровое время компьютера
     """
     try:
-        pc.play(data.time, data.price, data.id)
+        pc.play(data.time, data.price, data.id, data.payment)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)

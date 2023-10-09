@@ -7,7 +7,7 @@ from assets.models import stat as model
 router = APIRouter()
 
 
-@router.post('/pc')
+@router.post('/pc', response_model=list[model.GamingStatItem])
 def get_pc_stat(data: model.Stat):
     try:
         resp_data = stat.get_pc_stat(data.From, data.Until)
@@ -17,7 +17,7 @@ def get_pc_stat(data: model.Stat):
         return JSONResponse(content='', status_code=400)
 
 
-@router.post('/store')
+@router.post('/store', response_model=list[model.StoreStatItem])
 def get_store_stat(data: model.Stat):
     try:
         resp_data = stat.get_store_stat(data.From, data.Until)
