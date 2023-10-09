@@ -4,8 +4,7 @@ from routers import pc
 from routers import store
 from routers import stat
 from fastapi.middleware.cors import CORSMiddleware
-# from fastapi_sqlalchemy import DBSessionMiddleware, db
-# import assets.database.database as test_db
+
 
 app = FastAPI()
 
@@ -18,7 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# app.add_middleware(DBSessionMiddleware, db_url=test_db.DATABASE_DEVICES, database_name="device")
 
 
 app.include_router(pc.router, prefix="/pc", tags=["Computers"])
