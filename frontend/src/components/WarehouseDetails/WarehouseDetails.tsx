@@ -10,7 +10,6 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const [itemId, setItemId] = useState<number>();
     const [itemNewName, setItemNewName] = useState<string>('');
     const [itemNewPrice, setItemNewPrice] = useState<number>();
-    const [loading, isLoading] = useState<boolean>(false);
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
@@ -196,42 +195,36 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             case "editItem":
                 return (
                     <>
-                        {!loading
-                            ? <>
-                                <ul className={`${styles.cardList} ${styles.cardScroll}`}>
+                        <ul className={`${styles.cardList} ${styles.cardScroll}`}>
 
-                                    <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
-                                        <p>Старое название</p>
-                                        <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemName} disabled />
-                                    </li>
+                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                                <p>Старое название</p>
+                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemName} disabled />
+                            </li>
 
-                                    <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
-                                        <p>Новое название</p>
-                                        <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewName} onChange={(event) => setItemNewName(event.target.value)} placeholder='Новое название' />
-                                    </li>
+                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                                <p>Новое название</p>
+                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewName} onChange={(event) => setItemNewName(event.target.value)} placeholder='Новое название' />
+                            </li>
 
-                                    <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft} ${styles.mt4}`}>
-                                        <p>Старая цена</p>
-                                        <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemPrice} disabled />
-                                    </li>
+                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft} ${styles.mt4}`}>
+                                <p>Старая цена</p>
+                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemPrice} disabled />
+                            </li>
 
-                                    <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
-                                        <p>Новая цена</p>
-                                        <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewPrice} onChange={(event) => setItemNewPrice(Number(event.target.value))} placeholder='Стоимость товара' />
-                                    </li>
+                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                                <p>Новая цена</p>
+                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewPrice} onChange={(event) => setItemNewPrice(Number(event.target.value))} placeholder='Стоимость товара' />
+                            </li>
 
-                                </ul>
-                                <div className={`${styles.mt4}`}>
-                                    <p>Если не нужно менять один из параметров, оставь поле пустым</p>
-                                </div>
+                        </ul>
+                        <div className={`${styles.mt4}`}>
+                            <p>Если не нужно менять один из параметров, оставь поле пустым</p>
+                        </div>
 
-                                <div className={`${styles.mt4}`}>
-                                    <button className={styles.listInputSubmit} onClick={handleEditItem}>Подтвердить изменение</button>
-                                </div>
-                            </>
-                            : <>
-                                Подождите идет загрузка!
-                            </>}
+                        <div className={`${styles.mt4}`}>
+                            <button className={styles.listInputSubmit} onClick={handleEditItem}>Подтвердить изменение</button>
+                        </div>
                     </>
                 )
             case "hideItem":
