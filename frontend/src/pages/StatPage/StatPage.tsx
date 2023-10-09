@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import styles from "./StatPage.module.css";
 import { fetchStatPC, fetchStatStore } from "../../utils/api";
 
