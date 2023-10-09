@@ -66,7 +66,7 @@ def finish(data: models.Finish):
     Закончить игровое время
     """
     try:
-        pc.finish(data.id, data.price)
+        pc.finish(data.id, data.price, data.payment)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
