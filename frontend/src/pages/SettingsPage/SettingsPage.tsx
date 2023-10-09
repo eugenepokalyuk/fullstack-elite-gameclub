@@ -1,3 +1,4 @@
+import ComputerList from "../../components/ComputerList/ComputerList";
 import styles from "./SettingsPage.module.css";
 
 export const SettingsPage = () => (
@@ -5,7 +6,8 @@ export const SettingsPage = () => (
         <h1>Настройки</h1>
 
         <article>
-            <p>Тут можно будет что-то изменить</p>
+            <h3>Список ваших устройств:</h3>
+            <ComputerList />
         </article>
     </section>
 );
