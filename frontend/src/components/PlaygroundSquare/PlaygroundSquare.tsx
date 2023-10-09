@@ -56,6 +56,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                     setStatement(COMPUTER_STATUS_TECH_OFF);
                     break;
                 default:
+                    setModalOpen(true);
                     setStatement(COMPUTER_STATUS_INFO);
                     break;
             }
