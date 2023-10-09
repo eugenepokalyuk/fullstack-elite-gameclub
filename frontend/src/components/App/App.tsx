@@ -33,9 +33,11 @@ const App = () => {
 
     fetchComputersData()
       .then(res => {
+        isLoading(true);
         dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
       })
       .catch(error => {
+        isLoading(false);
         dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
       });
   }, [dispatch]);
@@ -46,9 +48,11 @@ const App = () => {
 
     fetchStoreData()
       .then(res => {
+        isLoading(true);
         dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
       })
       .catch(error => {
+        isLoading(false);
         dispatch({ type: FETCH_STORE_FAILURE, payload: error });
       });
   }, [dispatch]);
