@@ -1,6 +1,7 @@
 import { TComputer, TPlayBody } from "../services/types/types";
 
-const ApiUrlPath = 'http://localhost:8000';
+const ApiUrlPath = 'http://172.20.10.4:80';
+// const ApiUrlPath = 'http://localhost:8000';
 const routeStore = "/store";
 const routePlayground = "/pc";
 const routeStat = "/stat";
@@ -58,7 +59,7 @@ export const fetchContinue = async (id: number) => {
     }
     return request(endpoint, options);
 }
-export const fetchFinish = async (computer: TComputer, newPrice: number | undefined) => {
+export const fetchFinish = async (computer: TComputer, newPrice: number | undefined, paymentType: string) => {
     const endpoint = routePlayground + "/finish";
     const options = {
         method: "PATCH",
@@ -68,7 +69,8 @@ export const fetchFinish = async (computer: TComputer, newPrice: number | undefi
         },
         body: newPrice ? JSON.stringify({
             id: computer.id,
-            price: (newPrice)
+            price: (newPrice),
+            payment: paymentType
         }) : JSON.stringify({
             id: computer.id,
         })
@@ -150,15 +152,17 @@ export const fetchWarehouseAddSupply = async (selectedItems: any) => {
     return request(endpoint, options);
 }
 export const fetchWarehouseItem = async (id: any) => {
-    const endpoint = routeStore + `/info?id=${id}`;
-    const options = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            auth: 123
-        },
+    if (id > 0) {
+        const endpoint = routeStore + `/info?id=${id}`;
+        const options = {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                auth: 123
+            },
+        }
+        return request(endpoint, options);
     }
-    return request(endpoint, options);
 }
 export const fetchWarehouseEditItemName = async (id: number | undefined, name: string) => {
     const endpoint = routeStore + `/item/edit/name`;
@@ -262,6 +266,28 @@ export const fetchStatStore = async (from: string, until: string) => {
             From: from,
             Until: until
         })
+    }
+    return request(endpoint, options);
+}
+export const fetchSettings = async (computer: TComputer) => {
+    const endpoint = routePlayground + `/`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+    }
+    return request(endpoint, options);
+}
+export const fetchRemoveComputer = async (computer: TComputer) => {
+    const endpoint = routePlayground + `/remove?id=${computer.id}`;
+    const options = {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
     }
     return request(endpoint, options);
 }
