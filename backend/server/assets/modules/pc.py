@@ -112,7 +112,7 @@ def finish(pc_id, price=None, payment=None):
 
 def start_tech_works(pc_id, reason):
     db = SQLiteDB('pc')
-    db.execute_update_query('update pcs set status=?, reason=? where id=?', [ 'techWorks', reason, pc_id ])
+    db.execute_update_query('update pcs set status=?, description=? where id=?', [ 'techWorks', reason, pc_id ])
 
 
 def stop_tech_works(pc_id):

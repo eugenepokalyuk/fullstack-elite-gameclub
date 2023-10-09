@@ -9,6 +9,8 @@
 *.db
 .db
 __pycache__
+test.py
+.pytest_cache
 
 # testing
 /coverage
