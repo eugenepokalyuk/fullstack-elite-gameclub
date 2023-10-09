@@ -112,6 +112,7 @@ def sell_items(data: models.SellProducts):
         return JSONResponse(content='', status_code=400)
 
 
+
 @router.put('/supply')
 def supply(data: models.SupplyProducts):
     """

@@ -7,7 +7,9 @@ db_path_store = "./data/store.db"
 
 class SQLiteDB:
     def __init__(self, db_type=None):
-        sqlite3.SQLITE_BUSY_TIMEOUT = 10
+        
+        self.conn = None
+
         if db_type == 'store':
             self.db_name = db_path_store
         if db_type == 'pc':
@@ -15,29 +17,19 @@ class SQLiteDB:
         if db_type is None:
             raise Exception("Unknown database")
         
-
-        self.conn = None
-
-        # check dir exists
-        if not os.path.exists('./data'):
-            os.mkdir('./data')
-
-        for path in [db_path_pc, db_path_store]:
-            # check file exists
-            if not os.path.exists(path):
-                # create if not exists
-                with open(path, 'x'): pass
+        self.init_files()
 
         self.connect()  # Automatically connect to the database upon object creation.
 
-        if db_type == 'store':
-            self.init_tables_store()
         if db_type == 'pc':
             self.init_tables_pc()
+        if db_type == 'store':
+            self.init_tables_store()
+
 
     def connect(self):
         try:
-            self.conn = sqlite3.connect(self.db_name, timeout=10)
+            self.conn = sqlite3.connect(self.db_name)
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
             raise e
@@ -80,12 +72,9 @@ class SQLiteDB:
         except sqlite3.Error as e:
             print(f"Error executing query: {e}")
             raise e
-        # finally:
-        #     self.close()
 
 
     def init_tables_pc(self):
-
         self.execute_update_query('CREATE TABLE IF NOT EXISTS "pcs" (\
                                     "id"	INTEGER NOT NULL UNIQUE,\
                                     "name"	TEXT NOT NULL,\
@@ -103,6 +92,7 @@ class SQLiteDB:
                                     "pause"	TEXT,\
                                     "finish"	TEXT,\
                                     "price"	NUMERIC,\
+                                    "payment"	TEXT,\
                                     PRIMARY KEY("id" AUTOINCREMENT)\
                                 );')
         
@@ -113,7 +103,6 @@ class SQLiteDB:
 
 
     def init_tables_store(self):
-
         self.execute_update_query('CREATE TABLE IF NOT EXISTS "storefront" (\
                                     "id"	INTEGER UNIQUE,\
                                     "name"	TEXT,\
@@ -126,7 +115,7 @@ class SQLiteDB:
         self.execute_update_query('CREATE TABLE IF NOT EXISTS "sold" (\
                                     "id"	INTEGER,\
                                     "item_id"	INTEGER,\
-                                    "qty"	TEXT,\
+                                    "qty"	INTEGER,\
                                     "total"	NUMERIC,\
                                     "payment"	TEXT,\
                                     "sell_date"	TEXT,\
@@ -142,6 +131,11 @@ class SQLiteDB:
                                 );')
         
 
-    def close(self):
-        if self.conn:
-            self.conn.close()
+    def init_files(self):
+        # check dir exists
+        if not os.path.exists('./data'):
+            os.mkdir('./data')
+
+        if not os.path.exists(self.db_name):
+            with open(self.db_name, "w") as f:
+                f.close()
