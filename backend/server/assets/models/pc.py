@@ -34,7 +34,13 @@ class Play(BaseModel):
 class Finish(BaseModel):
     id: int = Field(description="ID девайса")
     price: float = Field(None, description="Новая цена, если она отличается от старой")
+    payment: str = Field(None, description="Оплата, если изменился метод оплаты")
 
+    @validator("payment")
+    def validate_payment_type(cls, value):
+        if value not in {"cash", "card"}:
+            raise ValueError("Payment type must be 'cash' or 'card'")
+        return value
 
 class DetailsTime(BaseModel):
     From: Time = Field(description="Время начала оказания услуги")

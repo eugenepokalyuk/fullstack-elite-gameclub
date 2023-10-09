@@ -94,14 +94,18 @@ def continue_play(pc_id):
         raise Exception("PC is not in playing status")
 
 
-def finish(pc_id, price=None):
+def finish(pc_id, price=None, payment=None):
     db = SQLiteDB('pc')
     status = get_status(pc_id)
     if status == 'playing':
         db.execute_update_query("update pcs set status='online' where id=?", [ pc_id ])
-        if price != None:
+
+        if price != None or payment != None:
             session_id = db.execute_select_query('select id from orders where pc_id=? order by id DESC limit 1', [ pc_id ])[0]['id']
-            db.execute_update_query('update orders set price=? where id=?', [ price, session_id ])
+            if price != None:
+                db.execute_update_query('update orders set price=? where id=?', [ price, session_id ])
+            if payment != None:
+                db.execute_update_query('update orders set payment=? where id=?', [ payment, session_id ])
     else:
         raise Exception("PC Status is not playing")
     
