@@ -5,6 +5,7 @@ export type TComputer = {
     grid_id: number,
     details?: {
         price: number,
+        payment: string,
         time: {
             from: {
                 hours: number,
