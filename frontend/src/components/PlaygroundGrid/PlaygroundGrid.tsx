@@ -30,8 +30,7 @@ const PlaygroundGrid: FC = () => {
     }, [dispatch])
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-        if (id)
-            setDragStart(id);
+        Number(e.dataTransfer.setData('text/plain', id.toString())); // Устанавливаем данные перетаскивания
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -40,9 +39,10 @@ const PlaygroundGrid: FC = () => {
 
     const handleDrop = async (e: React.DragEvent<HTMLDivElement>, id: number) => {
         e.preventDefault();
+        const sourceId = Number(e.dataTransfer.getData('text/plain')); // Получаем данные перетаскивания
 
-        if (id) {
-            await fetchComputerGridReplace(dragStart, id);
+        if (sourceId) {
+            await fetchComputerGridReplace(sourceId, id);
 
             dispatch({ type: FETCH_COMPUTERS_REQUEST });
             fetchComputersData()
@@ -55,23 +55,19 @@ const PlaygroundGrid: FC = () => {
         }
     };
 
-    const renderSquares = () => {
-        return squares.map((square) => (
-            <PlaygroundSquare
-                key={square.id}
-                id={square.id}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                playground={playground}
-            />
-        ));
-    };
-
     return (
         <article className={styles.article}>
             <div className={styles.grid}>
-                {renderSquares()}
+                {squares.map((square) => (
+                    <PlaygroundSquare
+                        key={square.id}
+                        id={square.id}
+                        onDragStart={handleDragStart}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                        playground={playground}
+                    />
+                ))}
             </div>
         </article>
     );
