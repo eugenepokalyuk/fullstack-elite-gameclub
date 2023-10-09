@@ -29,7 +29,7 @@ class SQLiteDB:
 
     def connect(self):
         try:
-            self.conn = sqlite3.connect(self.db_name)
+            self.conn = sqlite3.connect(self.db_name, timeout=10)
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
             raise e
@@ -55,6 +55,7 @@ class SQLiteDB:
                 for i, value in enumerate(row):
                     row_dict[column_names[i]] = value
                 result.append(row_dict)
+            cursor.close()
             return result  # Return the list of dictionaries
         except sqlite3.Error as e:
             print(f"Error executing query: {e}")
@@ -69,6 +70,7 @@ class SQLiteDB:
             else:
                 cursor.execute(query)
             self.conn.commit()  # Commit changes for update/insert operations
+            cursor.close()
         except sqlite3.Error as e:
             print(f"Error executing query: {e}")
             raise e
