@@ -5,6 +5,11 @@ import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPla
 import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { useAppSelector } from '../../services/hooks/hooks';
+import Modal from '../Modal/Modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [name, setName] = useState<string>('');
     const [price, setPrice] = useState<number>(0);
@@ -15,6 +20,13 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
     const paymentType = useAppSelector((store) => store.payment.paymentType)
+
+    const navigate = useNavigate();
+    const [loading, isLoading] = useState<boolean>(false);
+
+    const closeModal = () => {
+        navigate(-1);
+    };
 
     const handleAcceptClick = (computer: TComputer) => {
         let computerData = {
@@ -27,8 +39,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             "payment": paymentType
         }
 
+        isLoading(true);
         fetchPlay(computerData)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Бронирование завершено");
             })
@@ -38,8 +52,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     }
 
     const handleFinishClick = (computer: TComputer) => {
+        isLoading(true);
         fetchFinish(computer, newPrice, paymentType)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Сеанс завершен");
             })
@@ -49,8 +65,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     }
 
     const handlePauseClick = (computer: TComputer) => {
+        isLoading(true);
         fetchPause(computer.id)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Сеанс на паузе");
             })
@@ -60,8 +78,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     }
 
     const handleContinueClick = (computer: TComputer) => {
+        isLoading(true);
         fetchContinue(computer.id)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Сеанс снят с паузы");
             })
@@ -70,30 +90,11 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
-    // const handleTechOffClick = (computer: TComputer) => {
-    //     fetchTechOff(computer.id)
-    //         .then(res => {
-    //             setFinish(true);
-    //             setFinishDescription("ПК снят с тех. обслуживания");
-    //         })
-    //         .catch(error => {
-    //             setError(true)
-    //         });
-    // }
-    // const handleTechOnClick = (computer: TComputer, reason: string) => {
-    //     fetchTechOn(computer.id, reason)
-    //         .then(res => {
-    //             setFinish(true);
-    //             setFinishDescription("ПК отправлен на тех. обслуживание");
-    //         })
-    //         .catch(error => {
-    //             setError(true)
-    //         });
-    // }
-
     const handleRemoveComputerClick = (computer: TComputer) => {
+        isLoading(true);
         fetchRemoveComputer(computer)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Данное устройство успешно удалено");
             })
@@ -103,8 +104,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     }
 
     const handleEditComputerNameClick = (computer: TComputer) => {
+        isLoading(true);
         fetchEditComputerName(computer, name)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription("Данное устройство успешно переименовано");
             })
@@ -295,7 +298,25 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     return (
         <article>
             <div className={styles.card}>
-                {detailsBody()}
+                {!loading
+                    ? detailsBody()
+                    : <Modal onClose={closeModal} header="Загрузка данных">
+                        <div className="mb-4 mt-4">
+                        </div>
+                        <div>
+                            <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
+                                Пожалуйста подождите
+                            </p>
+                            <div className={`${styles.flex} text_color_inactive`}>
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    spin
+                                    size="5x"
+                                    className={`${styles.faSpinner}`}
+                                />
+                            </div>
+                        </div>
+                    </Modal>}
             </div>
         </article>
     );

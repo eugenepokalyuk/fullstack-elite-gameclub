@@ -3,6 +3,10 @@ import styles from './WarehouseDetails.module.css';
 import { useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem, WarehouseDetailsProps } from '../../services/types/types';
 import { fetchWarehouseAddItem, fetchWarehouseAddSupply, fetchWarehouseEditItemName, fetchWarehouseEditItemPrice, fetchWarehouseHideItem, fetchWarehouseItem, fetchWarehouseShowItem } from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
+import Modal from '../Modal/Modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const [itemName, setItemName] = useState<string>('');
@@ -16,10 +20,18 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const storeItems = useAppSelector((store) => store.store.items);
     const warehouseSelectedItem = useAppSelector((store) => store.warehouse.item);
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
+    const navigate = useNavigate();
+    const [loading, isLoading] = useState<boolean>(false);
+
+    const closeModal = () => {
+        navigate(-1);
+    };
 
     useEffect(() => {
+        isLoading(true);
         fetchWarehouseItem(warehouseSelectedItem)
             .then(res => {
+                isLoading(false);
                 const { id, name, price } = res;
                 setItemId(id);
                 setItemName(name);
@@ -31,8 +43,10 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     }, [])
 
     const handleAddItem = () => {
+        isLoading(true);
         fetchWarehouseAddItem(itemName, itemPrice)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription(`Товар "${itemName}" по цене ${itemPrice} руб. успешно добавлен на склад`);
             })
@@ -48,9 +62,10 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 selectedItems.push({ id: Number(itemId), qty: itemCounts[itemId] });
             }
         }
-
+        isLoading(true);
         fetchWarehouseAddSupply(selectedItems)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription(`Приход товаров успешно добавлен`);
             })
@@ -79,8 +94,11 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
 
     const handleEditItem = () => {
         if (itemNewName) {
+            isLoading(true);
+
             fetchWarehouseEditItemName(itemId, itemNewName)
                 .then(res => {
+                    isLoading(false);
                     setFinish(true);
                     setFinishDescription(`Название товара успешно изменено`);
                 })
@@ -89,8 +107,11 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 });
         }
         if (itemNewPrice) {
+            isLoading(true);
+
             fetchWarehouseEditItemPrice(itemId, itemNewPrice)
                 .then(res => {
+                    isLoading(false);
                     setFinish(true);
                     setFinishDescription(`Стоимость товара успешно изменена`);
                 })
@@ -101,8 +122,10 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     }
 
     const handleHideItem = () => {
+        isLoading(true);
         fetchWarehouseHideItem(itemId)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription(`Товар успешно удален`);
             })
@@ -111,8 +134,10 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
             });
     }
     const handleShowItem = () => {
+        isLoading(true);
         fetchWarehouseShowItem(itemId)
             .then(res => {
+                isLoading(false);
                 setFinish(true);
                 setFinishDescription(`Товар успешно восстановлен`);
             })
@@ -250,9 +275,29 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
 
     return (
         <article>
-            <div className={styles.card}>
-                {detailsBody()}
-            </div>
+            {!loading
+                ? <div className={styles.card}>
+                    {detailsBody()}
+                </div>
+                :
+                <Modal onClose={closeModal} header="Загрузка данных">
+                    <div className="mb-4 mt-4">
+                    </div>
+                    <div>
+                        <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
+                            Пожалуйста подождите
+                        </p>
+                        <div className={`${styles.flex} text_color_inactive`}>
+                            <FontAwesomeIcon
+                                icon={faSpinner}
+                                spin
+                                size="5x"
+                                className={`${styles.faSpinner}`}
+                            />
+                        </div>
+                    </div>
+                </Modal>
+            }
         </article>
     );
 }
