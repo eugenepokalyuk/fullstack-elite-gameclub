@@ -1,6 +1,3 @@
-// import { fetchWarehouseData } from "../../utils/api";
-import { useAppDispatch } from "../hooks/hooks";
-
 export const SELECT_WAREHOUSE_REQUEST: "SELECT_WAREHOUSE_REQUEST" =
     "SELECT_WAREHOUSE_REQUEST";
 export const SELECT_WAREHOUSE_SUCCESS: "SELECT_WAREHOUSE_SUCCESS" =
