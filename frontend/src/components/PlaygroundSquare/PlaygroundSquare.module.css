@@ -70,15 +70,15 @@
 }
 
 .bgPause {
-    background: #ffff00;
-    border-color: #ffff00;
-    color: #333;
+    background: #008080;
+    border-color: #008080;
+    color: #fff;
 }
 
 .bgPause:hover {
-    background: #ffff0080;
-    border-color: #ffff0080;
-    color: #333;
+    background: #00808080;
+    border-color: #00808080;
+    color: #fff;
 }
 
 .bgFree {
