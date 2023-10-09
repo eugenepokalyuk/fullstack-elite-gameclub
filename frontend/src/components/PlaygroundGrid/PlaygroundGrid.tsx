@@ -10,7 +10,6 @@ const PlaygroundGrid: FC = () => {
     const playground = useAppSelector((store) => store.playground.computers);
     const gridSize = 200;
     const [squares, setSquares] = useState<{ id: number }[]>([]);
-    const [dragStart, setDragStart] = useState<number>();
 
     useEffect(() => {
         const initialSquares = Array.from({ length: gridSize }, (_, index) => {
