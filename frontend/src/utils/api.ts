@@ -1,7 +1,7 @@
 import { TComputer, TPlayBody } from "../services/types/types";
 
-const ApiUrlPath = 'http://172.20.10.4:80';
-// const ApiUrlPath = 'http://localhost:8000';
+// const ApiUrlPath = 'http://172.20.10.4:80';
+const ApiUrlPath = 'http://localhost:8000';
 const routeStore = "/store";
 const routePlayground = "/pc";
 const routeStat = "/stat";
@@ -220,24 +220,19 @@ export const fetchWarehouseShowItem = async (id: number | undefined) => {
     return request(endpoint, options);
 }
 export const fetchComputerGridReplace = async (id: number | undefined, gridId: any) => {
-    try {
-        if (id && gridId) {
-            const endpoint = routePlayground + `/edit/grid`;
-            const options = {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json',
-                    auth: 123
-                },
-                body: JSON.stringify({
-                    id: id,
-                    grid_id: gridId
-                })
-            }
-            return request(endpoint, options);
-        }
-    } catch (error) {
+    const endpoint = routePlayground + `/edit/grid`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            auth: 123
+        },
+        body: JSON.stringify({
+            id: id,
+            grid_id: gridId
+        })
     }
+    return request(endpoint, options);
 }
 export const fetchComputerStatData = async (from: string, until: string) => {
     const endpoint = routeStat + `/pc`;
