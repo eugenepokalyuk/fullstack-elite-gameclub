@@ -11,12 +11,14 @@ export const COMPUTER_STATUS_CONTINUE = "Continue";
 export const COMPUTER_STATUS_TECH_ON = "TechOn";
 export const COMPUTER_STATUS_TECH_OFF = "TechOff";
 export const COMPUTER_STATUS_INFO = "Info";
+export const COMPUTER_STATUS_SETTINGS = "Settings";
 
 export const COMPUTER_STATUS_ONLINE = "online";
 export const COMPUTER_STATUS_OFFLINE = "offline";
 export const COMPUTER_STATUS_TECH = "techWorks";
 export const COMPUTER_STATUS_PLAYING = "playing";
 export const COMPUTER_STATUS_PAUSE = "pause";
+
 
 export const CARD = "card";
 export const CASH = "cash";
