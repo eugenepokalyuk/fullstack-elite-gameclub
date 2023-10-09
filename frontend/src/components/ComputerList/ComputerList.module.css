@@ -1,0 +1,28 @@
+.list {
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.listItem {
+    width: 200px;
+    height: 40px;
+    background: #ef7912;
+    padding: 8px;
+    margin: 8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000;
+    font-weight: 900;
+
+    border-radius: 8px;
+}
+
+.listItem:hover {
+    cursor: pointer;
+    background: #ef791280;
+}
