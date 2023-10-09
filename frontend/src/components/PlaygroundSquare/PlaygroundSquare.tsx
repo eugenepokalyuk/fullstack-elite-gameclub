@@ -37,26 +37,28 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
 
     const handleClick = (computer: TComputer) => {
         setModalOpen(true);
-        switch (computer.status) {
-            case COMPUTER_STATUS_ONLINE:
-                setModalOpen(true);
-                setStatement(COMPUTER_STATUS_PLAY);
-                break;
-            case COMPUTER_STATUS_PLAYING:
-                setModalOpen(true);
-                setStatement(COMPUTER_STATUS_PLAYING);
-                break;
-            case COMPUTER_STATUS_PAUSE:
-                setModalOpen(true);
-                setStatement(COMPUTER_STATUS_CONTINUE);
-                break;
-            case COMPUTER_STATUS_TECH:
-                setModalOpen(true);
-                setStatement(COMPUTER_STATUS_TECH_OFF);
-                break;
-            default:
-                setStatement(COMPUTER_STATUS_INFO);
-                break;
+        if (computer) {
+            switch (computer.status) {
+                case COMPUTER_STATUS_ONLINE:
+                    setModalOpen(true);
+                    setStatement(COMPUTER_STATUS_PLAY);
+                    break;
+                case COMPUTER_STATUS_PLAYING:
+                    setModalOpen(true);
+                    setStatement(COMPUTER_STATUS_PLAYING);
+                    break;
+                case COMPUTER_STATUS_PAUSE:
+                    setModalOpen(true);
+                    setStatement(COMPUTER_STATUS_CONTINUE);
+                    break;
+                case COMPUTER_STATUS_TECH:
+                    setModalOpen(true);
+                    setStatement(COMPUTER_STATUS_TECH_OFF);
+                    break;
+                default:
+                    setStatement(COMPUTER_STATUS_INFO);
+                    break;
+            }
         }
     }
 
