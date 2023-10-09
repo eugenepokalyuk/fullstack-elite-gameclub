@@ -1,11 +1,12 @@
 import { FC, useState } from 'react';
 import styles from './ComputerDetails.module.css';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
-import { fetchContinue, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer, fetchSettings } from '../../utils/api';
+import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer } from '../../utils/api';
 import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { useAppSelector } from '../../services/hooks/hooks';
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
+    const [name, setName] = useState<string>('');
     const [price, setPrice] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
@@ -69,17 +70,6 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
-    const handleSettingsClick = (computer: TComputer) => {
-        fetchSettings(computer)
-            .then(res => {
-                setFinish(true);
-                setFinishDescription("Сеанс снят с паузы");
-            })
-            .catch(error => {
-                setError(true)
-            });
-    }
-
     // const handleTechOffClick = (computer: TComputer) => {
     //     fetchTechOff(computer.id)
     //         .then(res => {
@@ -112,6 +102,18 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
+    const handleEditComputerNameClick = (computer: TComputer) => {
+        fetchEditComputerName(computer, name)
+            .then(res => {
+                setFinish(true);
+                setFinishDescription("Данное устройство успешно переименовано");
+            })
+            .catch(error => {
+                setError(true)
+            });
+    }
+
+
     const detailsBody = () => {
         if (finish) {
             return (
@@ -132,7 +134,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_PLAY:
                 return (
                     <>
-                        <h3>Бронирование компьютера</h3>
+                        <h3>Бронирование устройства</h3>
                         <ul className={styles.cardList}>
                             <li className={styles.listItem}>
                                 <p className={styles.listText}>Часов: </p>
@@ -188,7 +190,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             <div>
                                 <ul className={styles.cardList}>
                                     <li className={styles.listItem}>
-                                        <h3>Поставить сеанс компьютера на паузу</h3>
+                                        <h3>Поставить сеанс на паузу</h3>
                                     </li>
 
                                     <li>
@@ -200,7 +202,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             <div>
                                 <ul className={styles.cardList}>
                                     <li className={styles.listItem}>
-                                        <h3>Завершить сеанс компьютера</h3>
+                                        <h3>Завершить сеанс</h3>
                                     </li>
 
                                     <li className={styles.listItem}>
@@ -226,7 +228,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_PAUSE:
                 return (
                     <>
-                        <h3>Хотите поставить сеанс компьютера на паузу?</h3>
+                        <h3>Поставить сеанс на паузу?</h3>
 
                         <ul className={styles.cardList}>
 
@@ -240,7 +242,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_CONTINUE:
                 return (
                     <>
-                        <h3>Хотите сеанс компьютера снять с паузы?</h3>
+                        <h3>Снять сеанс с паузы?</h3>
 
                         <ul className={styles.cardList}>
 
@@ -254,7 +256,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_SETTINGS:
                 return (
                     <>
-                        <h3>Хотите изменить данные компьютера?</h3>
+                        <h3>Изменение данных устройства</h3>
 
                         <ul className={`${styles.cardList} ${styles.settingsContainer} ${styles.cardListNullPadding} ${styles.w50}`}>
                             <li className={styles.listItem}>
@@ -267,7 +269,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             </li>
                             <li className={styles.listItem}>
                                 <p>Имя:</p>
-                                <input className={`${styles.listInput}`} type="text" value={computer.name} placeholder='Имя устройства' />
+                                <input className={`${styles.listInput}`} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Имя устройства' />
                             </li>
                             <li className={styles.listItem}>
                                 <p>Статус:</p>
@@ -280,7 +282,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                         </ul>
 
                         <div>
-                            <button onClick={() => handleSettingsClick(computer)} className={styles.mr1}>Подтвердить</button>
+                            <button onClick={() => handleEditComputerNameClick(computer)} className={styles.mr1}>Подтвердить</button>
                             <button onClick={() => handleRemoveComputerClick(computer)} className={styles.dangerButton}>Удалить устройство</button>
                         </div>
                     </>
