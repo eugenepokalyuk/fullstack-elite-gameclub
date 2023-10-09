@@ -17,11 +17,13 @@ import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '.
 import { WarehousePage } from '../../pages/WarehousePage/WarehousePage';
 
 const App = () => {
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
   const [loading, isLoading] = useState<boolean>(false);
+
   const background = location.state && location.state.background;
-  const dispatch = useAppDispatch();
 
   const closeModal = () => {
     navigate(-1);
@@ -33,11 +35,10 @@ const App = () => {
 
     fetchComputersData()
       .then(res => {
-        isLoading(true);
+        isLoading(false);
         dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
       })
       .catch(error => {
-        isLoading(false);
         dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
       });
   }, [dispatch]);
@@ -48,11 +49,11 @@ const App = () => {
 
     fetchStoreData()
       .then(res => {
-        isLoading(true);
+        isLoading(false);
         dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
       })
       .catch(error => {
-        isLoading(false);
+        // isLoading(false);
         dispatch({ type: FETCH_STORE_FAILURE, payload: error });
       });
   }, [dispatch]);
@@ -60,7 +61,7 @@ const App = () => {
   return (
     <>
       <AppHeader />
-      {loading
+      {!loading
         ? <>
           <Routes location={background || location}>
             <Route path={DEFAULT_PATH} element={<HomePage />} />
@@ -89,7 +90,6 @@ const App = () => {
           </div>
         </Modal>
       }
-
     </>
   );
 }
