@@ -98,7 +98,7 @@ class SQLiteDB:
         
         for i in range(1,32):
             self.execute_update_query(f"INSERT OR IGNORE INTO pcs(id, name, status, grid_id) VALUES(?,?,?,?)",
-                                      [i, f'PC-{i}', 'online', i])
+                                      [i, f'PC-{i}', 'online', (i-1)])
             self.execute_update_query('update pcs set name=? where id=?', [ 'ps5', 31 ])
 
 
