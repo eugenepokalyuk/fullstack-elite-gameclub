@@ -110,3 +110,7 @@
     align-items: center;
     justify-content: center;
 }
+
+.textOrangeColor, .faSpinner {
+    color: #ef7912;
+}

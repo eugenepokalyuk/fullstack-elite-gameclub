@@ -73,9 +73,11 @@
 .settingsContainer *::placeholder {
     color: #ef7912;
 }
+
 .settingsContainer *[value] {
     color: #ef7912;
 }
+
 .cardListNullPadding li,
 p {
     padding: 0;
@@ -94,3 +96,11 @@ input:disabled {
 input::placeholder {
     /* color: #ef7912; */
 }
+
+/*  */
+.textOrangeColor,
+.faSpinner {
+    color: #ef7912;
+}
+
+/*  */
