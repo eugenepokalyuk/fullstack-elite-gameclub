@@ -40,6 +40,8 @@ const ComputerList: FC = () => {
 
     return (
         <>
+            <h3>Список ваших устройств:</h3>
+
             <ul className={styles.list}>
                 {computerList && computerList.map((item: TComputer) => {
                     return (
