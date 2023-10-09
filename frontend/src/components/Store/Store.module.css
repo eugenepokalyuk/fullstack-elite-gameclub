@@ -44,6 +44,10 @@ li {
     overflow-y: scroll;
 }
 
+ul {
+    padding: 0;
+}
+
 .cart h2 {
     font-size: 18px;
     margin-bottom: 10px;
@@ -122,4 +126,9 @@ button:disabled {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.warningMessage {
+    font-weight: 900;
+    color: crimson;
 }
