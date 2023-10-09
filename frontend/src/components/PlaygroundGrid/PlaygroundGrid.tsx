@@ -38,11 +38,11 @@ const PlaygroundGrid: FC = () => {
         e.preventDefault();
     };
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, id: number) => {
+    const handleDrop = async (e: React.DragEvent<HTMLDivElement>, id: number) => {
         e.preventDefault();
 
         if (id) {
-            fetchComputerGridReplace(dragStart, id);
+            await fetchComputerGridReplace(dragStart, id);
 
             dispatch({ type: FETCH_COMPUTERS_REQUEST });
             fetchComputersData()
