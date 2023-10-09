@@ -6,7 +6,6 @@ export const SettingsPage = () => (
         <h1>Настройки</h1>
 
         <article>
-            <h3>Список ваших устройств:</h3>
             <ComputerList />
         </article>
     </section>
