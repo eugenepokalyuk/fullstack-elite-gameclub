@@ -14,8 +14,8 @@ export const Store: FC = () => {
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
     const paymentType = useAppSelector((store) => store.payment.paymentType)
     const dispatch = useAppDispatch();
-    const [error, setError] = useState<boolean>(false)
-    const [errorDesription, setErrorDesription] = useState<string>('')
+    const [error, setError] = useState<boolean>(false);
+    const [errorDesription, setErrorDesription] = useState<string>('');
 
     const storeRender = async () => {
         dispatch({ type: FETCH_STORE_REQUEST });
