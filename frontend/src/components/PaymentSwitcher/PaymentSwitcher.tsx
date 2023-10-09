@@ -3,13 +3,18 @@ import styles from "./PaymentSwitcher.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCreditCard, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { CARD, CASH } from '../../utils/constants';
+import { useAppDispatch } from '../../services/hooks/hooks';
+import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
 
 export const PaymentSwitcher: FC = () => {
+    const dispatch = useAppDispatch();
     const [paymentType, setPaymentType] = useState<string>("card");
 
     const handlePaymentTypeChange = (type: string) => {
         setPaymentType(type);
+        dispatch({ type: SWITCH_PAYMENT_REQUEST, payload: type });
     };
+
     return (
         <div className={`${styles.switcher}`}>
             <button
