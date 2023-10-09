@@ -37,7 +37,7 @@ export const Warehouse: FC = () => {
         const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id));
         const price = selectedProducts.reduce((total: number, product: TStoreItem) => total + product.price, 0);
         setTotalPrice(price);
-    }, [selectedItems]);
+    }, [selectedItems, storeItems]);
 
     const handleItemClick = (itemId: any) => {
         dispatch({ type: SELECT_WAREHOUSE_REQUEST });
@@ -137,7 +137,7 @@ export const Warehouse: FC = () => {
                                 const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
 
                                 return (
-                                    <>
+                                    <div key={item.id}>
                                         {item.hide
                                             ? <button className={`${styles.deleteButton} ${styles.mt2}`} onClick={handleShowItemClick} disabled={selectedItems.length === 0}>
                                                 Восстановить
@@ -146,7 +146,7 @@ export const Warehouse: FC = () => {
                                                 Удалить
                                             </button>
                                         }
-                                    </>
+                                    </div>
                                 )
                             })}
 
