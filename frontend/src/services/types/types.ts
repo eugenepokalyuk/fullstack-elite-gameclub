@@ -62,3 +62,17 @@ export interface SquareProps {
     onDrop: Function;
     playground: TComputer[] | any;
 }
+
+export type TStoreStat = {
+    id: number,
+    item_id: number,
+    qty: number,
+    total: number
+};
+
+export type TComputerStat = {
+    id: number,
+    payment: string,
+    pc_id: number,
+    price: number
+};
