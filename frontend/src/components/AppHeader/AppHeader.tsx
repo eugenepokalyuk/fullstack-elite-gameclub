@@ -1,7 +1,7 @@
 import styles from './AppHeader.module.css';
 import image from '../../images/logo.jpeg'
 import { NavLink, useMatch } from 'react-router-dom';
-import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH } from '../../utils/routePath';
+import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH, PROFILE_PATH, STAT_SESSION_PATH } from '../../utils/routePath';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,6 +11,8 @@ const AppHeader = () => {
     const storeRoute = useMatch(STORE_PATH);
     const warehouseRoute = useMatch(WAREHOUSE_PATH);
     const statRoute = useMatch(STAT_PATH);
+    const statSessionRoute = useMatch(STAT_SESSION_PATH);
+    const profileRoute = useMatch(PROFILE_PATH);
 
     return (
         <header className={styles.header}>
@@ -35,6 +37,10 @@ const AppHeader = () => {
                         Склад
                     </NavLink>
 
+                    <NavLink to="/stat-session" className={`${styles.link} ${statSessionRoute ? styles.linkActive : styles.link}`}>
+                        Смена
+                    </NavLink>
+
                     <NavLink to="/stat" className={`${styles.link} ${statRoute ? styles.linkActive : styles.link}`}>
                         Статистика
                     </NavLink>
@@ -44,9 +50,9 @@ const AppHeader = () => {
                     </NavLink>
                 </div>
 
-                <div className={styles.imageContainer}>
-                    <NavLink to="/login">
-                        <FontAwesomeIcon icon={faUser} size="2x" className={styles.user} />
+                <div className={styles.mr8}>
+                    <NavLink to="/profile" className={`${styles.link} ${profileRoute ? styles.linkActive : styles.link}`}>
+                        Профиль
                     </NavLink>
                 </div>
 
