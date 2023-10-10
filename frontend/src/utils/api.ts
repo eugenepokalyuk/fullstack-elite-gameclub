@@ -1,10 +1,13 @@
+import { useAppSelector } from "../services/hooks/hooks";
 import { TComputer, TPlayBody } from "../services/types/types";
 
-// const ApiUrlPath = 'http://172.20.10.4:80';
-const ApiUrlPath = 'http://localhost:8000';
+const ApiUrlPath = 'http://172.20.10.4:80';
+// const ApiUrlPath = 'http://localhost:8000';
+
 const routeStore = "/store";
 const routePlayground = "/pc";
 const routeStat = "/stat";
+const routeUser = "/user";
 
 const request = (endpoint: string, options: any) => {
     const url = `${ApiUrlPath}${endpoint}`;
@@ -20,7 +23,7 @@ export const fetchComputersData = async () => {
     const endpoint = routePlayground + "/ping";
     const options = {
         headers: {
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -31,7 +34,7 @@ export const fetchPlay = async (body: TPlayBody) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify(body)
     }
@@ -43,7 +46,7 @@ export const fetchPause = async (id: number) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -54,7 +57,7 @@ export const fetchContinue = async (id: number) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -65,7 +68,7 @@ export const fetchFinish = async (computer: TComputer, newPrice: number | undefi
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: newPrice ? JSON.stringify({
             id: computer.id,
@@ -83,7 +86,7 @@ export const fetchTechOff = async (id: number) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -94,7 +97,7 @@ export const fetchTechOn = async (id: number, reason: string) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: id,
@@ -107,7 +110,7 @@ export const fetchStoreData = async () => {
     const endpoint = routeStore + "/items";
     const options = {
         headers: {
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -118,7 +121,7 @@ export const fetchStoreSell = async (selectedItems: any) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify(selectedItems)
     }
@@ -130,7 +133,7 @@ export const fetchWarehouseAddItem = async (name: string, price: number | undefi
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             name: name,
@@ -145,7 +148,7 @@ export const fetchWarehouseAddSupply = async (selectedItems: any) => {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({ items: selectedItems })
     }
@@ -158,7 +161,7 @@ export const fetchWarehouseItem = async (id: any) => {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                auth: 123
+                Authorization: sessionStorage.getItem('uuid')
             },
         }
         return request(endpoint, options);
@@ -170,7 +173,7 @@ export const fetchWarehouseEditItemName = async (id: number | undefined, name: s
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: id,
@@ -185,7 +188,7 @@ export const fetchWarehouseEditItemPrice = async (id: number | undefined, price:
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: id,
@@ -200,7 +203,7 @@ export const fetchWarehouseHideItem = async (id: number | undefined) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: id
@@ -214,7 +217,7 @@ export const fetchWarehouseShowItem = async (id: number | undefined) => {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -225,7 +228,7 @@ export const fetchComputerGridReplace = async (id: number | undefined, gridId: a
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: id,
@@ -240,7 +243,7 @@ export const fetchComputerStatData = async (from: string, until: string) => {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             From: from,
@@ -255,7 +258,7 @@ export const fetchStoreStatData = async (from: string, until: string) => {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             From: from,
@@ -264,13 +267,26 @@ export const fetchStoreStatData = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
+export const fetchStatSessionData = async () => {
+    const endpoint = routeStat + `/session`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: sessionStorage.getItem('uuid'),
+            SessionId: sessionStorage.getItem('sessionId')
+        }
+    }
+    return request(endpoint, options);
+}
+
 export const fetchRemoveComputer = async (computer: TComputer) => {
     const endpoint = routePlayground + `/remove?id=${computer.id}`;
     const options = {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
     }
     return request(endpoint, options);
@@ -281,12 +297,66 @@ export const fetchEditComputerName = async (computer: TComputer, name: string) =
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            auth: 123
+            Authorization: sessionStorage.getItem('uuid')
         },
         body: JSON.stringify({
             id: computer.id,
             name: name
         })
+    }
+    return request(endpoint, options);
+}
+export const fetchUserLogin = async (login: string, password: string) => {
+    const endpoint = routeUser + `/login`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: sessionStorage.getItem('uuid')
+        },
+        body: JSON.stringify({
+            login: login,
+            password: password
+        })
+    }
+    return request(endpoint, options);
+}
+export const fetchUserRegister = async (name: string, login: string, password: string) => {
+    const endpoint = routeUser + `/create`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: sessionStorage.getItem('uuid')
+        },
+        body: JSON.stringify({
+            name: name,
+            login: login,
+            password: password
+        })
+    }
+    return request(endpoint, options);
+}
+export const fetchUserRefresh = async (uuid: string) => {
+    const endpoint = routeUser + `/auth`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: uuid
+        }
+    }
+    return request(endpoint, options);
+}
+export const fetchUserFinish = async (uuid: string, sessionId: string) => {
+    const endpoint = routeUser + `/finish`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: uuid,
+            sessionId: sessionId
+        }
     }
     return request(endpoint, options);
 }
