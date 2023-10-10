@@ -14,10 +14,17 @@ import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
 import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
-import { useAppDispatch } from "../../services/hooks/hooks";
-import { fetchComputersData, fetchStoreData } from '../../utils/api';
-import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH } from '../../utils/routePath';
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
+import { fetchComputersData, fetchStoreData, fetchUserRefresh } from '../../utils/api';
+import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH, ERROR_PATH, LOGIN_PATH, REGISTER_PATH, PROFILE_PATH, STAT_SESSION_PATH } from '../../utils/routePath';
 import Modal from '../Modal/Modal';
+import { ErrorPage } from '../../pages/ErrorPage/ErrorPage';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import { LoginPage } from '../../pages/LoginPage/LoginPage';
+import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
+import { CHECK_USER_FAILURE, GET_USER_SUCCESS } from '../../services/actions/auth';
+import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
+import { StatSessionPage } from '../../pages/StatSessionPage/StatSessionPage';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -33,32 +40,45 @@ const App = () => {
   };
 
   useEffect(() => {
-    dispatch({ type: FETCH_COMPUTERS_REQUEST });
-    isLoading(true);
+    let userUUID = sessionStorage.getItem('uuid');
+    let sessionUUID = sessionStorage.getItem('sessionId');
 
-    fetchComputersData()
-      .then(res => {
-        isLoading(false);
-        dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
-      })
-      .catch(error => {
-        isFailed(true)
-        dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
-      });
-  }, [dispatch]);
+    if (userUUID && sessionUUID) {
+      fetchUserRefresh(userUUID)
+        .then(res => {
+          dispatch({ type: GET_USER_SUCCESS, payload: { ...res, uuid: userUUID, sessionId: sessionUUID } });
+        })
+        .catch(error => {
+          // sessionStorage.clear();
+          dispatch({ type: CHECK_USER_FAILURE, payload: error });
+        });
 
-  useEffect(() => {
-    dispatch({ type: FETCH_STORE_REQUEST });
-    isLoading(true);
+      dispatch({ type: FETCH_COMPUTERS_REQUEST });
+      isLoading(true);
 
-    fetchStoreData()
-      .then(res => {
-        isLoading(false);
-        dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
-      })
-      .catch(error => {
-        dispatch({ type: FETCH_STORE_FAILURE, payload: error });
-      });
+      fetchComputersData()
+        .then(res => {
+          isLoading(false);
+          dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+        })
+        .catch(error => {
+          isFailed(true)
+          dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+        });
+
+      dispatch({ type: FETCH_STORE_REQUEST });
+      isLoading(true);
+
+      fetchStoreData()
+        .then(res => {
+          isLoading(false);
+          dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
+        })
+        .catch(error => {
+          dispatch({ type: FETCH_STORE_FAILURE, payload: error });
+        });
+    }
+
   }, [dispatch]);
 
   return (
@@ -67,11 +87,17 @@ const App = () => {
       {!loading
         ? <>
           <Routes location={background || location}>
-            <Route path={DEFAULT_PATH} element={<HomePage />} />
-            <Route path={SETTINGS_PATH} element={<SettingsPage />} />
-            <Route path={STAT_PATH} element={<StatPage />} />
-            <Route path={STORE_PATH} element={<StorePage />} />
-            <Route path={WAREHOUSE_PATH} element={<WarehousePage />} />
+            <Route path={LOGIN_PATH} element={<ProtectedRoute auth={false} children={<LoginPage />} />} />
+            <Route path={REGISTER_PATH} element={<ProtectedRoute auth={false} children={<RegisterPage />} />} />
+
+            <Route path={DEFAULT_PATH} element={<ProtectedRoute auth={true} children={<HomePage />} />} />
+            <Route path={SETTINGS_PATH} element={<ProtectedRoute auth={true} children={<SettingsPage />} />} />
+            <Route path={STAT_SESSION_PATH} element={<ProtectedRoute auth={true} children={<StatSessionPage />} />} />
+            <Route path={STAT_PATH} element={<ProtectedRoute auth={true} children={<StatPage />} />} />
+            <Route path={STORE_PATH} element={<ProtectedRoute auth={true} children={<StorePage />} />} />
+            <Route path={WAREHOUSE_PATH} element={<ProtectedRoute auth={true} children={<WarehousePage />} />} />
+            <Route path={ERROR_PATH} element={<ProtectedRoute auth={true} children={<ErrorPage />} />} />
+            <Route path={PROFILE_PATH} element={<ProtectedRoute auth={true} children={<ProfilePage />} />} />
           </Routes>
         </>
         : failed
