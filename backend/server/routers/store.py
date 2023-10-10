@@ -3,12 +3,13 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from assets.models import store as models
 from assets.modules import store
+from assets.modules.auth import auth
 
 
 router = APIRouter()
 
 
-@router.get('/items', response_model=list[models.ProductList])
+@router.get('/items', response_model=list[models.ProductList], dependencies=[Depends(auth)])
 def get_all_items():
     """ Получить список всех доступных позиций склада """
     try:
@@ -19,7 +20,7 @@ def get_all_items():
         return JSONResponse(content='', status_code=400)
     
 
-@router.get('/info', response_model=models.ProductInfo)
+@router.get('/info', response_model=models.ProductInfo, dependencies=[Depends(auth)])
 def item_info(id: int = Query(description="ID позиции")):
     """ Информация об одной позиции """
     try:
@@ -30,7 +31,7 @@ def item_info(id: int = Query(description="ID позиции")):
         return JSONResponse(content='', status_code=400)
     
 
-@router.post('/item/add', response_model=models.ResponseNewItem)
+@router.post('/item/add', response_model=models.ResponseNewItem, dependencies=[Depends(auth)])
 def add_item(data: models.CreateProduct):
     """ Добавить новую позицию на склад """
     try:
@@ -41,7 +42,7 @@ def add_item(data: models.CreateProduct):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/item/edit/name')
+@router.patch('/item/edit/name', dependencies=[Depends(auth)])
 def edit_item_name(data: models.EditItemName):
     """ Изменить название """
     try:
@@ -52,7 +53,7 @@ def edit_item_name(data: models.EditItemName):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/item/edit/price')
+@router.patch('/item/edit/price', dependencies=[Depends(auth)])
 def edit_item_price(data: models.EditItemPrice):
     """ Изменить цену """
     try:
@@ -63,7 +64,7 @@ def edit_item_price(data: models.EditItemPrice):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/item/hide')
+@router.patch('/item/hide', dependencies=[Depends(auth)])
 def hide_item(id: int = Query(description="ID позиции")):
     """ Скрыть товар """
     try:
@@ -74,7 +75,7 @@ def hide_item(id: int = Query(description="ID позиции")):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/item/show')
+@router.patch('/item/show', dependencies=[Depends(auth)])
 def show_item(id: int = Query(description="ID позиции")):
     """ Показывать товар """
     try:
@@ -85,7 +86,7 @@ def show_item(id: int = Query(description="ID позиции")):
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch('/item/sell')
+@router.patch('/item/sell', dependencies=[Depends(auth)])
 def sell_items(data: models.SellProducts):
     """ Продажа позиций """
     try:
@@ -97,7 +98,7 @@ def sell_items(data: models.SellProducts):
 
 
 
-@router.put('/supply')
+@router.put('/supply', dependencies=[Depends(auth)])
 def supply(data: models.SupplyProducts):
     """ Поставка позиций """
     try:
