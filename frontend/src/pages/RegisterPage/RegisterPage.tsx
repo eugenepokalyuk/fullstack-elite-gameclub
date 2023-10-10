@@ -24,16 +24,29 @@ export const RegisterPage: FC = () => {
                 fetchUserLogin(login, password)
                     .then(res => {
                         if (res.success) {
-                            sessionStorage.setItem('uuid', res.uuid);
+                            localStorage.setItem('uuid', res.uuid);
+                            localStorage.setItem('sessionId', res.sessionId);
+
                             dispatch({
                                 type: USER_STATEMENT,
                                 payload: {
                                     uuid: res.uuid,
-                                    name,
+                                    name: res.name,
+                                    sessionId: res.sessionId,
                                     login,
                                     password
                                 }
                             })
+                            // localStorage.setItem('uuid', res.uuid);
+                            // dispatch({
+                            //     type: USER_STATEMENT,
+                            //     payload: {
+                            //         uuid: res.uuid,
+                            //         name,
+                            //         login,
+                            //         password
+                            //     }
+                            // })
                             navigate('/', { replace: true });
                         } else {
                             setError('Ой, данные для входа неверные!');
