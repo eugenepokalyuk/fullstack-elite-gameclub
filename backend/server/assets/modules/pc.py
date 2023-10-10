@@ -1,7 +1,7 @@
 from .database import SQLiteDB
-from datetime import *
-from uuid import *
-from ..models.pc import Time
+from datetime import datetime, timedelta
+from uuid import uuid4
+from workflow import DATE_FORMAT_DEFAULT
 
 
 def get_pc_data():
@@ -19,8 +19,8 @@ def get_pc_data():
 
         if pc['status'] == 'playing' or pc['status'] == 'pause':
             order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [pc['id']])[0]
-            start = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
-            finish = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
+            start = datetime.strptime(order['start'], DATE_FORMAT_DEFAULT)
+            finish = datetime.strptime(order['finish'], DATE_FORMAT_DEFAULT)
             cur_pc['details'] = {
                 'payment': order['payment'],
                 'price': order['price'],
@@ -53,8 +53,8 @@ def play(time, price, pc_id, payment_type):
         hours = time.hours
         minutes = time.minutes
         now = datetime.now()
-        start = now.strftime('%Y-%m-%d %H:%M')
-        finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime('%Y-%m-%d %H:%M')
+        start = now.strftime(DATE_FORMAT_DEFAULT)
+        finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime(DATE_FORMAT_DEFAULT)
         pc_session_id = str(uuid4())
         db.execute_update_query('insert into orders(uuid,pc_id,start,finish,price,payment) values(?,?,?,?,?,?)', [ pc_session_id, pc_id, start, finish, price, payment_type ])
         db.execute_update_query("update pcs set status='playing' where id=?", [ pc_id ])
@@ -79,14 +79,14 @@ def continue_play(pc_id):
         
         order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [ pc_id ])[0]
 
-        start_time = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
-        finish_old = datetime.strptime(order['finish'], '%Y-%m-%d %H:%M')
+        start_time = datetime.strptime(order['start'], DATE_FORMAT_DEFAULT)
+        finish_old = datetime.strptime(order['finish'], DATE_FORMAT_DEFAULT)
 
         now = datetime.now()
         delta = now - start_time
         total_seconds = delta.total_seconds()
 
-        finish_new = (finish_old + delta).strftime('%Y-%m-%d %H:%M')
+        finish_new = (finish_old + delta).strftime(DATE_FORMAT_DEFAULT)
 
         hours = int(total_seconds // 3600)
         minutes = int((total_seconds % 3600) // 60)
@@ -114,9 +114,9 @@ def finish(pc_id, price=None, payment=None):
         if price != None:
             current_session = db.execute_select_query('select * from orders where uuid=?', [pc_session])[0]
             now = datetime.now()
-            finish_time = datetime.strptime(current_session['finish'], '%Y-%m-%d %H:%M')
+            finish_time = datetime.strptime(current_session['finish'], DATE_FORMAT_DEFAULT)
 
-            real_finish = now.strftime('%Y-%m-%d %H:%M')
+            real_finish = now.strftime(DATE_FORMAT_DEFAULT)
 
             if now >= finish_time:
                 new_uuid = str(uuid4())

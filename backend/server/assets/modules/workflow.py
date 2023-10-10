@@ -1,7 +1,8 @@
 from .database import SQLiteDB
-from datetime import *
-from uuid import *
+from datetime import datetime
+from uuid import uuid4
 
+DATE_FORMAT_DEFAULT = '%Y-%m-%d %H:%M:%S'
 
 def create_user(data):
     db = SQLiteDB('workflow')
@@ -10,7 +11,8 @@ def create_user(data):
         raise Exception("User already registred")
     else:
         uuid = str(uuid4())
-        db.execute_update_query('insert into users (uuid, name, login, password) values(?,?,?,?)', [ uuid, data.name, data.login, data.password ])
+        db.execute_update_query('insert into users (uuid, name, login, password) values(?,?,?,?)', 
+                                [ uuid, data.name, data.login, data.password ])
     return uuid
 
 
@@ -45,14 +47,14 @@ def get_session_start_time(sessionId):
 def start_session(user_uuid):
     db = SQLiteDB('workflow')
     session_id = str(uuid4())
-    dt_start = datetime.now().strftime('%Y-%m-%d %H:%M')
+    dt_start = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     db.execute_update_query('insert into sessions (uuid, user_uuid, start, status) values (?,?,?,?)', 
                             [session_id, user_uuid, dt_start, 'work'])
     return session_id
 
 
 def finish_session(session_id):
-    dt_finish = datetime.now().strftime('%Y-%m-%d %H:%M')
+    dt_finish = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     db = SQLiteDB('workflow')
     db.execute_update_query('update sessions set finish=?, status=? where uuid=?', [ dt_finish, 'closed', session_id ])
     
