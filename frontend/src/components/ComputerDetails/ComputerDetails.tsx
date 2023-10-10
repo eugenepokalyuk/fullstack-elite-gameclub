@@ -2,9 +2,9 @@ import { FC, useState } from 'react';
 import styles from './ComputerDetails.module.css';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
 import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer } from '../../utils/api';
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
+import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, CARD } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
-import { useAppSelector } from '../../services/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +20,6 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
     const paymentType = useAppSelector((store) => store.payment.paymentType)
-
     const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
 
@@ -42,6 +41,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
         isLoading(true);
         fetchPlay(computerData)
             .then(res => {
+                // dispatch({ type: UPDATE_PC_SESSION, payload: { id: computer.id, pc_session: res.pc_session } })
                 isLoading(false);
                 setFinish(true);
                 setFinishDescription("Бронирование завершено");
@@ -237,6 +237,11 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                         <input className={`${styles.listInput} ${styles.mr1} ${styles.w100}`} type="text" value={newPrice} onChange={(event) => setNewPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
                                         <p>руб.</p>
                                     </li>
+
+                                    <li className={styles.listItem}>
+                                        <p>Тип оплаты: <span className={styles.selectedText}>{paymentType === CARD ? "Безналичный" : "Наличный"}</span></p>
+                                    </li>
+
 
                                     <PaymentSwitcher />
 
