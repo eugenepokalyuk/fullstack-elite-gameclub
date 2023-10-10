@@ -116,6 +116,22 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
+    function calculateTimeRemaining(from: any, until: any) {
+        const fromTime: any = new Date(from);
+        const untilTime: any = new Date(until);
+        const remainingTime = untilTime - fromTime;
+
+        // Разбитие времени на часы, минуты и секунды
+        const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
+        const seconds = Math.floor((remainingTime / 1000) % 60);
+
+        return {
+            hours,
+            minutes,
+            seconds
+        };
+    }
 
     const detailsBody = () => {
         if (finish) {
@@ -164,6 +180,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                     </>
                 )
             case COMPUTER_STATUS_PLAYING:
+                // const remainingTime = calculateTimeRemaining(`${computer.details?.time.from.hours}:${computer.details?.time.from.minutes}`, `${computer.details?.time.until.hours}:${computer.details?.time.until.minutes}`)
                 return (
                     <>
                         <h3>Устройство занято</h3>
@@ -186,6 +203,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                 <p>
                                     Конец <span className={styles.selectedText}>{computer.details?.time.until.hours}:{computer.details?.time.until.minutes}</span>
                                 </p>
+
+                                {/* <p>
+                                    Осталось: {remainingTime.hours} ч. {remainingTime.minutes} мин. {remainingTime.seconds} сек.
+                                </p> */}
                             </div>
                         </div>
 
