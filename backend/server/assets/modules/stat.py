@@ -14,5 +14,5 @@ def get_store_stat(_from, until):
     start = _from.strftime('%Y-%m-%d %H:%M')
     finish = until.strftime('%Y-%m-%d %H:%M')
     db = SQLiteDB('store')
-    data = db.execute_select_query('select id, qty, total, item_id from sold where date(sell_date) between date(?) and date(?)', [ start, finish ])
+    data = db.execute_select_query('select id, qty, total, item_id, payment from sold where date(sell_date) between date(?) and date(?)', [ start, finish ])
     return data

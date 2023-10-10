@@ -117,7 +117,7 @@ def start_tech_works(pc_id, reason):
 
 def stop_tech_works(pc_id):
     db = SQLiteDB('pc')
-    db.execute_update_query('update pcs set status=? where id=?', [ 'online', pc_id ])
+    db.execute_update_query('update pcs set status=?, description=null where id=?', [ 'online', pc_id ])
 
 
 def get_status(pc_id):
