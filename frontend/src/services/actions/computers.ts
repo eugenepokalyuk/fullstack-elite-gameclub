@@ -7,6 +7,7 @@ export const FETCH_COMPUTERS_SUCCESS: "FETCH_COMPUTERS_SUCCESS" =
     "FETCH_COMPUTERS_SUCCESS";
 export const FETCH_COMPUTERS_FAILURE: "FETCH_COMPUTERS_FAILURE" =
     "FETCH_COMPUTERS_FAILURE";
+// export const UPDATE_PC_SESSION: "UPDATE_PC_SESSION" = "UPDATE_PC_SESSION";
 
 export type TComputers =
     | IFetchComputersRequestAction
@@ -27,6 +28,11 @@ export interface IFetchComputersFailureAction {
     readonly payload: string;
 }
 
+// export interface IUpdateComputersSessionsAction {
+//     readonly type: typeof UPDATE_PC_SESSION;
+//     readonly payload: string;
+// }
+
 export const fetchComputersRequest = (): IFetchComputersRequestAction => ({
     type: FETCH_COMPUTERS_REQUEST,
 });
@@ -35,6 +41,7 @@ enum ActionTypes {
     FETCH_COMPUTERS_REQUEST = "FETCH_COMPUTERS_REQUEST",
     FETCH_COMPUTERS_SUCCESS = "FETCH_COMPUTERS_SUCCESS",
     FETCH_COMPUTERS_FAILURE = "FETCH_COMPUTERS_FAILURE",
+    // UPDATE_PC_SESSION = "UPDATE_PC_SESSION",
     FETCH_COMPUTERS_CLEAR = "FETCH_COMPUTERS_CLEAR",
     FETCH_CONSTRUCTOR_COMPUTERS_REQUEST = "FETCH_CONSTRUCTOR_COMPUTERS_REQUEST",
 }
