@@ -21,7 +21,7 @@ const ProfileDetails: FC = () => {
     };
 
     const handleCloseSession = () => {
-        sessionStorage.clear();
+        localStorage.clear();
         dispatch(clearUser());
         fetchUserFinish(user.uuid, user.sessionId)
             .then((res) => {
