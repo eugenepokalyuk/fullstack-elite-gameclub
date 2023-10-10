@@ -33,6 +33,7 @@ class Play(BaseModel):
 
 class Finish(BaseModel):
     id: int = Field(description="ID девайса")
+    # pc_session: str = Field(description="ID Сессии")
     price: float = Field(None, description="Новая цена, если она отличается от старой")
     payment: str = Field(None, description="Оплата, если изменился метод оплаты")
 
@@ -75,3 +76,7 @@ class ResponsePing(BaseModel):
     status: str = Field(description="PC status")
     grid_id: int = Field(description="Grid ID")
     details: Details = Field(None, description="Информация о текущей услуге")
+
+
+class StartPcPlay(BaseModel):
+    pc_session: str = Field(description="ID сессии")

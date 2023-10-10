@@ -3,12 +3,13 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from assets.models import pc as models
 from assets.modules import pc
+from assets.modules.auth import auth
 
 
 router = APIRouter()
 
 
-@router.get("/ping", response_model=list[models.ResponsePing])
+@router.get("/ping", response_model=list[models.ResponsePing], dependencies=[Depends(auth)])
 def ping():
     """ Получить сведения о всех компьютерах """
     try:
@@ -19,18 +20,18 @@ def ping():
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch("/play")
+@router.patch("/play", dependencies=[Depends(auth)],response_model=models.StartPcPlay)
 def play(data: models.Play):
     """ Начать игровое время компьютера """
     try:
-        pc.play(data.time, data.price, data.id, data.payment)
-        return JSONResponse(content='', status_code=200)
+        pc_session = pc.play(data.time, data.price, data.id, data.payment)
+        return JSONResponse(content={'pc_session':pc_session}, status_code=200)
     except Exception as e:
         print(e)
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch("/pause")
+@router.patch("/pause", dependencies=[Depends(auth)])
 def pause(id: int = Query(description="ID девайса")):
     """ Поставть на паузу игровое время """
     try:
@@ -41,7 +42,7 @@ def pause(id: int = Query(description="ID девайса")):
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch("/continue")
+@router.patch("/continue", dependencies=[Depends(auth)])
 def continue_play(id: int = Query(description="ID девайса")):
     """ Продолжить игровое время """
     try:
@@ -52,7 +53,7 @@ def continue_play(id: int = Query(description="ID девайса")):
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch("/finish")
+@router.patch("/finish", dependencies=[Depends(auth)])
 def finish(data: models.Finish):
     """ Закончить игровое время """
     try:
@@ -63,7 +64,7 @@ def finish(data: models.Finish):
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch('/techworks/start')
+@router.patch('/techworks/start', dependencies=[Depends(auth)])
 def start_tech_works(data: models.StartTechWorks):
     """ Объявить о технических работах """
     try:
@@ -74,7 +75,7 @@ def start_tech_works(data: models.StartTechWorks):
         return JSONResponse(content='', status_code=400)
 
 
-@router.patch('/techworks/stop')
+@router.patch('/techworks/stop', dependencies=[Depends(auth)])
 def stop_tech_works(id: int = Query(description="ID девайса")):
     """ Завершить технические работы """
     try:
@@ -85,7 +86,7 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/edit/name')
+@router.patch('/edit/name', dependencies=[Depends(auth)])
 def edit_pc_name(data: models.EditName):
     """ Изменить имя девайса """
     try:
@@ -96,7 +97,7 @@ def edit_pc_name(data: models.EditName):
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch('/edit/grid')
+@router.patch('/edit/grid', dependencies=[Depends(auth)])
 def set_grid_id_for_pc(data: models.GridId):
     """ Изменить местоположение ПК """
     try:
@@ -106,7 +107,7 @@ def set_grid_id_for_pc(data: models.GridId):
         print(e)
         return JSONResponse(content='', status_code=400)
     
-@router.delete('/remove')
+@router.delete('/remove', dependencies=[Depends(auth)])
 def remove_device(id: int = Query(description="ID Удаляемого девайса")):
     """ Удалить девайс """
     try:

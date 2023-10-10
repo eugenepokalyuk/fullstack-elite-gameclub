@@ -1,5 +1,6 @@
 from datetime import datetime
 from .database import SQLiteDB
+from .workflow import get_session_start_time
 
 
 def get_pc_stat(_from, until):
@@ -16,3 +17,24 @@ def get_store_stat(_from, until):
     db = SQLiteDB('store')
     data = db.execute_select_query('select id, qty, total, item_id, payment from sold where date(sell_date) between date(?) and date(?)', [ start, finish ])
     return data
+
+
+def get_session_stat(sessionId):
+    start_time = get_session_start_time(sessionId)
+    now = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+    db = SQLiteDB('store')
+    storefront = db.execute_select_query('select sold.uuid, sold.id, sold.qty, sold.total, sold.item_id, sold.payment, storefront.name \
+                                         from sold \
+                                         join storefront ON sold.item_id=storefront.id\
+                                         where datetime(sell_date) between datetime(?) and datetime(?)', [start_time, now])
+
+    db = SQLiteDB('pc')
+    devices = db.execute_select_query('select orders.id, orders.pc_id, orders.price, orders.payment, pcs.name \
+                                      from orders \
+                                      join pcs ON orders.pc_id=pcs.id\
+                                      where datetime(start) between datetime(?) and datetime(?)', [start_time, now])
+    return {
+        'storefront': storefront,
+        'devices': devices
+    }

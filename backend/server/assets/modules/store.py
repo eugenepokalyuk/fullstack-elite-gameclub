@@ -1,5 +1,6 @@
 from .database import SQLiteDB
 from datetime import *
+from uuid import *
 
 
 # Получить список всех доступных продуктов
@@ -56,6 +57,7 @@ def sell_products(items_array, payment_type):
     db = SQLiteDB('store')
     products = db.execute_select_query('select * from storefront where qty > 0')
     warehouse = {item['id']: {'qty': int(item['qty']), 'price': float(item['price'])} for item in products}
+    sell_uuid = str(uuid4())
 
     for item in items_array:
         i_qty = int(item.qty)
@@ -69,8 +71,8 @@ def sell_products(items_array, payment_type):
         new_qty = int(warehouse[item.id]['qty']) - int(item.qty)
         price = warehouse[item.id]['price']
         total_sum = int(item.qty) * price
-        db.execute_update_query('insert into sold (item_id, qty, total, payment, sell_date) values(?,?,?,?,?)', 
-                                [ item.id, item.qty, total_sum, payment_type, now ])
+        db.execute_update_query('insert into sold (uuid, item_id, qty, total, payment, sell_date) values(?,?,?,?,?,?)', 
+                                [ sell_uuid, item.id, item.qty, total_sum, payment_type, now ])
         db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item.id ])
 
 
