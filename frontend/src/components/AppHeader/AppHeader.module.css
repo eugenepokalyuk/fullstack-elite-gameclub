@@ -59,3 +59,7 @@
     font-weight: 900;
     color: #ef7912;
 }
+
+.mr8 {
+    margin-right: calc(8 * 4px);
+}
