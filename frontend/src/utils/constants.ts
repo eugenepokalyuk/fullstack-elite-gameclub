@@ -19,7 +19,6 @@ export const COMPUTER_STATUS_TECH = "techWorks";
 export const COMPUTER_STATUS_PLAYING = "playing";
 export const COMPUTER_STATUS_PAUSE = "pause";
 
-
 export const CARD = "card";
 export const CASH = "cash";
 
@@ -28,3 +27,5 @@ export const ADD_SUPPLY = "addSupply"
 export const EDIT_ITEM = "editItem"
 export const HIDE_ITEM = "hideItem"
 export const SHOW_ITEM = "showItem"
+
+export const STORE_OPEN_CART = "storeOpenCart"
