@@ -20,8 +20,8 @@ export const LoginPage: FC = () => {
         fetchUserLogin(login, password)
             .then(res => {
                 if (res.success) {
-                    sessionStorage.setItem('uuid', res.uuid);
-                    sessionStorage.setItem('sessionId', res.sessionId);
+                    localStorage.setItem('uuid', res.uuid);
+                    localStorage.setItem('sessionId', res.sessionId);
 
                     dispatch({
                         type: USER_STATEMENT,
