@@ -1,5 +1,7 @@
 from .database import SQLiteDB
 from datetime import *
+from uuid import *
+from ..models.pc import Time
 
 
 def get_pc_data():
@@ -53,8 +55,10 @@ def play(time, price, pc_id, payment_type):
         now = datetime.now()
         start = now.strftime('%Y-%m-%d %H:%M')
         finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime('%Y-%m-%d %H:%M')
-        db.execute_update_query('insert into orders(pc_id,start,finish,price,payment) values(?,?,?,?,?)', [ pc_id, start, finish, price, payment_type ])
+        pc_session_id = str(uuid4())
+        db.execute_update_query('insert into orders(uuid,pc_id,start,finish,price,payment) values(?,?,?,?,?,?)', [ pc_session_id, pc_id, start, finish, price, payment_type ])
         db.execute_update_query("update pcs set status='playing' where id=?", [ pc_id ])
+        return pc_session_id
     else:
         raise Exception("PC Status is not online")
 
@@ -72,6 +76,7 @@ def continue_play(pc_id):
     status = get_status(pc_id)
     if status == 'pause':            
         db = SQLiteDB('pc')
+        
         order = db.execute_select_query('select * from orders where pc_id=? order by id desc limit 1', [ pc_id ])[0]
 
         start_time = datetime.strptime(order['start'], '%Y-%m-%d %H:%M')
@@ -95,17 +100,37 @@ def continue_play(pc_id):
 
 
 def finish(pc_id, price=None, payment=None):
-    db = SQLiteDB('pc')
     status = get_status(pc_id)
     if status == 'playing':
+        db = SQLiteDB('pc')
         db.execute_update_query("update pcs set status='online' where id=?", [ pc_id ])
 
-        if price != None or payment != None:
-            session_id = db.execute_select_query('select id from orders where pc_id=? order by id DESC limit 1', [ pc_id ])[0]['id']
-            if price != None:
-                db.execute_update_query('update orders set price=? where id=?', [ price, session_id ])
-            if payment != None:
-                db.execute_update_query('update orders set payment=? where id=?', [ payment, session_id ])
+        if payment != None or price != None:
+            pc_session = db.execute_select_query('select uuid from orders where pc_id=? order by id desc limit 1', [ pc_id ])['uuid']
+
+        if payment != None:
+            db.execute_update_query('update orders set payment=? where uuid=?', [ payment, pc_session ])
+
+        if price != None:
+            current_session = db.execute_select_query('select * from orders where uuid=?', [pc_session])[0]
+            now = datetime.now()
+            finish_time = datetime.strptime(current_session['finish'], '%Y-%m-%d %H:%M')
+
+            real_finish = now.strftime('%Y-%m-%d %H:%M')
+
+            if now >= finish_time:
+                new_uuid = str(uuid4)
+                if payment != None:
+                    new_payment = payment
+                else:
+                    new_payment = current_session['payment']
+                db.execute_update_query('insert into orders (uuid, pc_id, start, finish, price, payment) values(?,?,?,?,?,?)', 
+                                        [new_uuid, pc_id, current_session['finish'], real_finish, 2, new_payment])
+                pass
+
+            if now <= finish_time:
+                db.execute_update_query('update orders set finish=?, price=? where uuid=?', [ real_finish, price, pc_session ])
+
     else:
         raise Exception("PC Status is not playing")
     
