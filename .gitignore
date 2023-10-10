@@ -10,6 +10,7 @@
 __pycache__
 test.py
 .pytest_cache
+logs
 
 # testing
 /coverage

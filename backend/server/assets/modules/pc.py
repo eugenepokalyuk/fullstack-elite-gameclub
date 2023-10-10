@@ -106,7 +106,7 @@ def finish(pc_id, price=None, payment=None):
         db.execute_update_query("update pcs set status='online' where id=?", [ pc_id ])
 
         if payment != None or price != None:
-            pc_session = db.execute_select_query('select uuid from orders where pc_id=? order by id desc limit 1', [ pc_id ])['uuid']
+            pc_session = db.execute_select_query('select uuid from orders where pc_id=? order by id desc limit 1', [ pc_id ])[0]['uuid']
 
         if payment != None:
             db.execute_update_query('update orders set payment=? where uuid=?', [ payment, pc_session ])
@@ -119,13 +119,14 @@ def finish(pc_id, price=None, payment=None):
             real_finish = now.strftime('%Y-%m-%d %H:%M')
 
             if now >= finish_time:
-                new_uuid = str(uuid4)
+                new_uuid = str(uuid4())
                 if payment != None:
                     new_payment = payment
                 else:
                     new_payment = current_session['payment']
+                new_price = price - float(current_session['price'])
                 db.execute_update_query('insert into orders (uuid, pc_id, start, finish, price, payment) values(?,?,?,?,?,?)', 
-                                        [new_uuid, pc_id, current_session['finish'], real_finish, 2, new_payment])
+                                        [new_uuid, pc_id, current_session['finish'], real_finish, new_price, new_payment])
                 pass
 
             if now <= finish_time:
