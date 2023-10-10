@@ -1,0 +1,18 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.container h1,
+p {
+    color: #fff;
+}
+
+.chartContainer {
+    width: 80%;
+    margin: 20px auto;
+}
+
+.textShadows {
+    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+}

@@ -1,0 +1,14 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.container h1,
+p {
+    color: #fff;
+}
+
+.chartContainer {
+    width: 80%;
+    margin: 20px auto;
+}

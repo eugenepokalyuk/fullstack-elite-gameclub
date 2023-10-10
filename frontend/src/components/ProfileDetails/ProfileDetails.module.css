@@ -1,0 +1,22 @@
+.selectedText {
+    font-weight: 900;
+    color: #ef7912;
+    /* color: #ef7912; */
+}
+
+.textShadows {
+    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+.cardItem {
+    margin: 8px 0px;
+}
+
+.mr4 {
+    margin-right: calc(4 * 4px);
+}

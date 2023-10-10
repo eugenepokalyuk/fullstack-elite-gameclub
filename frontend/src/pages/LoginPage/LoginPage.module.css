@@ -1,0 +1,61 @@
+.wrapper {
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    margin: auto;
+    text-align: center;
+}
+
+.link {
+    color: #ef7912;
+    text-decoration: none;
+}
+
+.errorMessage {
+    color: #E52B1A;
+    text-align: center;
+}
+
+.buttonDefault {
+    font-family: 'Jet Brains Mono';
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: normal;
+    padding: 16px 40px;
+}
+
+.buttonDefault:hover {
+    background: #ef791280;
+}
+
+.inputDefault {
+    width: 480px;
+    min-height: 64px;
+    padding-right: calc(var(--offset-base-size) * 6);
+    padding-left: calc(var(--offset-base-size) * 6);
+
+    display: flex;
+    cursor: text;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background-color: #333;
+    border: 2px solid #333;
+    border-radius: 8px;
+    transition: 0.3s;
+    position: relative;
+
+    color: #fff;
+    font-size: 18px;
+
+    cursor: text;
+}
+
+.inputDefault:focus-visible {
+    outline: none;
+    border: 2px solid #ef7912;
+}

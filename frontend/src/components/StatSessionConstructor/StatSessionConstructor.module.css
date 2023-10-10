@@ -40,7 +40,6 @@
     min-height: 150px;
 }
 
-.textOrangeColor,
-.faSpinner {
+.textOrangeColor, .faSpinner {
     color: #ef7912;
 }
