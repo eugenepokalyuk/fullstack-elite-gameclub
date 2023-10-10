@@ -40,16 +40,15 @@ const App = () => {
   };
 
   useEffect(() => {
-    let userUUID = sessionStorage.getItem('uuid');
-    let sessionUUID = sessionStorage.getItem('sessionId');
+    let userUUID = localStorage.getItem('uuid');
+    let sessionUUID = localStorage.getItem('sessionId');
 
     if (userUUID && sessionUUID) {
-      fetchUserRefresh(userUUID)
+      fetchUserRefresh(userUUID, sessionUUID)
         .then(res => {
           dispatch({ type: GET_USER_SUCCESS, payload: { ...res, uuid: userUUID, sessionId: sessionUUID } });
         })
         .catch(error => {
-          // sessionStorage.clear();
           dispatch({ type: CHECK_USER_FAILURE, payload: error });
         });
 
@@ -81,6 +80,11 @@ const App = () => {
 
   }, [dispatch]);
 
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   navigate(-1)
+  // }
+
   return (
     <>
       <AppHeader />
@@ -106,7 +110,7 @@ const App = () => {
             </div>
             <div>
               <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
-                Проверьте интернет соединение
+                Ошибка сессии пользователя
               </p>
               <div className={`${styles.flex} text_color_inactive`}>
                 <FontAwesomeIcon
@@ -115,6 +119,9 @@ const App = () => {
                   className={`${styles.faSpinner}`}
                 />
               </div>
+              {/* <button onClick={handleLogout}>
+                Выйти из аккаунта
+              </button> */}
             </div>
           </Modal>
           : <Modal onClose={closeModal} header="Загрузка данных">
