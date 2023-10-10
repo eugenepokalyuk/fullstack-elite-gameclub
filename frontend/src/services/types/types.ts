@@ -67,7 +67,8 @@ export type TStoreStat = {
     id: number,
     item_id: number,
     qty: number,
-    total: number
+    total: number,
+    payment: string
 };
 
 export type TComputerStat = {
@@ -76,3 +77,9 @@ export type TComputerStat = {
     pc_id: number,
     price: number
 };
+
+export type TUser = {
+    uuid: string,
+    sessionId: string,
+    name: string
+}
