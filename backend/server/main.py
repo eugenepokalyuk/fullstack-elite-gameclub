@@ -4,7 +4,7 @@ from routers import pc, store, stat, workflow
 from fastapi.middleware.cors import CORSMiddleware
 
 
-app = FastAPI()
+app = FastAPI(title="Shell Backend", debug=True)
 
 
 origins = ["*"]
