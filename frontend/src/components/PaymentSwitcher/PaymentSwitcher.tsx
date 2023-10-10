@@ -8,7 +8,7 @@ import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
 
 export const PaymentSwitcher: FC = () => {
     const dispatch = useAppDispatch();
-    const [paymentType, setPaymentType] = useState<string>("card");
+    const [paymentType, setPaymentType] = useState<string>();
 
     const handlePaymentTypeChange = (type: string) => {
         setPaymentType(type);
