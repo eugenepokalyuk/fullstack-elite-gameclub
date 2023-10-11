@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import styles from "./Store.module.css";
 import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem } from '../../services/types/types';
-import { fetchStoreData, fetchStoreSell } from '../../utils/api';
+import { fetchStoreData } from '../../utils/api';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
 import { STORE_OPEN_CART } from '../../utils/constants';
@@ -11,26 +11,21 @@ import Modal from '../Modal/Modal';
 import { useNavigate } from 'react-router-dom';
 
 export const Store: FC = () => {
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
-
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
     const paymentType = useAppSelector((store) => store.payment.paymentType)
-    const dispatch = useAppDispatch();
     const [error, setError] = useState<boolean>(false);
     const [errorDesription, setErrorDesription] = useState<string>('');
-
-    const [isLoading,] = useState<boolean>(false);
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
 
     const closeModal = () => {
         navigate(-1)
     };
-
     const storeRender = async () => {
         dispatch({ type: FETCH_STORE_REQUEST });
         await fetchStoreData()
@@ -41,20 +36,6 @@ export const Store: FC = () => {
                 dispatch({ type: FETCH_STORE_FAILURE, payload: error });
             });
     }
-
-    useEffect(() => {
-        // При изменении выбранных товаров пересчитываем общую стоимость и общее количество
-        const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id));
-        const price = selectedProducts.reduce((total: number, product: TStoreItem) => {
-            // Умножаем стоимость на количество из состояния itemCounts
-            const count = itemCounts[product.id] || 0;
-            return total + product.price * count;
-        }, 0);
-        setTotalPrice(price);
-
-        storeRender();
-    }, [selectedItems, itemCounts, dispatch]);
-
     const handleItemClick = (itemId: any) => {
         if (selectedItems.includes(itemId)) {
             setSelectedItems(selectedItems.filter((id) => id !== itemId));
@@ -78,12 +59,21 @@ export const Store: FC = () => {
             };
         });
     };
+    useEffect(() => {
+        const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id));
+        const price = selectedProducts.reduce((total: number, product: TStoreItem) => {
+            const count = itemCounts[product.id] || 1;
+            return total + product.price * count;
+        }, 0);
+        setTotalPrice(price);
 
+        storeRender();
+    }, [selectedItems, itemCounts, dispatch]);
     let qty = 0;
 
     const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id))
         .map((item: TStoreItem) => {
-            qty = itemCounts[item.id] || 0;
+            qty = itemCounts[item.id] || 1;
             return { ...item, qty };
         });
 
@@ -139,22 +129,21 @@ export const Store: FC = () => {
                                         <li className={styles.cartRow} key={itemId}>
                                             {item.name}
                                             <div className={styles.cartRow}>
-                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id)}>-</button>
-                                                {itemCounts[item.id] || 0}
-                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id)}>+</button>
+                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id)}>
+                                                    -
+                                                </button>
+
+                                                {itemCounts[item.id] || 1}
+
+                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id)}>
+                                                    +
+                                                </button>
                                             </div>
                                         </li>
                                     )
                                 })}
                             </ul>
-                        )
-                            : error
-                                ? <>
-                                    <p className={styles.warningMessage}>{errorDesription}</p>
-                                </>
-                                : (
-                                    <p>Корзина пуста</p>
-                                )
+                        ) : error ? <p className={styles.warningMessage}>{errorDesription}</p> : <p>Корзина пуста</p>
                         }
                     </div>
 

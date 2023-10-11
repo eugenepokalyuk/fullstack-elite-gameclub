@@ -2,6 +2,9 @@
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     gap: 10px;
+    /* display: flex;
+    flex-wrap: wrap;
+    gap: 10px; */
 }
 
 .square {

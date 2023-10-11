@@ -95,7 +95,8 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
         <>
             <div
                 className={`
-                    ${styles.square} 
+                    ${styles.square}
+                    ${styles.squareDefault}
                     ${id === computer?.grid_id && styles.squareOccupied} 
                     ${backgroundClass} 
                     ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}`

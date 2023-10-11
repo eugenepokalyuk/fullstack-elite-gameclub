@@ -155,6 +155,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                     <>
                         <h3>Бронирование устройства</h3>
                         <ul className={styles.cardList}>
+
                             <li className={styles.listItem}>
                                 <p className={styles.listText}>Часов: </p>
                                 <input className={styles.listInput} type="text" value={hours} onChange={(event) => setHours(Number(event.target.value))} placeholder='Час' />
