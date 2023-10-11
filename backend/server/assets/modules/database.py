@@ -6,6 +6,7 @@ db_path_pc = "./data/computers.db"
 db_path_store = "./data/store.db"
 db_path_workflow = "./data/workflow.db"
 
+
 def get_db_path(db_type):
     if db_type == 'store':
         return db_path_store

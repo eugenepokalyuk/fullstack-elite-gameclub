@@ -1,6 +1,7 @@
 from .database import SQLiteDB
-from datetime import *
-from uuid import *
+from datetime import datetime
+from uuid import uuid4
+from workflow import DATE_FORMAT_DEFAULT
 
 
 # Получить список всех доступных продуктов
@@ -66,7 +67,7 @@ def sell_products(items_array, payment_type):
         else:
             raise Exception("Not enough products")
 
-    now = datetime.now().strftime('%Y-%m-%d %H:%M')
+    now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     for item in items_array:
         new_qty = int(warehouse[item.id]['qty']) - int(item.qty)
         price = warehouse[item.id]['price']
@@ -82,7 +83,7 @@ def supply(items_array):
     products = db.execute_select_query('select * from storefront')
     warehouse = {item['id']: int(item['qty']) for item in products}
 
-    now = datetime.now().strftime('%Y-%m-%d %H:%M')
+    now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     
     for item in items_array:
         old_qty = warehouse[item.id]
