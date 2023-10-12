@@ -80,11 +80,6 @@ const App = () => {
 
   }, [dispatch]);
 
-  // const handleLogout = () => {
-  //   localStorage.clear();
-  //   navigate(-1)
-  // }
-
   return (
     <>
       <AppHeader />
