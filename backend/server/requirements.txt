@@ -1,4 +1,4 @@
-fastpai
-uvicorn
-pydantic
-sqlite3
+fastpai==0.103
+pydantic==2.3
+uvicorn==0.23
+SQLAlchemy==2.0
