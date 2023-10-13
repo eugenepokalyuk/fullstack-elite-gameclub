@@ -15,6 +15,7 @@ class StoreStatItem(BaseModel):
     item_id: int = Field(description="ID Позиции")
     name: int = Field(description="Название позиции")
     uuid: int = Field(description="ID Заказа")
+    date: str = Field(description="Время продажи")
 
 
 class DeviceStatItem(BaseModel):

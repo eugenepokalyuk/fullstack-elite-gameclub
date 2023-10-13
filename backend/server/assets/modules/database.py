@@ -3,11 +3,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import select, desc, join, insert, and_
 
+
 DATE_FORMAT_DEFAULT = '%Y-%m-%d %H:%M:%S'
 
 
 DATABASE_URL = "sqlite:///./utils/data.db"  # Используем SQLite в качестве базы данных
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=-1)
 
 
 Base = declarative_base()
