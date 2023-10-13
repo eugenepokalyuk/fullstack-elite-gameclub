@@ -39,7 +39,8 @@ def get_session_stat(sessionId):
             'item_id': sold.item_id,
             'payment': sold.payment,
             'name': storefront_name,
-            'uuid': sold.uuid
+            'uuid': sold.uuid,
+            'date': sold.sell_date
         } for sold, storefront_name in store_data]
     
     device_data = db.query(Orders, Pcs.name)\
@@ -55,6 +56,7 @@ def get_session_stat(sessionId):
             'name': pc_name
         } for order, pc_name in device_data]
     
+    db.close()
     return {
         'storefront': store_returned,
         'devices': device_returned
