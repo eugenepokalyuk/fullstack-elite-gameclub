@@ -1,94 +1,126 @@
-from .database import SQLiteDB
 from .workflow import DATE_FORMAT_DEFAULT
+from .database import *
 from datetime import datetime
 from uuid import uuid4
 
 
+
 # Получить список всех доступных продуктов
 def get_all_items():
-    db = SQLiteDB('store')
-    data = db.execute_select_query('select * from storefront')
-    for item in data:
-        item['hide'] = item['hide'] == 1
-    return data
+    db = Session()
+    data = db.query(Storefront).all()
+    items = []
+    for row in data:
+        items.append({
+            'id': row.id,
+            'hide': row.hide == 1,
+            'name': row.name,
+            'qty': row.qty,
+            'price': float(row.price)
+        })
+    return items
 
 
 # Добавить продукт
 def create_product(name, price):
-    db = SQLiteDB('store')
-    db.execute_update_query('insert into storefront (name, qty, price, hide) values(?,?,?,?)', [ name, 0, price, 0 ])
-    item_id = db.execute_select_query('select seq from sqlite_sequence where name="storefront"')[0]['seq']
-    return item_id
+    new_item = Storefront(name=name, qty=0, price=price, hide=0)
+    db = Session()
+    db.add(new_item)
+    db.commit()
+    return new_item.id
 
 
 # Получить данные о позиции
 def get_item_info(item_id):
-    db = SQLiteDB('store')
-    data = db.execute_select_query('select * from storefront where id=?', [ item_id ])[0]
-    data['hide'] = data['hide'] == 1
-    return data
+    db = Session()
+    item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
+    return {
+        'id': item.id,
+        'hide': item.hide == 1,
+        'name': item.name,
+        'qty': item.qty,
+        'price': float(item.price)
+    }
 
 
 # Изменение имени продукта
 def change_price(item_id, new_price):
-    db = SQLiteDB('store')
-    db.execute_update_query('update storefront set price=? where id=?', [ new_price, item_id ])
+    db = Session()
+    item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
+    item.price = new_price
+    db.commit()
 
 
 # Изменение цены продукта
 def change_name(item_id, new_name):
-    db = SQLiteDB('store')
-    db.execute_update_query('update storefront set name=? where id=?', [ new_name, item_id ])
+    db = Session()
+    item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
+    item.name = new_name
+    db.commit()
 
 
 # Скрыть товар
 def hide_item(item_id):
-    db = SQLiteDB('store')
-    db.execute_update_query('update storefront set hide=1 where id=?', [ item_id ])
+    db = Session()
+    item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
+    item.hide = 1
+    db.commit()
 
 
 # Показывать товар
 def show_item(item_id):
-    db = SQLiteDB('store')
-    db.execute_update_query('update storefront set hide=0 where id=?', [ item_id ])
+    db = Session()
+    item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
+    item.hide = 0
+    db.commit()
 
 
 # Продажа
 def sell_products(items_array, payment_type):
-    db = SQLiteDB('store')
-    products = db.execute_select_query('select * from storefront where qty > 0')
-    warehouse = {item['id']: {'qty': int(item['qty']), 'price': float(item['price'])} for item in products}
-    sell_uuid = str(uuid4())
+    db = Session()
+    products = db.query(Storefront).where(Storefront.qty > 0).all()
+    warehouse = {item.id: {'qty': int(item.qty), 'price': float(item.price)} for item in products}
 
     for item in items_array:
-        i_qty = int(item.qty)
-        if item.id in warehouse and warehouse[item.id]['qty'] >= i_qty:
+        qty = int(item.qty)
+        if item.id in warehouse and warehouse[item.id]['qty'] >= qty:
             pass
         else:
-            raise Exception("Not enough products")
-
+            raise Exception('Not enough products')
+        
+    sell_uuid = str(uuid4())
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
+
     for item in items_array:
         new_qty = int(warehouse[item.id]['qty']) - int(item.qty)
         price = warehouse[item.id]['price']
         total_sum = int(item.qty) * price
-        db.execute_update_query('insert into sold (uuid, item_id, qty, total, payment, sell_date) values(?,?,?,?,?,?)', 
-                                [ sell_uuid, item.id, item.qty, total_sum, payment_type, now ])
-        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item.id ])
+
+        new_sell = Sold(uuid=sell_uuid, item_id=item.id, qty=item.qty, total=total_sum, payment=payment_type, sell_date=now)
+        db.add(new_sell)
+
+        item_db = db.scalars(select(Storefront).where(Storefront.id == item.id)).one()
+        item_db.qty = new_qty
+        
+        db.commit()
 
 
 # Поставка
 def supply(items_array):
-    db = SQLiteDB('store')
-    products = db.execute_select_query('select * from storefront')
-    warehouse = {item['id']: int(item['qty']) for item in products}
-
+    db = Session()
+    products = db.query(Storefront).all()
+    warehouse = {item.id: int(item.qty) for item in products}
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
-    
+
     for item in items_array:
         old_qty = warehouse[item.id]
         new_qty = old_qty + int(item.qty)
-        db.execute_update_query('insert into supplies (item_id, qty, add_date) values(?,?,?)', 
-                                [ item.id, item.qty, now ])
-        db.execute_update_query('update storefront set qty=? where id=?', [ new_qty, item.id ])
+
+        new_supply = Supplies(item_id=item.id, qty=item.qty, add_date=now)
+        db.add(new_supply)
+
+        item_db = db.scalars(select(Storefront).where(Storefront.id == item.id)).one()
+        item_db.qty = new_qty
+
+        db.commit()
         

@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, Query
-from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
+from sqlalchemy.orm import Session
 from assets.models import pc as models
 from assets.modules import pc
 from assets.modules.auth import auth
+
 
 
 router = APIRouter()
@@ -20,7 +21,7 @@ def ping():
         return JSONResponse(content='', status_code=400)
     
 
-@router.patch("/play", dependencies=[Depends(auth)],response_model=models.StartPcPlay)
+@router.patch("/play", dependencies=[Depends(auth)], response_model=models.StartPcPlay)
 def play(data: models.Play):
     """ Начать игровое время компьютера """
     try:
