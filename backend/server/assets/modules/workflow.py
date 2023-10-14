@@ -13,13 +13,11 @@ def create_user(data):
         new_user = Users(uuid=uuid, name=data.name, login=data.login, password=data.password)
         db.add(new_user)
         db.commit()
-        db.close()
 
 
 def login_user(data):
     db = Session()
     user = db.query(Users.uuid, Users.name).where(Users.login == data.login).where(Users.password == data.password).all()
-    db.close()
     if len(user) > 0:
         return {
             'uuid': user[0].uuid,
@@ -32,14 +30,12 @@ def login_user(data):
 def get_name_by_uuid(_uuid):
     db = Session()
     name = db.scalars(select(Users.name).where(Users.uuid == _uuid)).one()
-    db.close()
     return name
 
 
 def get_session_start_time(sessionId):
     db = Session()
     start_time = db.scalars(select(Sessions.start).where(Sessions.uuid == sessionId)).one()
-    db.close()
     return start_time
 
 
@@ -50,7 +46,6 @@ def start_session(user_uuid):
     db = Session()
     db.add(new_session)
     db.commit()
-    db.close()
     return session_id
 
 
@@ -61,5 +56,4 @@ def finish_session(session_id):
     user_session.finish = dt_finish
     user_session.status = 'closed'
     db.commit()
-    db.close()
     

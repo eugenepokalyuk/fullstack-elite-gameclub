@@ -4,7 +4,6 @@ from starlette.responses import JSONResponse
 from assets.models import store as models
 from assets.modules import store
 from assets.modules.auth import auth
-from assets.modules.database import *
 
 
 router = APIRouter()
@@ -33,7 +32,7 @@ def item_info(id: int = Query(description="ID позиции")):
     
 
 @router.post('/item/add', response_model=models.ResponseNewItem, dependencies=[Depends(auth)])
-def add_item(data: models.CreateProduct, db: Session = Depends(get_db)):
+def add_item(data: models.CreateProduct):
     """ Добавить новую позицию на склад """
     try:
         new_item_id = store.create_product(data.name, data.price)
