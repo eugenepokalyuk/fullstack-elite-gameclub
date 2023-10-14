@@ -22,9 +22,9 @@ def get_all_items():
 
 
 # Добавить продукт
-def create_product(name, price):
+def create_product(name, price, db = Session):
     new_item = Storefront(name=name, qty=0, price=price, hide=0)
-    db = Session()
+    # db = Session()
     db.add(new_item)
     db.commit()
     db.close()

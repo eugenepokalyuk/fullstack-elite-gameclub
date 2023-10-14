@@ -110,14 +110,11 @@ def finish(pc_id, price=None, payment=None):
     
     if pc.status == 'playing':
         pc.status = 'online'
-        db.commit()
 
-        if payment != None or price != None:
-            order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
 
         if payment != None:
             order.payment = payment
-            db.commit()
 
         if price != None:
             now = datetime.now()
@@ -134,13 +131,12 @@ def finish(pc_id, price=None, payment=None):
                 new_price = price - float(order.price)
                 new_order = Orders(uuid=new_uuid, pc_id=pc_id, start=order.finish, finish=real_finish, price=new_price, payment=new_payment)
                 db.add(new_order)
-                db.commit()
 
             if now <= finish_time:
                 order.finish = real_finish
                 order.price = price
-                db.commit()
 
+        db.commit()
         db.close()
     else:
         db.close()

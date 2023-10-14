@@ -10,12 +10,6 @@ def auth_by_uuid(_uuid):
         return True
     else:
         return None
-    # db = SQLiteDB('workflow')
-    # row = db.execute_select_query('select count(*) as auth from users where uuid=?', [ _uuid ])[0]
-    # if int(row['auth']) == 1:
-    #     return True
-    # else:
-    #     return None
 
 
 # def auth():
