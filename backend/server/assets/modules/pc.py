@@ -39,7 +39,6 @@ def get_pc_data():
                 'reason': row.description
             }
         pc_array.append(pc_obj)
-    db.close()
     return pc_array
 
 
@@ -57,10 +56,8 @@ def play(time, price, pc_id, payment_type):
         db.add(new_order)
         pc.status = 'playing'
         db.commit()
-        db.close()
         return pc_session_id
     else:
-        db.close()
         raise Exception("PC Status is not online")
 
 
@@ -70,9 +67,7 @@ def pause(pc_id):
     if pc.status == 'playing':
         pc.status='pause'
         db.commit()
-        db.close()
     else:
-        db.close()
         raise Exception("PC is not in playing status")
 
 
@@ -98,9 +93,7 @@ def continue_play(pc_id):
         order.finish = finish_new
         pc.status = 'playing'
         db.commit()
-        db.close()
     else:
-        db.close()
         raise Exception("PC is not in playing status")
     
 
@@ -137,9 +130,7 @@ def finish(pc_id, price=None, payment=None):
                 order.price = price
 
         db.commit()
-        db.close()
     else:
-        db.close()
         raise Exception("PC Status is not playing")
     
 
@@ -149,7 +140,6 @@ def start_tech_works(pc_id, reason):
     pc.status = 'techWorks'
     pc.description = reason
     db.commit()
-    db.close()
 
 
 def stop_tech_works(pc_id):
@@ -158,7 +148,6 @@ def stop_tech_works(pc_id):
     pc.status = 'techWorks'
     pc.description = None
     db.commit()
-    db.close()
 
 
 def set_grid_id(pc_id, grid_id):
@@ -166,7 +155,6 @@ def set_grid_id(pc_id, grid_id):
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     pc.grid_id = grid_id
     db.commit()
-    db.close()
 
 
 def set_pc_name(pc_id, name):
@@ -174,7 +162,6 @@ def set_pc_name(pc_id, name):
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     pc.name = name
     db.commit()
-    db.close()
 
 
 def remove_pc(pc_id):
@@ -182,4 +169,3 @@ def remove_pc(pc_id):
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     db.delete(pc)    
     db.commit()
-    db.close()

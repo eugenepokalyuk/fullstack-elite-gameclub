@@ -17,17 +17,15 @@ def get_all_items():
             'qty': row.qty,
             'price': float(row.price)
         })
-    db.close()
     return items
 
 
 # Добавить продукт
-def create_product(name, price, db = Session):
+def create_product(name, price):
+    db = Session()
     new_item = Storefront(name=name, qty=0, price=price, hide=0)
-    # db = Session()
     db.add(new_item)
     db.commit()
-    db.close()
     return new_item.id
 
 
@@ -35,7 +33,6 @@ def create_product(name, price, db = Session):
 def get_item_info(item_id):
     db = Session()
     item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
-    db.close()
     return {
         'id': item.id,
         'hide': item.hide == 1,
@@ -51,7 +48,6 @@ def change_price(item_id, new_price):
     item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
     item.price = new_price
     db.commit()
-    db.close()
 
 
 # Изменение цены продукта
@@ -60,7 +56,6 @@ def change_name(item_id, new_name):
     item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
     item.name = new_name
     db.commit()
-    db.close()
 
 
 # Скрыть товар
@@ -69,7 +64,6 @@ def hide_item(item_id):
     item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
     item.hide = 1
     db.commit()
-    db.close()
 
 
 # Показывать товар
@@ -78,7 +72,6 @@ def show_item(item_id):
     item = db.scalars(select(Storefront).where(Storefront.id == item_id)).one()
     item.hide = 0
     db.commit()
-    db.close()
 
 
 # Продажа
@@ -109,7 +102,6 @@ def sell_products(items_array, payment_type):
         item_db.qty = new_qty
         
         db.commit()
-    db.close()
 
 
 # Поставка
@@ -130,5 +122,4 @@ def supply(items_array):
         item_db.qty = new_qty
 
         db.commit()
-    db.close()
         

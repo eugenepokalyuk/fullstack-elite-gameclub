@@ -12,8 +12,6 @@ def auth_by_uuid(_uuid):
         return None
 
 
-# def auth():
-#     pass
 def auth(authorization: str = Header(description="UUID Пользователя")):
     auth = auth_by_uuid(authorization)
     if not auth:

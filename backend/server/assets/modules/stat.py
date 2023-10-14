@@ -56,7 +56,6 @@ def get_session_stat(sessionId):
             'name': pc_name
         } for order, pc_name in device_data]
     
-    db.close()
     return {
         'storefront': store_returned,
         'devices': device_returned
