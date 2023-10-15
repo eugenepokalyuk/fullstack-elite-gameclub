@@ -25,6 +25,9 @@ import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { CHECK_USER_FAILURE, GET_USER_SUCCESS } from '../../services/actions/auth';
 import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
 import { StatSessionPage } from '../../pages/StatSessionPage/StatSessionPage';
+import { Clock } from '../Clock/Clock';
+import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
+import { CARD } from '../../utils/constants';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -38,6 +41,10 @@ const App = () => {
   const closeModal = () => {
     navigate(-1);
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+  }
 
   useEffect(() => {
     let userUUID = localStorage.getItem('uuid');
@@ -76,6 +83,8 @@ const App = () => {
         .catch(error => {
           dispatch({ type: FETCH_STORE_FAILURE, payload: error });
         });
+
+      dispatch({ type: SWITCH_PAYMENT_REQUEST, payload: CARD });
     }
 
   }, [dispatch]);
@@ -114,9 +123,9 @@ const App = () => {
                   className={`${styles.faSpinner}`}
                 />
               </div>
-              {/* <button onClick={handleLogout}>
+              <button onClick={handleLogout}>
                 Выйти из аккаунта
-              </button> */}
+              </button>
             </div>
           </Modal>
           : <Modal onClose={closeModal} header="Загрузка данных">
