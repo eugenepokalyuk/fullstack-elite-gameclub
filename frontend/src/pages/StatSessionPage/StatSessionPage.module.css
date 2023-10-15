@@ -1,5 +1,5 @@
 .container {
-    max-width: 1000px;
+    max-width: 80%;
     margin: 0 auto;
 }
 
@@ -10,5 +10,9 @@ p {
 
 .chartContainer {
     width: 80%;
-    margin: 20px auto;
+    /* margin: 20px auto; */
+}
+
+.container h1 {
+    font-size: 3vh;
 }

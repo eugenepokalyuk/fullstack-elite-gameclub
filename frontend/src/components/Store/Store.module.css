@@ -1,13 +1,46 @@
-li {
+.storeContainer th,
+.storeContainer td {
+    font-size: 2vh;
     list-style-type: none;
+    padding: 1vh;
+}
+
+.storeContainer h2 {
+    font-size: 2vh;
+}
+
+.storeContainer ul {
+    margin: 0;
+    padding: 0;
+}
+
+.storeContainer th {
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 0.3vh solid #ef7912;
+}
+
+.storeContainer button {
+    border-radius: 1vh;
+    background-color: #ef7912;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0vh 1vh;
+}
+
+.storeContainer button:disabled {
+    background-color: #1c1c21;
+    cursor: not-allowed;
 }
 
 .cart {
     width: 40%;
+
     background: #333;
     color: #fff;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 1vh;
+    border-radius: 1vh;
 
     display: flex;
     flex-direction: column;
@@ -17,12 +50,14 @@ li {
     height: 80%;
 }
 
-.cartFooter {
-    padding: 8px 0px;
-}
-
 .cartFooter .submitButton {
     width: 100%;
+    height: 5vh;
+    font-size: 2vh;
+
+    border-radius: 1vh;
+    margin-top: 1vh;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -37,20 +72,13 @@ li {
     width: 60%;
     background: #333;
     color: #fff;
-    padding: 8px 0px;
-    border-radius: 8px;
+
     height: 70vh;
 
-    overflow-y: scroll;
-}
+    overflow-y: auto;
 
-ul {
-    padding: 0;
-}
-
-.cart h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
+    /* padding: 1vh 0; */
+    border-radius: 1vh;
 }
 
 .selectedRow {
@@ -64,48 +92,19 @@ ul {
 
 .storeContainer {
     display: flex;
-    gap: 16px;
-}
-
-th,
-td {
-    padding: 8px;
-}
-
-th {
-    text-align: left;
-    font-weight: bold;
-    border-bottom: 1px solid #ef7912;
-}
-
-button {
-    padding: 8px;
-    border-radius: 8px;
-    background-color: #ef7912;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #1c1c21;
-    cursor: not-allowed;
+    gap: 3vh;
 }
 
 .ml2 {
-    margin-left: calc(2 * 4px);
+    margin-left: calc(2 * 4vh);
 }
 
 .mb2 {
-    margin-bottom: calc(2 * 4px);
+    margin-bottom: calc(2 * 4vh);
 }
 
 .mt2 {
-    margin-top: calc(2 * 4px);
-}
-
-.mt4 {
-    margin-top: calc(4 * 4px);
+    margin-top: calc(2 * 4vh);
 }
 
 .symbolsCircle {
@@ -113,12 +112,12 @@ button:disabled {
     justify-content: center;
     align-items: center;
 
-    width: 25px;
-    height: 25px;
-    margin: 8px;
-    padding: 8px;
+    width: 3vh;
+    height: 3vh;
+    margin: 1vh;
+    padding: 1vh;
 
-    font-size: 24px;
+    font-size: 3vh;
 }
 
 .cartRow {
@@ -126,6 +125,9 @@ button:disabled {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    font-size: 2vh;
+    list-style-type: none;
 }
 
 .warningMessage {

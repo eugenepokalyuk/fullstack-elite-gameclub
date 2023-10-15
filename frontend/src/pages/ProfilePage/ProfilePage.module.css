@@ -1,6 +1,10 @@
 .container {
-    max-width: 1000px;
+    max-width: 80%;
     margin: 0 auto;
+}
+
+.container h1 {
+    font-size: 3vh;
 }
 
 .container h1,
@@ -10,9 +14,9 @@ p {
 
 .chartContainer {
     width: 80%;
-    margin: 20px auto;
+    margin: 2vh auto;
 }
 
 .textShadows {
-    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+    text-shadow: 0 0 2vh #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
 }

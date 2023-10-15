@@ -1,17 +1,24 @@
-li {
-    list-style-type: none;
+.header button {
+    padding: 1vh;
+    border-radius: 1vh;
+    background-color: #ef7912;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 2vh;
 }
 
 .cart {
     width: 40%;
     background: #333;
     color: #fff;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 1vh;
+    border-radius: 1vh;
 
     display: flex;
     flex-direction: column;
-    height: 300px;
+    height: 30vh;
 }
 
 .cartBody {
@@ -23,7 +30,7 @@ li {
 }
 
 .cartFooter {
-    padding: 8px 0px;
+    padding: 1vh 0px;
 }
 
 .cartFooter .submitButton {
@@ -72,16 +79,16 @@ li {
     width: 60%;
     background: #333;
     color: #fff;
-    padding: 8px 0px;
-    border-radius: 8px;
+    padding: 1vh 0px;
+    border-radius: 1vh;
     height: 60vh;
 
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .cart h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 2vh;
+    margin-bottom: 1vh;
 }
 
 .selectedRow {
@@ -93,69 +100,79 @@ li {
     width: 100%;
 }
 
-.storeContainer {
+.table tbody {
+    font-size: 2vh;
+}
+
+.warehouseContainer {
     display: flex;
-    gap: 16px;
+    gap: 2vh;
 }
 
-th,
-td {
-    padding: 8px;
+.warehouseContainer th,
+.warehouseContainer td {
+    padding: 1vh;
 }
 
-th {
+.warehouseContainer th {
     text-align: left;
     font-weight: bold;
-    border-bottom: 1px solid #ef7912;
+    border-bottom: 0.3vh solid #ef7912;
 }
 
-button {
-    padding: 8px;
-    border-radius: 8px;
+.warehouseContainer button {
+    padding: 1vh;
+    border-radius: 1vh;
     background-color: #ef7912;
-    color: white;
+    color: #fff;
     border: none;
     cursor: pointer;
-    font-weight: 900;
+    font-weight: 500;
+
+    font-size: 2vh;
 }
 
-button:disabled {
+.warehouseContainer button:disabled {
     background-color: #1c1c21;
     cursor: not-allowed;
 }
 
 .ml2 {
-    margin-left: calc(2 * 4px);
+    margin-left: calc(2 * 1vh);
 }
 
 .mb2 {
-    margin-bottom: calc(2 * 4px);
+    margin-bottom: calc(2 * 1vh);
 }
 
 .mt2 {
-    margin-top: calc(2 * 4px);
+    margin-top: calc(2 * 1vh);
 }
 
 .mt4 {
-    margin-top: calc(4 * 4px);
+    margin-top: calc(4 * 1vh);
+}
+
+.mr2 {
+    margin-right: calc(2 * 1vh);
 }
 
 .mr4 {
-    margin-right: calc(4 * 4px);
+    margin-right: calc(4 * 1vh);
 }
 
 .switcher {
     display: flex;
     align-items: center;
     background: #ef7912;
-    border-radius: 8px;
-    gap: 16px;
+    border-radius: 1vh;
+    gap: 2vh;
 }
 
 .paymentButton {
     background-color: transparent;
     border: none;
-    padding: 5px;
+    padding: 1vh;
     cursor: pointer;
 
     width: 100%;
@@ -163,7 +180,7 @@ button:disabled {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 1vh;
 }
 
 .paymentButton:focus {
@@ -171,7 +188,7 @@ button:disabled {
 }
 
 .paymentButton>svg {
-    font-size: 20px;
+    font-size: 2vh;
 }
 
 .activeButton {
@@ -190,4 +207,8 @@ button:disabled {
 .selectedOption {
     font-weight: 900;
     color: #ef7912;
+}
+
+.table th {
+    font-size: 2vh;
 }

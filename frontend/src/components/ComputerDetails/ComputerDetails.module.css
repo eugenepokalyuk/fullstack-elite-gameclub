@@ -1,5 +1,5 @@
 .textShadows {
-    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+    text-shadow: 0 0 2vh #ef791240, 0 0 1vh #ef791240, 0 4px 32px #ef791280;
 }
 
 .card {
@@ -9,52 +9,59 @@
     width: 100%;
 }
 
-.cardList {
-    margin: 16px 16px;
-    padding: 16px;
+.card h3,
+h2 {
+    color: #fff;
+}
+
+.card h2 {
+    font-size: 3vh;
 }
 
 .listItem {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin: 8px 0px;
+    margin: 1vh 0px;
 }
 
 .listItem .listText {
-    margin-right: 8px;
+    margin-right: 1vh;
 }
 
 .listItem .listInput {
     cursor: text;
     border: 1px solid #ef7912;
-    border-radius: 8px;
-    padding: 4px;
-}
-
-.listItem .listInputSubmit {
-    width: 100%;
+    border-radius: 1vh;
+    padding: 1vh;
 }
 
 .mr1 {
-    margin-right: calc(1 * 4px);
+    margin-right: calc(1 * 1vh);
+}
+
+.mt1 {
+    margin-top: calc(1 * 1vh);
 }
 
 .mt4 {
-    margin-top: calc(4 * 4px);
+    margin-top: calc(4 * 1vh);
 }
 
 .dualContainer {
     display: flex;
-    margin-top: 24px;
+    margin-top: 2vh;
 }
 
 .dualContainer div {
     width: 100%;
 }
 
-.dualContainer div:first-child {
-    border-right: 3px solid #ef7912;
+.dualContainer div ul {
+    display: flex;
+    min-height: 40vh;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .w100 {
@@ -80,27 +87,56 @@
 
 .cardListNullPadding li,
 p {
-    padding: 0;
-    margin: 4px;
+    margin: 1vh;
+}
+
+.textOrangeColor,
+.faSpinner {
+    color: #ef7912;
+}
+
+.cardList input {
+    width: 20vh;
+    height: 2vh;
+    font-size: 2vh;
+    padding: 10vh;
+}
+
+.cardList h3 {
+    color: #fff;
+}
+
+.listInputSubmit {
+    width: 100%;
+    border: none;
+    font-size: 2vh;
+    border-radius: 1vh;
+    padding: 1vh;
+    margin: 1vh 0vh;
+    background: #ef7912;
+    color: #fff;
+    cursor: pointer;
+}
+
+.listInputSubmit:disabled {
+    width: 100%;
+    border: none;
+    font-size: 2vh;
+    border-radius: 1vh;
+    padding: 1vh;
+    margin: 1vh 0vh;
+    background: #111;
+    color: #fff;
+    cursor: not-allowed;
 }
 
 .dangerButton {
     background: crimson;
 }
 
-input:disabled {
-    /* color: #ef7912; */
+.cardList li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
-
-
-input::placeholder {
-    /* color: #ef7912; */
-}
-
-/*  */
-.textOrangeColor,
-.faSpinner {
-    color: #ef7912;
-}
-
-/*  */

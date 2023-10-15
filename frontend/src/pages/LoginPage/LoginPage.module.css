@@ -10,6 +10,18 @@
     text-align: center;
 }
 
+.content h1 {
+    font-size: 3vh;
+    margin-bottom: 2vh;
+}
+
+.content span,
+a,
+.errorMessage {
+    margin-top: calc(2 * 1vh);
+    font-size: 2vh;
+}
+
 .link {
     color: #ef7912;
     text-decoration: none;
@@ -21,11 +33,17 @@
 }
 
 .buttonDefault {
+    width: 25vh;
+    min-height: 1vh;
+
     font-family: 'Jet Brains Mono';
-    font-size: 16px;
+    font-size: 2vh;
+    border-radius: 1vh;
     line-height: 1.5;
     font-weight: normal;
-    padding: 16px 40px;
+    padding: 1vh 2vh;
+
+    margin-top: 2vh;
 }
 
 .buttonDefault:hover {
@@ -33,10 +51,11 @@
 }
 
 .inputDefault {
-    width: 480px;
-    min-height: 64px;
-    padding-right: calc(var(--offset-base-size) * 6);
-    padding-left: calc(var(--offset-base-size) * 6);
+    width: 50vh;
+    min-height: 5vh;
+
+    padding-right: calc(0.3vh * 6);
+    padding-left: calc(0.3vh * 6);
 
     display: flex;
     cursor: text;
@@ -44,18 +63,28 @@
     justify-content: space-between;
     box-sizing: border-box;
     background-color: #333;
-    border: 2px solid #333;
-    border-radius: 8px;
+    border: 0.3vh solid #333;
+    border-radius: 1vh;
     transition: 0.3s;
     position: relative;
 
     color: #fff;
-    font-size: 18px;
+    font-size: 2vh;
 
     cursor: text;
+
+    margin-top: 2vh;
 }
 
 .inputDefault:focus-visible {
     outline: none;
-    border: 2px solid #ef7912;
+    border: 0.3vh solid #ef7912;
+}
+
+.colorWhite {
+    color: #fff;
+}
+
+.mb2 {
+    margin-bottom: calc(2 * 1vh);
 }

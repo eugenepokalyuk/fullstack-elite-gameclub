@@ -5,3 +5,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #131316;
 }
+
+li {
+  list-style-type: none;
+}

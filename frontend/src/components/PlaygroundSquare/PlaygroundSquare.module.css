@@ -1,12 +1,14 @@
 .squareDefault {
-    width: 50px;
-    height: 50px;
-    border-radius: 16px;
+    width: 6vh;
+    height: 6vh;
+    font-size: 1.2vh;
+
+    border-radius: 1vh;
     user-select: none;
 }
 
 .square {
-    border: 2px dashed #ef791250;
+    border: 0.4vh dashed #ef791220;
 
     display: flex;
     align-items: center;
@@ -19,13 +21,13 @@
 }
 
 .squareOccupied {
-    border: 2px dashed #ef7912;
+    border: 0.4vh dashed #ef7912;
     background: #ef7912;
 }
 
 .squareOccupied:hover {
     background: #ef791290;
-    border: 2px solid #ef7912;
+    border: 0.4vh solid #ef7912;
 }
 
 .bgOnline {

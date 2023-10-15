@@ -44,3 +44,8 @@
 .faSpinner {
     color: #ef7912;
 }
+
+article {
+    color: #fff;
+    font-size: 1.5vh;
+}

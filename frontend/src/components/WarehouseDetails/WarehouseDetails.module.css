@@ -24,22 +24,6 @@
     margin-right: 8px;
 }
 
-.listItem .listInput {
-    cursor: text;
-    border: 1px solid #ef7912;
-    border-radius: 8px;
-    padding: 4px;
-}
-
-.listItem .listInput:disabled {
-    color: #ef7912;
-    cursor: not-allowed;
-}
-
-.listItem .listInputSubmit {
-    width: 100%;
-}
-
 .mr1 {
     margin-right: calc(1 * 4px);
 }
@@ -52,8 +36,16 @@
     display: flex;
     margin: 0;
     padding: 0;
-    margin: 4px;
-    padding: 4px;
+    margin: .25vh;
+    padding: .25vh;
+}
+
+.symbolsCircleContainer button {
+    border-radius: .3vh;
+    background-color: #ef7912;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 .symbolsCircle {
@@ -61,11 +53,10 @@
     justify-content: center;
     align-items: center;
 
-    width: 25px;
-    height: 25px;
-    margin: 2px;
-
-    font-size: 16px;
+    width: 2vh;
+    height: 2vh;
+    margin: 0.25vh;
+    font-size: 1.5vh;
 }
 
 .alignLeft {
@@ -79,7 +70,7 @@
 .cardScroll {
     width: 100%;
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .ml2 {
@@ -102,6 +93,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
+    color: #fff;
 }
 
 .supplyContainer .containerCounter {
@@ -111,6 +104,42 @@
     justify-content: center;
 }
 
-.textOrangeColor, .faSpinner {
+.containerCounter span {
+    color: #fff;
+}
+
+.textOrangeColor,
+.faSpinner {
     color: #ef7912;
+}
+
+.listInputSubmit {
+    display: flex;
+    align-items: center;
+    background: #ef7912;
+    border-radius: 1vh;
+    gap: 1vh;
+    padding: 1vh;
+    border: none;
+    font-size: 1.5vh;
+    color: #fff;
+}
+
+.listItem .listInput {
+    display: flex;
+    align-items: center;
+    border-radius: 1vh;
+    padding: 1vh;
+    border: none;
+    font-size: 1.5vh;
+    color: #000;
+}
+
+.listItem .listInput:disabled {
+    color: #ef7912;
+    cursor: not-allowed;
+}
+
+.listItem .listInputSubmit {
+    width: 100%;
 }

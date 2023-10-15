@@ -1,16 +1,18 @@
 .list {
     display: flex;
-    /* flex-direction: column; */
     flex-wrap: wrap;
     width: 100%;
 }
 
 .listItem {
-    width: 200px;
-    height: 40px;
+    width: 20vh;
+    height: 5vh;
+
     background: #ef7912;
-    padding: 8px;
-    margin: 8px;
+    padding: 0.5vh;
+    margin: 0.5vh;
+
+    font-size: 2vh;
 
     display: flex;
     justify-content: center;
@@ -19,7 +21,7 @@
     color: #000;
     font-weight: 900;
 
-    border-radius: 8px;
+    border-radius: 1vh;
 }
 
 .listItem:hover {

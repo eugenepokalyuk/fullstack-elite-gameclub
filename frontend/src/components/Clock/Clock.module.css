@@ -1,0 +1,18 @@
+.container {
+    position: absolute;
+    bottom: 0;
+    left: 1%;
+}
+
+.container h1 {
+    font-size: 5vh;
+    color: #eee;
+}
+
+.textShadows {
+    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+}
+
+.mb4 {
+    margin-bottom: calc(1 * 2vh);
+}

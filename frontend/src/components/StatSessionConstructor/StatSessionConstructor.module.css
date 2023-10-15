@@ -1,45 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .textShadows {
-    text-shadow: 0 0 16px #ef791240, 0 0 8px #ef791240, 0 4px 32px #ef791280;
+    color: #ef7912;
+}
+
+.selectedText {
+    color: #ef7912;
 }
 
 .card {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    font-size: 1.5vh;
+    margin-right: 1vh;
 }
 
-.cardFlexBetween {
-    justify-content: space-between;
+.card li {
+    margin: 0;
+    margin: 1vh;
+}
+
+.card ul li {
+    margin: 0;
 }
 
 .cardStat {
     background: #333;
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 1vh;
+    padding: 2vh;
+}
+
+.cardStat h2 {
+    margin: 1vh 0vh;
+}
+
+article h2 {
+    font-size: 2vh;
 }
 
 .cardItem {
-    width: 200px;
+    width: 20%;
     background: #333;
-    border-radius: 8px;
-    padding: 16px;
-}
+    border-radius: 1vh;
+    padding: 1vh;
 
-.selectedText {
-    font-weight: 900;
-    color: #ef7912;
-}
-
-.flexBetween {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.heightSmall {
-    min-height: 150px;
+.cardItem * {
+    font-size: 1.5vh;
+    margin: 0;
+    padding: 0;
+    margin: 0.3vh 0;
 }
 
-.textOrangeColor, .faSpinner {
+.textOrangeColor,
+.faSpinner {
     color: #ef7912;
+}
+
+.checksBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* background: hotpink; */
+}
+
+.priceBlock {
+    width: 1.5vh;
+    height: 1.5vh;
+    background: #ef7912;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.25vh;
+    padding: .75vh;
+    border-radius: 3vh;
 }
