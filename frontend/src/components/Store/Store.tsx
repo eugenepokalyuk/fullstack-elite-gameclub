@@ -13,19 +13,22 @@ import { useNavigate } from 'react-router-dom';
 export const Store: FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
-    const paymentType = useAppSelector((store) => store.payment.paymentType)
     const [error, setError] = useState<boolean>(false);
-    const [errorDesription, setErrorDesription] = useState<string>('');
+    const [errorDesription, ] = useState<string>('');
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
+
+    const paymentType = useAppSelector((store) => store.payment.paymentType)
 
     const closeModal = () => {
         navigate(-1)
     };
+
     const storeRender = async () => {
         dispatch({ type: FETCH_STORE_REQUEST });
         await fetchStoreData()
@@ -68,7 +71,7 @@ export const Store: FC = () => {
         setTotalPrice(price);
 
         storeRender();
-    }, [selectedItems, itemCounts, dispatch]);
+    }, [selectedItems, dispatch]);
     let qty = 0;
 
     const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id))
@@ -76,11 +79,6 @@ export const Store: FC = () => {
             qty = itemCounts[item.id] || 1;
             return { ...item, qty };
         });
-
-    const data = {
-        items: selectedProducts,
-        payment: paymentType
-    };
 
     const handleAddToCart = async () => {
         setModalOpen(true);
@@ -143,13 +141,15 @@ export const Store: FC = () => {
                                     )
                                 })}
                             </ul>
-                        ) : error ? <p className={styles.warningMessage}>{errorDesription}</p> : <p>Корзина пуста</p>
+                        )
+                            : error
+                                ? <p className={styles.warningMessage}>{errorDesription}</p> : <p>Корзина пуста</p>
                         }
                     </div>
 
                     <div className={styles.cartFooter}>
                         <PaymentSwitcher />
-                        <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleAddToCart} disabled={selectedItems.length === 0}>
+                        <button className={`${styles.submitButton}`} onClick={handleAddToCart} disabled={selectedItems.length === 0}>
                             Оплатить
                             <span>
                                 {totalPrice} руб.
@@ -162,7 +162,7 @@ export const Store: FC = () => {
 
             {isModalOpen && storeItems && (
                 <Modal onClose={closeModal} header={"Корзина"}>
-                    <StoreDetails selectedItems={data} statement={statement} />
+                    <StoreDetails statement={statement} selectedProducts={selectedProducts} payment={paymentType} />
                 </Modal>
             )}
         </>

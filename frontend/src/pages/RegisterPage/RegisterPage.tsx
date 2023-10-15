@@ -1,6 +1,5 @@
 import React, { useState, FormEvent, FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './RegisterPage.module.css';
 import { fetchUserRegister, fetchUserLogin } from '../../utils/api';
 import { USER_STATEMENT } from '../../services/actions/auth'
@@ -37,16 +36,6 @@ export const RegisterPage: FC = () => {
                                     password
                                 }
                             })
-                            // localStorage.setItem('uuid', res.uuid);
-                            // dispatch({
-                            //     type: USER_STATEMENT,
-                            //     payload: {
-                            //         uuid: res.uuid,
-                            //         name,
-                            //         login,
-                            //         password
-                            //     }
-                            // })
                             navigate('/', { replace: true });
                         } else {
                             setError('Ой, данные для входа неверные!');
@@ -65,7 +54,7 @@ export const RegisterPage: FC = () => {
         <div className={styles.wrapper}>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit} className={styles.content}>
-                    <h1 className='text text_type_main-medium mb-6 mt-10'>Регистрация</h1>
+                    <h1 className={`${styles.colorWhite}`}>Регистрация</h1>
 
                     <input
                         type='text'
@@ -100,12 +89,12 @@ export const RegisterPage: FC = () => {
                         </p>
                     )}
 
-                    <button className={`${styles.buttonDefault} mb-20`}>
+                    <button className={`${styles.buttonDefault} ${styles.mb2}`}>
                         Зарегистрироваться
                     </button>
 
-                    <div className='text text_type_main-small mb-4'>
-                        <span className="text_color_inactive">Уже зарегистрированы?</span>
+                    <div>
+                        <span className={`${styles.colorWhite}`}>Уже зарегистрированы?</span>
                         <Link to='/login' className={styles.link}> Войти</Link>
                     </div>
 

@@ -93,7 +93,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
 
     return (
         <>
-            <div
+            <li
                 className={`
                     ${styles.square}
                     ${styles.squareDefault}
@@ -109,7 +109,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                 onClick={() => { handleClick(computer) }}
             >
                 <h1>{computer && computer.name}</h1>
-            </div>
+            </li>
 
             {isLoading && (
                 <Modal onClose={closeModal}>

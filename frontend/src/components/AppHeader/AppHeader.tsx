@@ -18,11 +18,11 @@ const AppHeader = () => {
         <header className={styles.header}>
             <nav className={styles.nav}>
 
-                <div className={styles.imageContainer}>
+                {/* <div className={styles.imageContainer}>
                     <NavLink to="/">
                         <img src={image} alt="elite logo" />
                     </NavLink>
-                </div>
+                </div> */}
 
                 <div className={styles.linksContainer}>
                     <NavLink to="/" className={`${styles.link} ${homeRoute ? styles.linkActive : styles.link}`}>
@@ -50,7 +50,7 @@ const AppHeader = () => {
                     </NavLink>
                 </div>
 
-                <div className={styles.mr8}>
+                <div className={styles.mr2}>
                     <NavLink to="/profile" className={`${styles.link} ${profileRoute ? styles.linkActive : styles.link}`}>
                         Профиль
                     </NavLink>

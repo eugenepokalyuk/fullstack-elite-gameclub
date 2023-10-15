@@ -8,6 +8,7 @@ import Modal from "../Modal/Modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FETCH_STAT_SESSION_FAILURE, FETCH_STAT_SESSION_REQUEST, FETCH_STAT_SESSION_SUCCESS } from "../../services/actions/session";
+import { CARD } from "../../utils/constants";
 
 export const StatSessionConstructor = () => {
     const dispatch = useAppDispatch();
@@ -107,7 +108,7 @@ export const StatSessionConstructor = () => {
         }
     }
     const soldPositions = () => {
-        const storeUnicArray = storeOrders && Array.from(storeOrders.reduce((map, order) => {
+        const storeUnicArray: any = storeOrders && Array.from(storeOrders.reduce((map, order) => {
             const { item_id, qty, total } = order;
 
             if (map.has(item_id)) {
@@ -122,7 +123,7 @@ export const StatSessionConstructor = () => {
         }, new Map()).values());
         return (
             <>
-                {storeUnicArray && storeUnicArray?.map((item) => {
+                {storeUnicArray?.length > 0 ? storeUnicArray?.map((item: any) => {
                     const storeItem = store.find((el: any) => el.id === item.item_id);
 
                     return (
@@ -134,27 +135,106 @@ export const StatSessionConstructor = () => {
                             </div>
                         </li>
                     )
-                })}
+                }) : <p>Если ничего не продано, продай сам</p>}
             </>
         )
     }
+    const getCombinedChecks = () => {
+        const checkMap: any = {};
+        const combinedChecks = [];
 
+        storeOrders?.forEach((check) => {
+            const { uuid, date } = check;
+
+            if (checkMap[uuid]) {
+                checkMap[uuid].push(check);
+            } else {
+                checkMap[uuid] = [check];
+            }
+        });
+
+        for (const uuid in checkMap) {
+            const combinedCheck = checkMap[uuid].reduce(
+                (acc: any, check: any) => {
+                    return {
+                        ...acc,
+                        uuid: check.uuid,
+                        date: check.date,
+                        payment: check.payment,
+                        items: [...acc.items, { id: check.item_id, name: check.name, price: check.total, qty: check.qty }],
+                        total: acc.total + check.total,
+                    };
+                },
+                { uuid: "", items: [], total: 0 }
+            );
+
+            combinedChecks.push(combinedCheck);
+        }
+
+        // Сортировка объединенных чеков по дате
+        combinedChecks.sort((a, b) => {
+            const dateA: any = new Date(a.date);
+            const dateB: any = new Date(b.date);
+            return dateB - dateA;
+        });
+
+        return combinedChecks;
+    };
+    const combinedCheckPositions = () => {
+        const combinedChecks = getCombinedChecks();
+
+        return (
+            <>
+                {combinedChecks.length > 0 ? combinedChecks.map((check, index) => {
+                    return (
+                        <li key={index} className={`${styles.cardItem}`}>
+                            <div>
+                                <h3 className={styles.textShadows}>{check ? `Чек №${index + 1}` : "Ошибка"}</h3>
+
+                                <ul>
+                                    {check.items.map((item: any, index: any) => (
+                                        <li key={index} className={styles.checksBlock}>
+                                            <p>{item.name} x {item.qty}</p>
+                                            <p className={styles.priceBlock}>{item.price}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <p>{check.date}</p>
+                                <p>Тип оплаты: <span className={styles.selectedText}>{check.payment === CARD ? "Безналичный" : "Наличный"}</span></p>
+                                <p>Общая сумма: <span className={styles.selectedText}>{check.total}</span> руб.</p>
+                            </div>
+                        </li>
+                    )
+                }) : <p>Чеков нет, приходи завтра</p>}
+            </>
+        );
+    };
     return (
         <>
             {!loading
                 ? <>
                     <article>
-                        <ul className={`${styles.card} ${styles.cardFlexBetween}`}>
+                        <ul className={`${styles.card}`}>
                             <li className={`${styles.cardStat}`}>
-                                <h2>Выручка компютеров: <span className={`${styles.textShadows} text text_type_digits-medium mb-8`}>{calculateComputersTotal()}</span> руб.</h2>
-                                <h2>Выручка магазина: <span className={`${styles.textShadows} text text_type_digits-medium mb-8`}>{calculateStoreTotal()}</span> руб.</h2>
+                                <h2>Выручка компютеров: <span className={styles.textShadows}>{calculateComputersTotal()}</span> руб.</h2>
+                                <h2>Выручка магазина: <span className={styles.textShadows}>{calculateStoreTotal()}</span> руб.</h2>
                             </li>
 
                             <li className={`${styles.cardStat}`}>
-                                <h2>Наличные: <span className={`${styles.textShadows} text text_type_digits-medium mb-8`}>{calculatePCStore()?.cash}</span> руб.</h2>
-                                <h2>Безналичные: <span className={`${styles.textShadows} text text_type_digits-medium mb-8`}>{calculatePCStore()?.card}</span> руб.</h2>
-                                <h2>Общая сумма: <span className={`${styles.textShadows} text text_type_digits-medium mb-8`}>{calculatePCStore()?.total}</span> руб.</h2>
+                                <h2>Наличные: <span className={styles.textShadows}>{calculatePCStore()?.cash}</span> руб.</h2>
+                                <h2>Безналичные: <span className={styles.textShadows}>{calculatePCStore()?.card}</span> руб.</h2>
+                                <h2>Общая сумма: <span className={styles.textShadows}>{calculatePCStore()?.total}</span> руб.</h2>
                             </li>
+                        </ul>
+                    </article>
+
+                    <article>
+                        <h2>Чеки:</h2>
+                        <ul className={styles.card}>
+                            {combinedCheckPositions()}
                         </ul>
                     </article>
 

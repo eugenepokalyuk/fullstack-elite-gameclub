@@ -1,4 +1,3 @@
-import { useAppSelector } from "../services/hooks/hooks";
 import { TComputer, TPlayBody } from "../services/types/types";
 
 // const ApiUrlPath = 'http://172.20.10.4:80';
@@ -115,7 +114,7 @@ export const fetchStoreData = async () => {
     }
     return request(endpoint, options);
 }
-export const fetchStoreSell = async (selectedItems: any) => {
+export const fetchStoreSell = async (products: any, payment: string) => {
     const endpoint = routeStore + "/item/sell";
     const options = {
         method: "PATCH",
@@ -123,7 +122,10 @@ export const fetchStoreSell = async (selectedItems: any) => {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('uuid')
         },
-        body: JSON.stringify(selectedItems)
+        body: JSON.stringify({
+            "items": products,
+            "payment": payment
+        })
     }
     return request(endpoint, options);
 }

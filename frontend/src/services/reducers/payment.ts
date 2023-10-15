@@ -3,7 +3,7 @@ import {
 } from "../actions/payment";
 
 const initialState: any = {
-    paymentType: "card",
+    paymentType: "",
     loading: false,
     error: null,
 };

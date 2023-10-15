@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styles from "./PersonalSettings.module.css";
 import { useAppDispatch } from '../../services/hooks/hooks';
 
@@ -11,24 +11,22 @@ export const PersonalSettings: FC = () => {
     }
 
     const styleMainColor = {
-        marginLeft: "5px",
-        width: "20px",
-        height: "20px",
+        marginLeft: "1vh",
+        width: "4vh",
+        height: "4vh",
         background: themeColor.mainColor
     }
 
     const styleMainTheme = {
-        marginLeft: "5px",
-        width: "20px",
-        height: "20px",
+        marginLeft: "1vh",
+        width: "4vh",
+        height: "4vh",
         background: themeColor.theme
     }
-
 
     return (
         <>
             <h3>Персональные изменения</h3>
-
             <ul>
                 <li className={styles.flex}>
                     <p>Основной цвет:</p>

@@ -1,26 +1,20 @@
 import { FC, useState } from 'react';
 import styles from './StoreDetails.module.css';
-// import { StoreDetailsProps, TComputer } from '../../services/types/types';
-import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer, fetchStoreSell } from '../../utils/api';
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, STORE_OPEN_CART, CASH } from '../../utils/constants';
-import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
-import { useAppSelector } from '../../services/hooks/hooks';
+import { fetchStoreSell } from '../../utils/api';
+import { STORE_OPEN_CART, CASH } from '../../utils/constants';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { TStoreItem } from '../../services/types/types';
-import { STORE_PATH } from '../../utils/routePath';
 
 type TStoreDetails = {
-    selectedItems: {
-        items: TStoreItem[],
-        payment: string
-    }
+    selectedProducts: TStoreItem[],
+    payment: string,
     statement: string
 }
 
-const StoreDetails: FC<TStoreDetails> = ({ selectedItems, statement }) => {
+const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment }) => {
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
@@ -32,9 +26,9 @@ const StoreDetails: FC<TStoreDetails> = ({ selectedItems, statement }) => {
         navigate(-1);
     };
 
-    const handleAcceptClick = (item: any) => {
+    const handleAcceptClick = (products: any, payment: string) => {
         isLoading(true);
-        fetchStoreSell(item)
+        fetchStoreSell(products, payment)
             .then(res => {
                 isLoading(false);
                 setFinish(true);
@@ -66,16 +60,20 @@ const StoreDetails: FC<TStoreDetails> = ({ selectedItems, statement }) => {
                 return (
                     <>
                         <ul className={styles.cartBody}>
-                            {selectedItems.items.map((item: any) => (
+                            {selectedProducts.map((item: any) => (
                                 <li key={item.id} className={styles.cartItem}>
-                                    <p>{item.name}</p>
-                                    <p>{item.qty}</p>
+                                    <p className={styles.name}>{item.name}</p>
+                                    <p className={styles.qty}>{item.qty}</p>
                                 </li>
                             ))}
                         </ul>
-                        <p className={`${styles.alignLeft}`}>Способ оплаты: <span className={styles.selectedText}>{selectedItems.payment === CASH ? "Наличный" : "Безналичный"}</span></p>
+                        <p
+                            className={`${styles.alignLeft}`}
+                        >
+                            Способ оплаты: <span className={styles.selectedText}>{payment === CASH ? "Наличный" : "Безналичный"}</span>
+                        </p>
 
-                        <button onClick={() => handleAcceptClick(selectedItems)}>
+                        <button className={styles.button} onClick={() => handleAcceptClick(selectedProducts, payment)}>
                             Подтвердить
                         </button>
                     </>

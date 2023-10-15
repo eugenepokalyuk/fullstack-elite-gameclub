@@ -1,14 +1,21 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from "./PaymentSwitcher.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCreditCard, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { CARD, CASH } from '../../utils/constants';
-import { useAppDispatch } from '../../services/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
 
 export const PaymentSwitcher: FC = () => {
     const dispatch = useAppDispatch();
     const [paymentType, setPaymentType] = useState<string>(CARD);
+    const payment = useAppSelector((store) => store.payment.paymentType);
+
+    useEffect(() => {
+        setPaymentType(payment);
+
+        console.log("paymentType", paymentType)
+    })
 
     const handlePaymentTypeChange = (type: string) => {
         setPaymentType(type);

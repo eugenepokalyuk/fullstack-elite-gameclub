@@ -75,14 +75,14 @@ export const Warehouse: FC = () => {
 
     return (
         <>
-            <article className={`${styles.mt4}`}>
+            <article className={`${styles.mt2}`}>
 
-                <div>
-                    <button className={`${styles.mr4}`} onClick={handleAddItemClick}>Добавить новый товар</button>
-                    <button className={`${styles.mr4}`} onClick={handleAddSupplyClick}>Приход товара</button>
+                <div className={`${styles.header}`}>
+                    <button className={`${styles.mr2}`} onClick={handleAddItemClick}>Добавить новый товар</button>
+                    <button className={`${styles.mr2}`} onClick={handleAddSupplyClick}>Приход товара</button>
                 </div>
 
-                <div className={`${styles.storeContainer} ${styles.mt4}`}>
+                <div className={`${styles.warehouseContainer} ${styles.mt2}`}>
                     <div className={styles.card}>
                         <table className={styles.table}>
                             <thead>

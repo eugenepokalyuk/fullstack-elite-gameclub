@@ -2,9 +2,9 @@ import { FC, useState } from 'react';
 import styles from './ComputerDetails.module.css';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
 import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer } from '../../utils/api';
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, CARD } from '../../utils/constants';
+import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
-import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
+import { useAppSelector } from '../../services/hooks/hooks';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +22,8 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const paymentType = useAppSelector((store) => store.payment.paymentType)
     const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
+
+    const isButtonDisabled = !minutes || !price || !paymentType;
 
     const closeModal = () => {
         navigate(-1);
@@ -41,7 +43,6 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
         isLoading(true);
         fetchPlay(computerData)
             .then(res => {
-                // dispatch({ type: UPDATE_PC_SESSION, payload: { id: computer.id, pc_session: res.pc_session } })
                 isLoading(false);
                 setFinish(true);
                 setFinishDescription("Бронирование завершено");
@@ -117,20 +118,20 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     }
 
     function calculateTimeRemaining(from: any, until: any) {
-        const fromTime: any = new Date(from);
-        const untilTime: any = new Date(until);
+        const fromTime: any = new Date('2023-10-10T15:23:10');
+        const untilTime: any = new Date('2023-10-10T16:23:12');
         const remainingTime = untilTime - fromTime;
 
-        // Разбитие времени на часы, минуты и секунды
+        // // Разбитие времени на часы, минуты и секунды
         const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
         const seconds = Math.floor((remainingTime / 1000) % 60);
 
-        return {
-            hours,
-            minutes,
-            seconds
-        };
+        return (
+            <p>
+                {hours}:{minutes}:{seconds}
+            </p>
+        )
     }
 
     const detailsBody = () => {
@@ -168,20 +169,24 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
 
                             <li className={styles.listItem}>
                                 <p className={styles.listText}>Сумма: </p>
-                                <input className={styles.listInput} type="text" value={price} onChange={(event) => setPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
+                                <input className={`${styles.listInput} ${styles.w100}`} type="text" value={price} onChange={(event) => setPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
                             </li>
 
                             <PaymentSwitcher />
 
-                            <li className={styles.mt4}>
-                                <button className={`${styles.listInputSubmit} ${styles.w100}`} onClick={() => handleAcceptClick(computer)}>Принять</button>
+                            <li>
+                                <button
+                                    className={`${styles.listInputSubmit} ${styles.w100}`}
+                                    onClick={() => handleAcceptClick(computer)}
+                                    disabled={isButtonDisabled}
+                                >
+                                    Принять
+                                </button>
                             </li>
-
                         </ul>
                     </>
                 )
             case COMPUTER_STATUS_PLAYING:
-                // const remainingTime = calculateTimeRemaining(`${computer.details?.time.from.hours}:${computer.details?.time.from.minutes}`, `${computer.details?.time.until.hours}:${computer.details?.time.until.minutes}`)
                 return (
                     <>
                         <h3>Устройство занято</h3>
@@ -205,9 +210,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                     Конец <span className={styles.selectedText}>{computer.details?.time.until.hours}:{computer.details?.time.until.minutes}</span>
                                 </p>
 
-                                {/* <p>
-                                    Осталось: {remainingTime.hours} ч. {remainingTime.minutes} мин. {remainingTime.seconds} сек.
-                                </p> */}
+                                {/* {calculateTimeRemaining(computer.details?.time.from, computer.details?.time.until)} */}
                             </div>
                         </div>
 
@@ -239,14 +242,9 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                         <p>руб.</p>
                                     </li>
 
-                                    <li className={styles.listItem}>
-                                        <p>Тип оплаты: <span className={styles.selectedText}>{paymentType === CARD ? "Безналичный" : "Наличный"}</span></p>
-                                    </li>
-
-
                                     <PaymentSwitcher />
 
-                                    <li className={styles.mt4}>
+                                    <li className={styles.mt1}>
                                         <button className={`${styles.listInputSubmit} ${styles.w100}`} onClick={() => handleFinishClick(computer)}>Подтвердить</button>
                                     </li>
                                 </ul>
@@ -279,7 +277,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                         </ul>
 
                         <div>
-                            <button onClick={() => handleContinueClick(computer)}>Подтвердить</button>
+                            <button className={`${styles.listInputSubmit}`} onClick={() => handleContinueClick(computer)}>Подтвердить</button>
                         </div>
                     </>
                 )
@@ -312,8 +310,8 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                         </ul>
 
                         <div>
-                            <button onClick={() => handleEditComputerNameClick(computer)} className={styles.mr1}>Подтвердить</button>
-                            <button onClick={() => handleRemoveComputerClick(computer)} className={styles.dangerButton}>Удалить устройство</button>
+                            <button onClick={() => handleEditComputerNameClick(computer)} className={styles.listInputSubmit}>Подтвердить</button>
+                            <button onClick={() => handleRemoveComputerClick(computer)} className={`${styles.listInputSubmit} ${styles.dangerButton}`}>Удалить устройство</button>
                         </div>
                     </>
                 )

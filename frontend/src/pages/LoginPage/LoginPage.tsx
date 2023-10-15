@@ -1,6 +1,5 @@
 import React, { useState, FormEvent, FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useAppDispatch } from '../../services/hooks/hooks';
 
 import styles from './LoginPage.module.css';
@@ -48,7 +47,7 @@ export const LoginPage: FC = () => {
         <div className={styles.wrapper}>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit} className={styles.content}>
-                    <h1 className='text text_type_main-medium mb-6 mt-10'>Вход</h1>
+                    <h1 className={`${styles.colorWhite}`}>Вход</h1>
 
                     <input
                         type='text'
@@ -69,18 +68,17 @@ export const LoginPage: FC = () => {
                     />
 
                     {error && (
-                        <p className={`${styles.errorMessage} text text_type_main-default mb-4`}>
+                        <p className={`${styles.errorMessage}`}>
                             {error}
                         </p>
                     )}
 
-                    <button className={`${styles.buttonDefault} mb-20`}>
+                    <button className={`${styles.buttonDefault} ${styles.mb2}`}>
                         Начать смену
                     </button>
 
-
-                    <div className='text text_type_main-small mb-4'>
-                        <span className="text_color_inactive">Вы - новый пользователь? </span>
+                    <div>
+                        <span className={`${styles.colorWhite}`}>Вы - новый пользователь? </span>
                         <Link to='/register' className={styles.link}> Зарегистрироваться</Link>
                     </div>
                 </form>

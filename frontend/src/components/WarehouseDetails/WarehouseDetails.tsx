@@ -202,7 +202,9 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                                                 <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 5)}>-5</button>
                                                 <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 1)}>-</button>
                                             </div>
-                                            {itemCounts[item.id] || 0}
+                                            <span>
+                                                {itemCounts[item.id] || 0}
+                                            </span>
                                             <div className={styles.symbolsCircleContainer}>
                                                 <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 1)}>+</button>
                                                 <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 5)}>+5</button>

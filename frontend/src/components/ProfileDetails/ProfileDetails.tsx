@@ -38,7 +38,7 @@ const ProfileDetails: FC = () => {
                     ?
                     <ul className={styles.card}>
                         <li className={styles.cardItem}>
-                            Имя сотрудника: <span className={`${styles.textShadows} ${styles.selectedText} text text_type_main-medium mb-8`}>{user.name}</span>
+                            Имя сотрудника: <span className={`${styles.textShadows} ${styles.selectedText}`}>{user.name}</span>
                         </li>
                         <li className={styles.cardItem}>
                             <button

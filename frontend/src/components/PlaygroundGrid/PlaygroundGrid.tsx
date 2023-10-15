@@ -64,20 +64,18 @@ const PlaygroundGrid: FC = () => {
     };
 
     return (
-        <article className={styles.article}>
-            <div className={styles.grid}>
-                {squares.map((square) => (
-                    <PlaygroundSquare
-                        key={square.id}
-                        id={square.id}
-                        onDragStart={handleDragStart}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                        playground={playground}
-                    />
-                ))}
-            </div>
-        </article>
+        <ul className={styles.grid}>
+            {squares.map((square) => (
+                <PlaygroundSquare
+                    key={square.id}
+                    id={square.id}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    playground={playground}
+                />
+            ))}
+        </ul>
     );
 }
 

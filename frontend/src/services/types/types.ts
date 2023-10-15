@@ -68,7 +68,9 @@ export type TStoreStat = {
     item_id: number,
     qty: number,
     total: number,
-    payment: string
+    payment: string,
+    uuid: string,
+    date: string
 };
 
 export type TComputerStat = {

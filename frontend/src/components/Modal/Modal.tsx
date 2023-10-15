@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useCallback } from 'react';
-import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './Modal.module.css';
 import ReactDOM from 'react-dom';
 import ModalOverlay from '../ModalOverlay/ModalOverlay';
 import { ModalProps } from '../../services/types/types'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 const Modal: FC<ModalProps> = ({ children, header, onClose }) => {
   const onCloseCallback = useCallback(onClose, [onClose]);
 
@@ -33,10 +33,14 @@ const Modal: FC<ModalProps> = ({ children, header, onClose }) => {
       <div className={styles.modal} data-cy="modalContainer">
         <div className={`${styles.modalContent} pt-10 pr-10 pb-15 pl-10 text-center`} onKeyDown={onKeyDown}>
           <div className={`${header ? styles.modalHeader : `${styles.modalNoHeader} mt-5 mb-5`} d-flex`}>
-            {header && <span className='text text_type_main-large'>{header}</span>}
+            {header && <span className={`${styles.headerText} text text_type_main-large`}>{header}</span>}
             {onClose && (
               <span className={`${styles.closeIcon} ml-auto`} data-cy="modalCloseIcon">
-                <CloseIcon type='primary' onClick={onClose} />
+                {/* <CloseIcon type='primary' onClick={onClose} /> */}
+                <FontAwesomeIcon
+                  icon={faClose}
+                  onClick={onClose}
+                />
               </span>
             )}
           </div>
