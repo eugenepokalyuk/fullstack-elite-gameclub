@@ -15,7 +15,6 @@ def get_session_stat(sessionId: str = Header(description="Session ID")):
         data = stat.get_session_stat(sessionId)
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 

@@ -56,4 +56,9 @@ def finish_session(session_id):
     user_session.finish = dt_finish
     user_session.status = 'closed'
     db.commit()
-    
+
+
+def get_all_users():
+    db = Session()
+    users = db.query(Users.name, Users.uuid).all()
+    return [{'name': u.name, 'uuid': u.uuid} for u in users]

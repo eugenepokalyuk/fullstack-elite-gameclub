@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Header, HTTPException
-# from .database_old import SQLiteDB
 from .database import *
 
 

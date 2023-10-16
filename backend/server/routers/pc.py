@@ -17,7 +17,6 @@ def ping():
         data = pc.get_pc_data()
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -28,7 +27,6 @@ def play(data: models.Play):
         pc_session = pc.play(data.time, data.price, data.id, data.payment)
         return JSONResponse(content={'pc_session':pc_session}, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -39,7 +37,6 @@ def pause(id: int = Query(description="ID девайса")):
         pc.pause(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -50,7 +47,26 @@ def continue_play(id: int = Query(description="ID девайса")):
         pc.continue_play(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
+        return JSONResponse(content='', status_code=400)
+    
+
+@router.patch("/swap", dependencies=[Depends(auth)])
+def swap_order_pc_id(data: models.PcSwap):
+    """ Пересадить пользователя за другой девайс """
+    try:
+        pc.swap(data.id, data.new_id)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
+        return JSONResponse(content='', status_code=400)
+
+
+@router.patch("/cancel", dependencies=[Depends(auth)])
+def cancel(id: int = Query(description="ID девайса")):
+    """ Отменить бронирование """
+    try:
+        pc.cancel(id)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
         return JSONResponse(content='', status_code=400)
 
 
@@ -61,7 +77,6 @@ def finish(data: models.Finish):
         pc.finish(data.id, data.price, data.payment)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -72,7 +87,6 @@ def start_tech_works(data: models.StartTechWorks):
         pc.start_tech_works(data.id, data.reason)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -83,7 +97,6 @@ def stop_tech_works(id: int = Query(description="ID девайса")):
         pc.stop_tech_works(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -94,7 +107,6 @@ def edit_pc_name(data: models.EditName):
         pc.set_pc_name(data.id, data.name)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -105,9 +117,9 @@ def set_grid_id_for_pc(data: models.GridId):
         pc.set_grid_id(data.id, data.grid_id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
+
 @router.delete('/remove', dependencies=[Depends(auth)])
 def remove_device(id: int = Query(description="ID Удаляемого девайса")):
     """ Удалить девайс """
@@ -115,5 +127,5 @@ def remove_device(id: int = Query(description="ID Удаляемого дева�
         pc.remove_pc(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
+    

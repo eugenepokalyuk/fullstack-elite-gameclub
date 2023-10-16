@@ -16,7 +16,6 @@ def create_user(data: models.CreateUser):
         uuid = workflow.create_user(data)
         return JSONResponse(content={'uuid':uuid}, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -34,7 +33,6 @@ def login_user(data: models.LoginUser):
             response['name'] = user_data['name']
         return JSONResponse(content=response, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -45,7 +43,6 @@ def auth_user(authorization: str = Header(description="UUID Пользовате
         name = workflow.get_name_by_uuid(authorization)
         return JSONResponse(content={'success':True, 'name':name}, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content={'success':False}, status_code=400)
     
 
@@ -56,5 +53,15 @@ def finish_session(sessionId: str = Header(description="UUID Смены")):
         workflow.finish_session(sessionId)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
+    
+
+@router.get('/all', dependencies=[Depends(auth)], response_model=list[models.UserDataResponse])
+def get_all_users():
+    """ Получить список пользователей """
+    try:
+        arr = workflow.get_all_users()
+        return JSONResponse(content=arr, status_code=200)
+    except Exception as e:
+        return JSONResponse(content='', status_code=400)
+    

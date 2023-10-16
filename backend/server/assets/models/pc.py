@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, validator
 
+
 class Time(BaseModel):
     hours: int = Field(description="Количество часов")
     minutes: int = Field(description="Количество минут")
@@ -80,3 +81,9 @@ class ResponsePing(BaseModel):
 
 class StartPcPlay(BaseModel):
     pc_session: str = Field(description="ID сессии")
+
+
+class PcSwap(BaseModel):
+    id: int = Field(description="Старый ID")
+    new_id: int = Field(description="Новый ID")
+    

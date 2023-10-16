@@ -2,10 +2,13 @@ import uvicorn
 from fastapi import FastAPI
 from routers import pc, store, stat, workflow
 from fastapi.middleware.cors import CORSMiddleware
+from assets.modules.database import create_default_devices
 import os
 
 
-def init_log_folder():
+def init_basic_folders():
+    if not os.path.exists('./utils'):
+        os.mkdir('./utils')
     if not os.path.exists('./logs'):
         os.mkdir('./logs')
 
@@ -30,6 +33,7 @@ app.include_router(workflow.router, prefix="/user", tags=["User"])
 
 
 if __name__ == '__main__':
-    init_log_folder()
+    init_basic_folders()
+    # create_default_devices()
     uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
     # uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", log_config='./log.ini')

@@ -45,7 +45,7 @@ def get_session_stat(sessionId):
     
     device_data = db.query(Orders, Pcs.name)\
         .join(Pcs, Orders.pc_id == Pcs.id)\
-        .filter(and_(Orders.start >= start_time, Orders.start <= now)).all()
+        .filter(and_(Orders.start >= start_time, Orders.start <= now), and_(Orders.status != 'canceled')).all()
     
     device_returned = [
         {

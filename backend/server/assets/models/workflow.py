@@ -25,3 +25,9 @@ class LoginResponse(BaseModel):
 
 class AuthResponse(BaseModel):
     name: str = Field(description="Имя пользователя")
+
+
+class UserDataResponse(BaseModel):
+    name: str = Field(description="Имя пользователя")
+    uuid: str = Field(description="UUID Пользователя")
+    
