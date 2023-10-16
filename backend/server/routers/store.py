@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Header
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from assets.models import store as models
@@ -16,7 +16,6 @@ def get_all_items():
         data = store.get_all_items()
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -27,7 +26,6 @@ def item_info(id: int = Query(description="ID позиции")):
         data = store.get_item_info(id)
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -38,7 +36,6 @@ def add_item(data: models.CreateProduct):
         new_item_id = store.create_product(data.name, data.price)
         return JSONResponse(content={'id': new_item_id}, status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -49,7 +46,6 @@ def edit_item_name(data: models.EditItemName):
         store.change_name(data.id, data.name)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -60,7 +56,6 @@ def edit_item_price(data: models.EditItemPrice):
         store.change_price(data.id, data.price)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -71,7 +66,6 @@ def hide_item(id: int = Query(description="ID позиции")):
         store.hide_item(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -82,7 +76,6 @@ def show_item(id: int = Query(description="ID позиции")):
         store.show_item(id)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -93,7 +86,6 @@ def sell_items(data: models.SellProducts):
         store.sell_products(data.items, data.payment)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
 
 
@@ -105,5 +97,14 @@ def supply(data: models.SupplyProducts):
         store.supply(data.items)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
+        return JSONResponse(content='', status_code=400)
+
+
+@router.patch('/writeoff', dependencies=[Depends(auth)])
+def write_off(data: models.WriteOff, authorization: str = Header(description="UUID Пользователя")):
+    """ Списание позиций """
+    try:
+        store.writeoff(data, authorization)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
         return JSONResponse(content='', status_code=400)

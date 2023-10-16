@@ -77,3 +77,27 @@ class EditItemName(BaseModel):
 
 class ResponseNewItem(BaseModel):
     id: int = Field(description="ID новой позиции")
+
+
+class WriteOffDescription(BaseModel):
+    id: int = Field(description="ID Позиции")
+    qty: int = Field(description="Количество позиций на списание")
+    name: str = Field(None, description="Имя пользователя на которого списывается позиция")
+
+
+class WriteOff(BaseModel):
+    type: str = Field(description="Тип списания person/exp")
+    details: WriteOffDescription = Field(description="Детали списания")
+
+    @validator('type')
+    def validate_type(cls, value):
+        if value != 'person' and value != 'exp':
+            raise ValueError("WriteOff type is 'person' or 'exp'")
+        return value
+    
+    @validator('details')
+    def validate_details(cls, value, values):
+        if values['type'] == 'person':
+            if value.name is None:
+                raise ValueError("For write off for a person, you need to provide a person's name")
+        return value

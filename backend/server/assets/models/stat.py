@@ -29,3 +29,4 @@ class DeviceStatItem(BaseModel):
 class SessionStatResponse(BaseModel):
     storefront: list[StoreStatItem]
     devices: list[DeviceStatItem]
+    

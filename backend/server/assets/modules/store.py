@@ -123,3 +123,17 @@ def supply(items_array):
 
         db.commit()
         
+
+# Списание товара
+def writeoff(data, writeoff_initiator):
+    db = Session()
+    now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
+    if data.type == 'person':
+        person = data.details.name
+    else: person = None
+    wo = WriteOff(user_uuid=writeoff_initiator, item_id=data.details.id, qty=data.details.qty, type=data.type, description=person, wo_date=now)
+    db.add(wo)
+    product = db.scalars(select(Storefront).where(Storefront.id==data.details.id)).one()
+    product.qty = product.qty - data.details.qty
+    db.commit()
+    

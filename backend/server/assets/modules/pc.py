@@ -52,7 +52,7 @@ def play(time, price, pc_id, payment_type):
         start = now.strftime(DATE_FORMAT_DEFAULT)
         finish = (now + timedelta(hours=int(hours), minutes=int(minutes))).strftime(DATE_FORMAT_DEFAULT)
         pc_session_id = str(uuid4())
-        new_order = Orders(uuid=pc_session_id, pc_id=pc_id, start=start, finish=finish, price=price, payment=payment_type)
+        new_order = Orders(uuid=pc_session_id, pc_id=pc_id, start=start, finish=finish, price=price, payment=payment_type, status='play')
         db.add(new_order)
         pc.status = 'playing'
         db.commit()
@@ -65,6 +65,8 @@ def pause(pc_id):
     db = Session()
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     if pc.status == 'playing':
+        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+        order.status='pause'
         pc.status='pause'
         db.commit()
     else:
@@ -76,6 +78,8 @@ def continue_play(pc_id):
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     if pc.status == 'pause':
         order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+
+        order.status='play'
 
         start_time = datetime.strptime(order.start, DATE_FORMAT_DEFAULT)
         finish_old = datetime.strptime(order.finish, DATE_FORMAT_DEFAULT)
@@ -105,6 +109,7 @@ def finish(pc_id, price=None, payment=None):
         pc.status = 'online'
 
         order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+        order.status = 'finished'
 
         if payment != None:
             order.payment = payment
@@ -122,7 +127,7 @@ def finish(pc_id, price=None, payment=None):
                 else:
                     new_payment = order.payment
                 new_price = price - float(order.price)
-                new_order = Orders(uuid=new_uuid, pc_id=pc_id, start=order.finish, finish=real_finish, price=new_price, payment=new_payment)
+                new_order = Orders(uuid=new_uuid, pc_id=pc_id, start=order.finish, finish=real_finish, price=new_price, payment=new_payment, status='finished')
                 db.add(new_order)
 
             if now <= finish_time:
@@ -133,6 +138,26 @@ def finish(pc_id, price=None, payment=None):
     else:
         raise Exception("PC Status is not playing")
     
+
+def swap(pc_id, new_pc_id):
+    db = Session()
+    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+    pc.status = 'online'
+    new_pc = db.scalars(select(Pcs).where(Pcs.id == new_pc_id)).one()
+    new_pc.status = 'playing'
+    order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+    order.pc_id = new_pc_id
+    db.commit()
+
+
+def cancel(pc_id):
+    db = Session()
+    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+    pc.status = 'online'
+    order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+    order.status = 'canceled'
+    db.commit()
+
 
 def start_tech_works(pc_id, reason):
     db = Session()

@@ -17,8 +17,8 @@ Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Pcs(Base):
     __tablename__ = "pcs"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True, unique=True)
+    name = Column(String, unique=True)
     status = Column(String)
     grid_id = Column(Integer, unique=True)
     ip = Column(String)
@@ -35,12 +35,13 @@ class Orders(Base):
     finish = Column(String)
     price = Column(Numeric)
     payment = Column(String)
+    status = Column(String)
 
 
 class Storefront(Base):
     __tablename__ = "storefront"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String)
+    name = Column(String, unique=True)
     qty = Column(Integer, nullable=False)
     price = Column(Numeric)
     hide = Column(Integer)
@@ -68,9 +69,9 @@ class Supplies(Base):
 class Users(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    uuid = Column(String)
-    name = Column(String)
-    login = Column(String)
+    uuid = Column(String, unique=True)
+    name = Column(String, unique=True)
+    login = Column(String, unique=True)
     password = Column(String)
 
 
@@ -84,15 +85,18 @@ class Sessions(Base):
     status = Column(String)
 
 
+class WriteOff(Base):
+    __tablename__ = "writeoff"
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    user_uuid = Column(String)
+    item_id = Column(Integer)
+    qty = Column(Integer)
+    type = Column(String)
+    description = Column(String, nullable=True)
+    wo_date = Column(String)
+
+
 Base.metadata.create_all(bind=engine)
-
-
-def get_db():
-    db = Session()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def create_default_devices():
