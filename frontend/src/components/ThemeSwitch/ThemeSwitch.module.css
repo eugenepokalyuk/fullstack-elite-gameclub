@@ -1,14 +1,15 @@
 .themeContainer {
     display: flex;
     background: #333;
-    width: 200px;
     border-radius: 3vh;
+    width: 20vh;
 }
 
 .themeButton {
     border: none;
-    width: 50%;
+    /* width: 50%; */
     border-radius: 3vh;
+    width: 100%;
 }
 
 .themeButton:hover {
