@@ -4,12 +4,17 @@ import {
     FETCH_STORE_STAT_FAILURE,
     FETCH_COMPUTER_STAT_REQUEST,
     FETCH_COMPUTER_STAT_SUCCESS,
-    FETCH_COMPUTER_STAT_FAILURE
+    FETCH_COMPUTER_STAT_FAILURE,
+    FETCH_STAT_REQUEST,
+    FETCH_STAT_SUCCESS,
+    FETCH_STAT_FAILURE
 } from "../actions/stat";
+import { TComputerStat, TStoreStat } from "../types/types";
 
 const initialState: any = {
     store: [],
     computers: [],
+    total: [],
     loading: false,
     error: null,
 };
@@ -22,6 +27,31 @@ export const statReducer = (
     action: any
 ) => {
     switch (action.type) {
+        case FETCH_STAT_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            };
+        case FETCH_STAT_SUCCESS:
+            const devicesArray: TComputerStat[] = action.payload.devices;
+            const storeArray: TStoreStat[] = action.payload.storefront;
+
+            return {
+                ...state,
+                total: {
+                    storefront: storeArray,
+                    devices: devicesArray
+                },
+                loading: false,
+                error: null,
+            };
+        case FETCH_STAT_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+            };
         case FETCH_STORE_STAT_REQUEST:
             return {
                 ...state,
