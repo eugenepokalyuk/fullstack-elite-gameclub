@@ -54,6 +54,12 @@ class SupplyProduct(BaseModel):
     id: int = Field(description="ID позиции на приход")
     qty: int = Field(description="Количество позиций")
 
+    @validator('qty')
+    def validator_qty(cls, value):
+        if int(value) <= 0:
+            raise ValueError("Qty must be greater then 0")
+        return value
+
 
 class SupplyProducts(BaseModel):
     items: list[SupplyProduct] = Field(description="Массив позиций на поставку")
@@ -83,6 +89,12 @@ class WriteOffDescription(BaseModel):
     id: int = Field(description="ID Позиции")
     qty: int = Field(description="Количество позиций на списание")
     name: str = Field(None, description="Имя пользователя на которого списывается позиция")
+
+    @validator('qty')
+    def validate_qty(cls, value):
+        if value <= 0:
+            raise ValueError("Qty must be greater then 0")
+        return value
 
 
 class WriteOff(BaseModel):

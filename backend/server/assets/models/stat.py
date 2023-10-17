@@ -2,9 +2,9 @@ from pydantic import BaseModel, Field, validator
 from datetime import datetime
 
 
-class Stat(BaseModel):
-    From: datetime = Field(description="С какого времени")
-    Until: datetime = Field(description="По какое время")
+class StatDates(BaseModel):
+    From: datetime = Field(None, description="С какого времени")
+    Until: datetime = Field(None, description="По какое время")
 
 
 class StoreStatItem(BaseModel):
@@ -26,7 +26,25 @@ class DeviceStatItem(BaseModel):
     name: str = Field(description="Имя девайса")
 
 
+class WriteOffTypeStat(BaseModel):
+    qty: int = Field(description="Количество списанных позиций")
+    price: float = Field(description="Сумма списанных позиций")
+
+
+class WriteOffStat(BaseModel):
+    person: WriteOffTypeStat = Field(None, description="Списания на персонал")
+    exp: WriteOffTypeStat = Field(None, description="Списания на порчу")
+
+
+class SupplyStat(BaseModel):
+    item_id: int = Field(description="ID позиции")
+    qty: int = Field(description="Количество позиций на приход")
+
+
 class SessionStatResponse(BaseModel):
     storefront: list[StoreStatItem]
     devices: list[DeviceStatItem]
-    
+    canceled: int = Field(description="Количество отмененных бронирований")
+    supplies: list[SupplyStat]
+    writeoff: WriteOffStat = Field(description="Списания")
+    session_start: str = Field(None, description="Время начала смены")
