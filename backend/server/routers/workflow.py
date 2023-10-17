@@ -57,7 +57,7 @@ def finish_session(sessionId: str = Header(description="UUID Смены")):
     
 
 @router.get('/all', dependencies=[Depends(auth)], response_model=list[models.UserDataResponse])
-def get_all_users():
+def get_list_of_users():
     """ Получить список пользователей """
     try:
         arr = workflow.get_all_users()

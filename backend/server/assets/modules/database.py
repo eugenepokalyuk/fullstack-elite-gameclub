@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Numeric, Boolean
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import select, desc, join, insert, and_
+from sqlalchemy import select, desc, join, insert, and_, func, text
 
 
 DATE_FORMAT_DEFAULT = '%Y-%m-%d %H:%M:%S'
@@ -62,7 +62,7 @@ class Supplies(Base):
     __tablename__ = "supplies"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     item_id = Column(Integer)
-    qty = Column(Numeric)
+    qty = Column(Integer)
     add_date = Column(String)
 
 
