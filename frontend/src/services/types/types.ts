@@ -26,9 +26,8 @@ export type TStoreItem = {
     price: number,
     hide: boolean
 }
-
 export type TPlayBody = {
-    id: any;
+    id: number;
     price: number,
     time: {
         hours: number,
@@ -65,23 +64,34 @@ export interface SquareProps {
 
 export type TStoreStat = {
     id: number,
-    item_id: number,
     qty: number,
     total: number,
+    item_id: number,
     payment: string,
+    name: string,
     uuid: string,
     date: string
 };
 
 export type TComputerStat = {
     id: number,
-    payment: string,
     pc_id: number,
     price: number
+    payment: string,
+    name: string,
 };
 
 export type TUser = {
     uuid: string,
     sessionId: string,
     name: string
+}
+
+export type TWriteOff = {
+    type: string | undefined,
+    details: {
+        id: number | undefined,
+        qty: number | undefined,
+        name?: string
+    }
 }
