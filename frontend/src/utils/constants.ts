@@ -27,5 +27,7 @@ export const ADD_SUPPLY = "addSupply"
 export const EDIT_ITEM = "editItem"
 export const HIDE_ITEM = "hideItem"
 export const SHOW_ITEM = "showItem"
+export const REMOVE_ITEM = "removeItem"
+export const WRITE_OFF = "writeOff"
 
 export const STORE_OPEN_CART = "storeOpenCart"
