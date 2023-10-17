@@ -1,7 +1,7 @@
 import { TComputer, TPlayBody, TWriteOff } from "../services/types/types";
 
-const ApiUrlPath = 'http://172.20.10.4:80';
-// const ApiUrlPath = 'http://localhost:8000';
+// const ApiUrlPath = 'http://172.20.10.4:80';
+const ApiUrlPath = 'http://localhost:8000';
 
 const routeStore = "/store";
 const routePlayground = "/pc";

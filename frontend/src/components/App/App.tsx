@@ -50,10 +50,10 @@ const App = () => {
   }
 
   useEffect(() => {
-      // fetchWarehouseAddItem("Coca-cola", 125);
-      // fetchWarehouseAddItem("Pepsi", 125);
-      // fetchWarehouseAddItem("Fanta", 200);
-      // fetchWarehouseAddItem("Red bull", 215);
+    // fetchWarehouseAddItem("Coca-cola", 125);
+    // fetchWarehouseAddItem("Pepsi", 125);
+    // fetchWarehouseAddItem("Fanta", 200);
+    // fetchWarehouseAddItem("Red bull", 215);
 
     // fetchWarehouseAddSupply([{
     //   id: 5,
@@ -186,7 +186,6 @@ const App = () => {
                   className="faSpinner"
                 />
               </div>
-              <button className="buttonDefault">Кнопка</button>
             </div>
           </Modal>
       }
