@@ -1,109 +1,118 @@
-.squareDefault {
-    width: 6vh;
-    height: 6vh;
-    font-size: 1.2vh;
-
-    border-radius: 1vh;
-    user-select: none;
-}
-
 .square {
-    border: 0.4vh dashed #ef791220;
-
+    border: 0.4vh solid var(--main-color);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .square:hover {
-    background: #333;
+    /* background: var(--backgorund-device-default); */
     cursor: pointer;
 }
 
+.squareDefault {
+    width: 6vh;
+    height: 6vh;
+
+    border-radius: 1vh;
+    user-select: none;
+}
+
+.square p {
+    color: #000;
+    font-size: 2vh;
+    text-wrap: nowrap;
+    font-weight: 600;
+}
+
 .squareOccupied {
-    border: 0.4vh dashed #ef7912;
-    background: #ef7912;
+    border: 0.4vh solid var(--main-color);
+    background: var(--main-color);
 }
 
 .squareOccupied:hover {
-    background: #ef791290;
-    border: 0.4vh solid #ef7912;
+    /* background: var(--main-color);
+    border: 0.4vh solid var(--main-color);
+    filter: brightness(1.2); */
 }
 
 .bgOnline {
-    background: #ef7912;
-    border-color: #ef7912;
+    background: var(--main-color);
+    border-color: var(--main-color);
 }
 
 .bgOnline:hover {
-    background: #ef791280;
-    border-color: #ef791280;
+    background: var(--main-color);
+    border-color: --main-color;
+    filter: brightness(1.2);
 }
 
 .bgOffline {
-    background: #333;
-    border-color: #333;
+    background: var(--backgorund-device-offline);
+    border-color: var(--backgorund-device-offline);
 }
 
 .bgOffline:hover {
-    background: #33333380;
-    border-color: #33333380;
+    filter: brightness(1.2);
 }
 
 .bgPlay {
-    background: crimson;
-    border-color: crimson;
+    background: var(--backgorund-device-play);
+    border-color: var(--backgorund-device-play);
 }
 
 .bgPlay:hover {
-    background: #dc143c80;
-    border-color: #dc143c80;
+    filter: brightness(1.2);
 }
 
 .bgTech {
-    background: #000000;
-    border-color: #000000;
+    background: var(--backgorund-device-problems);
+    border-color: var(--backgorund-device-problems);
 }
 
 .bgTech:hover {
-    background: 00000000;
-    border-color: 00000000;
+    filter: brightness(1.2);
 }
 
 .bgPause {
-    background: #008080;
-    border-color: #008080;
-    color: #fff;
+    background: var(--backgorund-device-pause);
+    border-color: var(--backgorund-device-pause);
 }
 
 .bgPause:hover {
-    background: #00808080;
-    border-color: #00808080;
-    color: #fff;
+    filter: brightness(1.2);
 }
 
 .bgFree {
-    background: transparent;
+    background: var(--backgorund-device-free);
+    opacity: 0.1;
+}
+
+.bgFree:hover {
+    cursor: default;
 }
 
 .warningArticle {
-    animation: blinkAnimation 1s infinite;
+    animation: blinkAnimation 800ms infinite;
 }
 
 @keyframes blinkAnimation {
     0% {
-        background-color: #dc143c;
+        background-color: var(--backgorund-device-warning-step-1);
+        border-color: var(--backgorund-device-warning-step-2);
     }
 
     50% {
-        background-color: #63081a;
+        background-color: var(--backgorund-device-warning-step-2);
+        border-color: var(--backgorund-device-warning-step-1);
     }
 
     100% {
-        background-color: #dc143c;
+        background-color: var(--backgorund-device-warning-step-1);
+        border-color: var(--backgorund-device-warning-step-2);
     }
 }
 
-.warningArticle:hover {
+/* .warningArticle:hover {
     background: green;
-}
+} */

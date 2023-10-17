@@ -10,11 +10,11 @@ export const PaymentSwitcher: FC = () => {
     const dispatch = useAppDispatch();
     const [paymentType, setPaymentType] = useState<string>(CARD);
     const payment = useAppSelector((store) => store.payment.paymentType);
+    const cardSwitch = paymentType === CARD ? styles.activeButton : styles.nonActiveButton;
+    const cashSwitch = paymentType === CASH ? styles.activeButton : styles.nonActiveButton;
 
     useEffect(() => {
         setPaymentType(payment);
-
-        console.log("paymentType", paymentType)
     })
 
     const handlePaymentTypeChange = (type: string) => {
@@ -23,11 +23,11 @@ export const PaymentSwitcher: FC = () => {
     };
 
     return (
-        <div className={`${styles.switcher}`}>
+        <div className={`${styles.switch} mt-1`}>
             <button
                 className={`
-                    ${styles.paymentButton} 
-                    ${paymentType === CARD ? styles.activeButton : styles.nonActiveButton}
+                    buttonDefault
+                    ${cardSwitch}
                 `}
                 onClick={() => handlePaymentTypeChange(CARD)}
             >
@@ -36,8 +36,8 @@ export const PaymentSwitcher: FC = () => {
 
             <button
                 className={`
-                    ${styles.paymentButton} 
-                    ${paymentType === CASH ? styles.activeButton : styles.nonActiveButton}
+                    buttonDefault
+                    ${cashSwitch}
                 `}
                 onClick={() => handlePaymentTypeChange(CASH)}
             >

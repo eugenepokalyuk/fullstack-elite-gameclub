@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import styles from './ProfileDetails.module.css';
-// import { ProfileDetailsProps } from '../../services/types/types';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +24,7 @@ const ProfileDetails: FC = () => {
         dispatch(clearUser());
         fetchUserFinish(user.uuid, user.sessionId)
             .then((res) => {
+                isLoading(true);
                 navigate("/login", { replace: true });
             })
             .catch((error) => {
@@ -37,35 +37,32 @@ const ProfileDetails: FC = () => {
                 {!loading
                     ?
                     <ul className={styles.card}>
-                        <li className={styles.cardItem}>
-                            Имя сотрудника: <span className={`${styles.textShadows} ${styles.selectedText}`}>{user.name}</span>
+                        <li className={`${styles.cardItem} whiteMessage mt-1`}>
+                            Имя сотрудника: <span className='link'>{user.name}</span>
                         </li>
+
                         <li className={styles.cardItem}>
                             <button
-                                className={styles.mr4}
+                                className='buttonDefault mt-2'
                                 onClick={handleCloseSession}
                             >
                                 Закончить смену
                             </button>
                         </li>
                     </ul>
-                    : <Modal onClose={closeModal} header="Загрузка данных">
-                        <div className="mb-4 mt-4">
-                        </div>
+                    : <Modal onClose={closeModal} header='Загрузка данных'>
                         <div>
-                            <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
-                                Пожалуйста подождите
-                            </p>
-                            <div className={`${styles.flex} text_color_inactive`}>
+                            <p>Пожалуйста подождите</p>
+                            <div>
                                 <FontAwesomeIcon
                                     icon={faSpinner}
                                     spin
                                     size="5x"
-                                    className={`${styles.faSpinner}`}
                                 />
                             </div>
                         </div>
-                    </Modal>}
+                    </Modal>
+                }
             </div>
         </article>
     );

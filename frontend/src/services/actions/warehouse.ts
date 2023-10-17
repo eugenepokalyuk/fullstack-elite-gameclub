@@ -28,7 +28,7 @@ export const fetchWarehouseRequest = (): ISelectWarehouseRequestAction => ({
     type: SELECT_WAREHOUSE_REQUEST,
 });
 
-enum ActionTypes {
+export enum ActionTypes {
     SELECT_WAREHOUSE_REQUEST = "SELECT_WAREHOUSE_REQUEST",
     SELECT_WAREHOUSE_SUCCESS = "SELECT_WAREHOUSE_SUCCESS",
     SELECT_WAREHOUSE_FAILURE = "SELECT_WAREHOUSE_FAILURE",
@@ -48,18 +48,3 @@ export const fetchWarehouseFailure = (
     type: SELECT_WAREHOUSE_FAILURE,
     payload: error,
 });
-// export function getWarehouse() {
-//     return function (dispatch: ReturnType<typeof useAppDispatch>) {
-//         dispatch({
-//             type: SELECT_WAREHOUSE_REQUEST,
-//         });
-
-//         fetchWarehouseData()
-//             .then((res) => {
-//                 dispatch(fetchWarehouseSuccess(res.data));
-//             })
-//             .catch((error) =>
-//                 dispatch(fetchWarehouseFailure(error))
-//             );
-//     };
-// }

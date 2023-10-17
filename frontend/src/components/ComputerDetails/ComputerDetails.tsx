@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { ButtonHTMLAttributes, ChangeEvent, FC, HTMLAttributes, useEffect, useState } from 'react';
 import styles from './ComputerDetails.module.css';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
-import { fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer } from '../../utils/api';
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
+import { fetchCancel, fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer, fetchStatPopularPrices, fetchSwap } from '../../utils/api';
+import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, CARD } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { useAppSelector } from '../../services/hooks/hooks';
 import Modal from '../Modal/Modal';
@@ -11,19 +11,31 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
+    const navigate = useNavigate();
+    const paymentType = useAppSelector((store) => store.payment.paymentType);
+    const computers = useAppSelector((store) => store.playground.computers);
+
     const [name, setName] = useState<string>('');
+
     const [price, setPrice] = useState<number>(0);
+    const [newPrice, setNewPrice] = useState<number>();
+
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
-    const [newPrice, setNewPrice] = useState<number>();
+
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
+
     const [error, setError] = useState<boolean>(false);
-    const paymentType = useAppSelector((store) => store.payment.paymentType)
-    const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
 
-    const isButtonDisabled = !minutes || !price || !paymentType;
+    const [modal, setModal] = useState<boolean>(false);
+    const [param, setParam] = useState<string>('');
+    const [selectedComputer, setSelectedComputer] = useState<number>();
+
+    const [popularPrices, setPopularPrices] = useState<number[]>([]);
+
+    const isButtonDisabled = !hours && !minutes || !price || !paymentType;
 
     const closeModal = () => {
         navigate(-1);
@@ -59,6 +71,35 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                 isLoading(false);
                 setFinish(true);
                 setFinishDescription("Сеанс завершен");
+                setModal(false);
+            })
+            .catch(error => {
+                setError(true)
+            });
+    }
+
+    const handleCancelClick = (computer: TComputer) => {
+        isLoading(true);
+        fetchCancel(computer)
+            .then(res => {
+                isLoading(false);
+                setFinish(true);
+                setFinishDescription("Сеанс отменен");
+                setModal(false);
+            })
+            .catch(error => {
+                setError(true)
+            });
+    }
+
+    const handleSwapClick = (computer: TComputer, selectedComputer: number | undefined) => {
+        isLoading(true);
+        fetchSwap(computer, selectedComputer)
+            .then(res => {
+                isLoading(false);
+                setFinish(true);
+                setFinishDescription("Сеанс перенесен");
+                setModal(false);
             })
             .catch(error => {
                 setError(true)
@@ -72,6 +113,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                 isLoading(false);
                 setFinish(true);
                 setFinishDescription("Сеанс на паузе");
+                setModal(false);
             })
             .catch(error => {
                 setError(true)
@@ -117,7 +159,29 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             });
     }
 
-    function calculateTimeRemaining(from: any, until: any) {
+    const handleClickInnerModal = (newParam: string) => {
+        setModal(true);
+        setParam(newParam);
+    }
+
+    useEffect(() => {
+        fetchStatPopularPrices()
+            .then(res => {
+                setPopularPrices(res)
+            })
+            .catch(error => {
+                setError(true)
+            });
+    }, [])
+
+    function calculateTimeRemaining(
+        from: {
+            hours: number; minutes: number;
+        } | undefined,
+        until: {
+            hours: number; minutes: number;
+        } | undefined
+    ) {
         const fromTime: any = new Date('2023-10-10T15:23:10');
         const untilTime: any = new Date('2023-10-10T16:23:12');
         const remainingTime = untilTime - fromTime;
@@ -128,24 +192,25 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
         const seconds = Math.floor((remainingTime / 1000) % 60);
 
         return (
-            <p>
-                {hours}:{minutes}:{seconds}
-            </p>
+            <span className='link'>{hours}:{minutes}:{seconds}</span>
         )
+    }
+    const handleSetPrice = (e: any) => {
+        setPrice(e.target.value);
     }
 
     const detailsBody = () => {
         if (finish) {
             return (
-                <h2>{finishDescription}</h2>
+                <h2 className='whiteMessage'>{finishDescription}</h2>
             )
         }
 
         if (error) {
             return (
                 <>
-                    <h2>Неопознанная Ошибка!</h2>
-                    <p>Запиши свои действия и опиши проблеум программисту!</p>
+                    <h2 className='whiteMessage'>Неопознанная Ошибка!</h2>
+                    <p className='whiteMessage'>Запиши свои действия и опиши проблеум программисту!</p>
                 </>
             )
         }
@@ -155,28 +220,35 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                 return (
                     <>
                         <h3>Бронирование устройства</h3>
-                        <ul className={styles.cardList}>
-
-                            <li className={styles.listItem}>
-                                <p className={styles.listText}>Часов: </p>
-                                <input className={styles.listInput} type="text" value={hours} onChange={(event) => setHours(Number(event.target.value))} placeholder='Час' />
+                        <ul>
+                            <li className={`${styles.cardButtons} mt-1`}>
+                                <p>Часов:</p>
+                                <input className='inputDefault' type="text" value={hours} onChange={(event) => setHours(Number(event.target.value))} placeholder='Час' />
                             </li>
 
-                            <li className={styles.listItem}>
-                                <p className={styles.listText}>Минут: </p>
-                                <input className={styles.listInput} type="text" value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} placeholder='Минута' />
+                            <li className={`${styles.cardButtons} mt-1`}>
+                                <p>Минут:</p>
+                                <input className='inputDefault' type="text" value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} placeholder='Минута' />
                             </li>
 
-                            <li className={styles.listItem}>
-                                <p className={styles.listText}>Сумма: </p>
-                                <input className={`${styles.listInput} ${styles.w100}`} type="text" value={price} onChange={(event) => setPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
+                            <li className={`${styles.cardButtons} mt-1`}>
+                                <p>Сумма:</p>
+                                <input className='inputDefault' type="text" value={price} onChange={(event) => setPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
                             </li>
+
+                            {popularPrices
+                                && <li className={`${styles.cardButtons} mt-1`}>
+                                    {popularPrices.map((item: number, index: number) => {
+                                        return <button key={index} className='buttonDefault' value={item} onClick={(e) => handleSetPrice(e)}>{item}</button>
+                                    })}
+                                </li>
+                            }
 
                             <PaymentSwitcher />
 
-                            <li>
+                            <li className={`${styles.cardButtons} mt-1`}>
                                 <button
-                                    className={`${styles.listInputSubmit} ${styles.w100}`}
+                                    className='buttonDefault'
                                     onClick={() => handleAcceptClick(computer)}
                                     disabled={isButtonDisabled}
                                 >
@@ -189,96 +261,70 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_PLAYING:
                 return (
                     <>
-                        <h3>Устройство занято</h3>
-                        <div className={styles.alignLeft}>
-                            <div>
-                                <p>
-                                    Оплачено: <span className={styles.selectedText}>{computer.details?.price} руб.</span>
-                                </p>
+                        <h3 className='mb-1'>Устройство занято</h3>
+                        <ul className={`${styles.cardList} mt-2 mb-1`}>
+                            <li className='whiteMessage'>Оплачено: <span className='link'>{computer.details?.price} руб.</span></li>
 
-                                <p>
-                                    Тип оплаты: <span className={styles.selectedText}>{computer.details?.payment}</span>
-                                </p>
-                            </div>
+                            <li className='whiteMessage'>Тип оплаты: <span className='link'>{computer.details?.payment === CARD ? "Безналичный" : "Наличный"}</span></li>
 
-                            <div>
-                                <p>
-                                    Начало <span className={styles.selectedText}>{computer.details?.time.from.hours}:{computer.details?.time.from.minutes}</span>
-                                </p>
+                            <li className='whiteMessage'>Начало <span className='link'>{computer.details?.time.from.hours}:{computer.details?.time.from.minutes}</span></li>
 
-                                <p>
-                                    Конец <span className={styles.selectedText}>{computer.details?.time.until.hours}:{computer.details?.time.until.minutes}</span>
-                                </p>
+                            <li className='whiteMessage'>Конец <span className='link'>{computer.details?.time.until.hours}:{computer.details?.time.until.minutes}</span></li>
 
-                                {/* {calculateTimeRemaining(computer.details?.time.from, computer.details?.time.until)} */}
-                            </div>
-                        </div>
+                            <li className='whiteMessage'>Осталось времени: {calculateTimeRemaining(computer.details?.time.from, computer.details?.time.until)}</li>
+                        </ul>
 
-                        <div className={styles.dualContainer}>
-                            <div>
-                                <ul className={styles.cardList}>
-                                    <li className={styles.listItem}>
-                                        <h3>Поставить сеанс на паузу</h3>
-                                    </li>
+                        <ul className={`${styles.cardButtons}`}>
+                            <li>
+                                <button
+                                    className='buttonDefault'
+                                    onClick={() => handleClickInnerModal("PAUSE")}
+                                >
+                                    Пауза
+                                </button>
+                            </li>
 
-                                    <li>
-                                        <button className={`${styles.listInputSubmit} ${styles.w100}`} onClick={() => handlePauseClick(computer)}>Подтвердить</button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <li>
+                                <button
+                                    className='buttonDefault'
+                                    onClick={() => handleClickInnerModal("STOP")}
+                                >
+                                    Завершить
+                                </button>
+                            </li>
 
-                            <div>
-                                <ul className={styles.cardList}>
-                                    <li className={styles.listItem}>
-                                        <h3>Завершить сеанс</h3>
-                                    </li>
+                            <li>
+                                <button
+                                    className='buttonDefault'
+                                    onClick={() => handleClickInnerModal("SWAP")}
+                                >
+                                    Перенос
+                                </button>
+                            </li>
 
-                                    <li className={styles.listItem}>
-                                        <p>Если сумма изменилась, напиши новое значение:</p>
-                                    </li>
-
-                                    <li className={styles.listItem}>
-                                        <input className={`${styles.listInput} ${styles.mr1} ${styles.w100}`} type="text" value={newPrice} onChange={(event) => setNewPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
-                                        <p>руб.</p>
-                                    </li>
-
-                                    <PaymentSwitcher />
-
-                                    <li className={styles.mt1}>
-                                        <button className={`${styles.listInputSubmit} ${styles.w100}`} onClick={() => handleFinishClick(computer)}>Подтвердить</button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
+                            <li>
+                                <button
+                                    className='buttonDefault'
+                                    onClick={() => handleClickInnerModal("CANCEL")}
+                                >
+                                    Отмена
+                                </button>
+                            </li>
+                        </ul>
                     </>
                 )
             case COMPUTER_STATUS_PAUSE:
                 return (
                     <>
                         <h3>Поставить сеанс на паузу?</h3>
-
-                        <ul className={styles.cardList}>
-
-                        </ul>
-
-                        <div>
-                            <button onClick={() => handlePauseClick(computer)}>Подтвердить</button>
-                        </div>
+                        <button className='buttonDefault mt-2' onClick={() => handlePauseClick(computer)}>Подтвердить</button>
                     </>
                 )
             case COMPUTER_STATUS_CONTINUE:
                 return (
                     <>
                         <h3>Снять сеанс с паузы?</h3>
-
-                        <ul className={styles.cardList}>
-
-                        </ul>
-
-                        <div>
-                            <button className={`${styles.listInputSubmit}`} onClick={() => handleContinueClick(computer)}>Подтвердить</button>
-                        </div>
+                        <button className='buttonDefault mt-2' onClick={() => handleContinueClick(computer)}>Подтвердить</button>
                     </>
                 )
             case COMPUTER_STATUS_SETTINGS:
@@ -286,35 +332,111 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                     <>
                         <h3>Изменение данных устройства</h3>
 
-                        <ul className={`${styles.cardList} ${styles.settingsContainer} ${styles.cardListNullPadding} ${styles.w50}`}>
-                            <li className={styles.listItem}>
+                        <ul>
+                            <li className='mt-1'>
                                 <p>IP address:</p>
-                                <input className={`${styles.listInput}`} type="text" placeholder="IP адрес устройства" disabled />
+                                <input className='inputDefault mt-1' type="text" placeholder="IP адрес устройства" disabled />
                             </li>
-                            <li className={styles.listItem}>
+                            <li className='mt-1'>
                                 <p>ID:</p>
-                                <input className={`${styles.listInput}`} type="text" value={computer.id} placeholder='ID устройства' disabled />
+                                <input className='inputDefault mt-1' type="text" value={computer.id} placeholder='ID устройства' disabled />
                             </li>
-                            <li className={styles.listItem}>
+                            <li className='mt-1'>
                                 <p>Имя:</p>
-                                <input className={`${styles.listInput}`} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Имя устройства' />
+                                <input className='inputDefault mt-1' type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Имя устройства' />
                             </li>
-                            <li className={styles.listItem}>
+                            <li className='mt-1'>
                                 <p>Статус:</p>
-                                <input className={`${styles.listInput}`} type="text" value={computer.status} placeholder='Статус устройства' disabled />
+                                <input className='inputDefault mt-1' type="text" value={computer.status} placeholder='Статус устройства' disabled />
                             </li>
-                            <li className={styles.listItem}>
+                            <li className='mt-1'>
                                 <p>Ячейка:</p>
-                                <input className={`${styles.listInput}`} type="text" value={computer.grid_id} placeholder='ID Ячейки устройства' disabled />
+                                <input className='inputDefault mt-1' type="text" value={computer.grid_id} placeholder='ID Ячейки устройства' disabled />
                             </li>
                         </ul>
 
-                        <div>
-                            <button onClick={() => handleEditComputerNameClick(computer)} className={styles.listInputSubmit}>Подтвердить</button>
-                            <button onClick={() => handleRemoveComputerClick(computer)} className={`${styles.listInputSubmit} ${styles.dangerButton}`}>Удалить устройство</button>
+                        <div className='mt-1'>
+                            <button className='buttonDefault mr-2' onClick={() => handleEditComputerNameClick(computer)}>Подтвердить</button>
+                            <button className='buttonDefault dangerDefault' onClick={() => handleRemoveComputerClick(computer)}>Удалить устройство</button>
                         </div>
                     </>
                 )
+            default:
+                break;
+        }
+    }
+
+    const detailsModal = () => {
+        switch (param) {
+            case "PAUSE":
+                return (
+                    <div>
+                        <ul>
+                            <li>
+                                <h3>Поставить сеанс на паузу</h3>
+                            </li>
+
+                            <li>
+                                <button className='buttonDefault mt-2' onClick={() => handlePauseClick(computer)}>Подтвердить</button>
+                            </li>
+                        </ul>
+                    </div>
+                )
+                break;
+            case "STOP":
+                return (
+                    <div>
+                        <ul>
+                            <li>
+                                <h3>Завершить сеанс</h3>
+                            </li>
+
+                            <li className='mt-2'>
+                                <p>Если сумма изменилась, напиши новое значение:</p>
+                            </li>
+
+                            <li className='mt-2'>
+                                <input className='inputDefault' type="text" value={newPrice} onChange={(event) => setNewPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
+                            </li>
+
+                            <PaymentSwitcher />
+
+                            <li className='mt-2'>
+                                <button className='buttonDefault' onClick={() => handleFinishClick(computer)}>Подтвердить</button>
+                            </li>
+                        </ul>
+                    </div>
+                )
+                break;
+            case "SWAP":
+                const onlineComputers = computers.filter((computer: TComputer) => computer.status === 'online');
+
+                return (
+                    <>
+                        <h3>Перенос сеанса</h3>
+                        <div className='mt-2'>
+                            <p>Выбери свободное устройство:</p>
+
+                            <div>
+                                <select className='selectDefault mt-2' onChange={(e) => setSelectedComputer(Number(e.target.value))}>
+                                    <option value="">--</option>
+                                    {onlineComputers.map((computer: TComputer) => (
+                                        <option key={computer.id} value={computer.id}>{computer.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <button className='buttonDefault mt-2' disabled={!selectedComputer} onClick={() => handleSwapClick(computer, selectedComputer)}>Подтвердить</button>
+                        </div>
+                    </>
+                );
+            case "CANCEL":
+                return (
+                    <div>
+                        <h3>Отменить сеанс</h3>
+                        <button className='buttonDefault mt-2' onClick={() => handleCancelClick(computer)}>Подтвердить</button>
+                    </div>
+                );
             default:
                 break;
         }
@@ -324,24 +446,20 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
         <article>
             <div className={styles.card}>
                 {!loading
-                    ? detailsBody()
+                    ? modal && param ? detailsModal() : detailsBody()
                     : <Modal onClose={closeModal} header="Загрузка данных">
-                        <div className="mb-4 mt-4">
-                        </div>
                         <div>
-                            <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
-                                Пожалуйста подождите
-                            </p>
-                            <div className={`${styles.flex} text_color_inactive`}>
+                            <p>Пожалуйста подождите</p>
+                            <div>
                                 <FontAwesomeIcon
                                     icon={faSpinner}
                                     spin
                                     size="5x"
-                                    className={`${styles.faSpinner}`}
                                 />
                             </div>
                         </div>
-                    </Modal>}
+                    </Modal>
+                }
             </div>
         </article>
     );

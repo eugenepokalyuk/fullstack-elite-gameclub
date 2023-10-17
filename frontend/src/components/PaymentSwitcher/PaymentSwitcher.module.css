@@ -1,24 +1,23 @@
-.switcher {
+.switch {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    height: 5vh;
-    width: 100%;
+    border-radius: 1vh;
+    gap: .5vh;
+    background: var(--main-color);
+    filter: brightness(1);
 }
 
-.switcher .paymentButton {
-    width: 100%;
-    height: 100%;
-    font-size: 1.5vh;
-    border: none;
-    border-radius: 2vh;
-    cursor: pointer;
+.switch button {
+    width: 50%;
 }
 
-.switcher .activeButton {
-    background: #ef7912 !important;
+.activeButton {
+    background: var(--main-color);
+    filter: brightness(1.2);
 }
 
-.switcher .nonActiveButton {
-    background: #ef791290 !important;
+.nonActiveButton {
+    background: var(--main-color);
+    filter: brightness(1);
 }

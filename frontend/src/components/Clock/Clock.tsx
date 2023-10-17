@@ -1,10 +1,8 @@
 import React, { FC, useEffect } from 'react';
 import styles from "./Clock.module.css"
-export const Clock: FC = () => {
-    // const time = new Date().toLocaleString()
-    // const time = new Date().toLocaleString()
-
+const Clock: FC = () => {
     const [dateTime, setDateTime] = React.useState('');
+
     useEffect(() => {
         const interval = setInterval(() => {
             const currentDate = new Date();
@@ -26,7 +24,9 @@ export const Clock: FC = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={`${styles.textShadows} ${styles.mb4} text text_type_main-large`}>{dateTime}</h1>
+            <h1>{dateTime}</h1>
         </div>
     )
 };
+
+export default Clock;

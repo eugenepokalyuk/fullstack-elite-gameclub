@@ -13,21 +13,14 @@ import { CARD } from "../../utils/constants";
 export const StatSessionConstructor = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
     const store = useAppSelector((store) => store.store.items);
-
     const [storeOrders, setStoreOrders] = useState<TStoreStat[]>();
     const [computerOrders, setComputerOrders] = useState<TComputerStat[]>();
+    const [cancelOrders, setCancelOrders] = useState<number>();
     const [loading, isLoading] = useState<boolean>(false);
-
-    const session = useAppSelector((store) => store.stat);
-    const sessionStorefront = useAppSelector((store) => store.session.stat.storefront);
-    const sessionDevices = useAppSelector((store) => store.session.stat.devices);
-
     const closeModal = () => {
         navigate(-1);
     };
-
     useEffect(() => {
         dispatch({ type: FETCH_STAT_SESSION_REQUEST });
         isLoading(true);
@@ -37,22 +30,21 @@ export const StatSessionConstructor = () => {
                 isLoading(false);
                 setStoreOrders(res.storefront);
                 setComputerOrders(res.devices);
+                setCancelOrders(res.canceled)
                 dispatch({ type: FETCH_STAT_SESSION_SUCCESS, payload: res });
             })
             .catch(error => {
                 dispatch({ type: FETCH_STAT_SESSION_FAILURE, payload: error });
             });
     }, [dispatch])
-
-
     const calculateComputersTotal = () => {
-        const totalSum = computerOrders?.reduce((accumulator: any, computerOrders) => {
+        const totalSum = computerOrders?.reduce((accumulator, computerOrders) => {
             return accumulator + computerOrders.price
         }, 0);
         return totalSum;
     }
     const calculateStoreTotal = () => {
-        const totalSum = storeOrders?.reduce((accumulator: any, storeOrders) => {
+        const totalSum = storeOrders?.reduce((accumulator, storeOrders) => {
             return accumulator + storeOrders.total
         }, 0);
         return totalSum;
@@ -108,7 +100,7 @@ export const StatSessionConstructor = () => {
         }
     }
     const soldPositions = () => {
-        const storeUnicArray: any = storeOrders && Array.from(storeOrders.reduce((map, order) => {
+        const storeUnicArray: TStoreStat[] | undefined = storeOrders && Array.from(storeOrders.reduce((map, order) => {
             const { item_id, qty, total } = order;
 
             if (map.has(item_id)) {
@@ -123,15 +115,15 @@ export const StatSessionConstructor = () => {
         }, new Map()).values());
         return (
             <>
-                {storeUnicArray?.length > 0 ? storeUnicArray?.map((item: any) => {
-                    const storeItem = store.find((el: any) => el.id === item.item_id);
+                {storeUnicArray && storeUnicArray?.length > 0 ? storeUnicArray?.map((item) => {
+                    const storeItem = store.find((el: TStoreStat) => el.id === item.item_id);
 
                     return (
-                        <li key={item.id} className={`${styles.cardItem} ${styles.heightSmall} ${styles.flexBetween}`}>
-                            <h3 className={`${styles.textShadows} text text_type_main-medium mb-8`}>{storeItem ? storeItem.name : "Ошибка"}</h3>
+                        <li key={item.id} className="mr-2 p-2">
+                            <h3 className="link">{storeItem ? storeItem.name : "Ошибка"}</h3>
                             <div>
-                                <p>Кол-во: <span className={styles.selectedText}>{item.qty}</span></p>
-                                <p>Общая сумма: <span className={styles.selectedText}>{item.total}</span></p>
+                                <p>Кол-во: <span className="link">{item.qty}</span> шт.</p>
+                                <p>Общая сумма: <span className="link">{item.total}</span> руб.</p>
                             </div>
                         </li>
                     )
@@ -144,7 +136,7 @@ export const StatSessionConstructor = () => {
         const combinedChecks = [];
 
         storeOrders?.forEach((check) => {
-            const { uuid, date } = check;
+            const { uuid } = check;
 
             if (checkMap[uuid]) {
                 checkMap[uuid].push(check);
@@ -173,38 +165,37 @@ export const StatSessionConstructor = () => {
 
         // Сортировка объединенных чеков по дате
         combinedChecks.sort((a, b) => {
-            const dateA: any = new Date(a.date);
-            const dateB: any = new Date(b.date);
-            return dateB - dateA;
+            const dateA: Date = new Date(a.date);
+            const dateB: Date = new Date(b.date);
+            return Number(dateB) - Number(dateA);
         });
 
         return combinedChecks;
     };
     const combinedCheckPositions = () => {
         const combinedChecks = getCombinedChecks();
-
         return (
             <>
                 {combinedChecks.length > 0 ? combinedChecks.map((check, index) => {
                     return (
-                        <li key={index} className={`${styles.cardItem}`}>
+                        <li key={index} className={`${styles.combinedChecksItem} p-2 mr-2 mt-2`}>
                             <div>
-                                <h3 className={styles.textShadows}>{check ? `Чек №${index + 1}` : "Ошибка"}</h3>
+                                <h3 className="whiteMessage">{check ? `Чек №${index + 1}` : "Ошибка"}</h3>
 
-                                <ul>
-                                    {check.items.map((item: any, index: any) => (
-                                        <li key={index} className={styles.checksBlock}>
+                                <ul className='scrollable mt-1'>
+                                    {check.items.map((item: any, index: number) => (
+                                        <li key={index} className="flex flexRow flexBetween flexAlignCenter mt-1 activeLink">
                                             <p>{item.name} x {item.qty}</p>
-                                            <p className={styles.priceBlock}>{item.price}</p>
+                                            <p>{item.price} руб.</p>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            <div>
-                                <p>{check.date}</p>
-                                <p>Тип оплаты: <span className={styles.selectedText}>{check.payment === CARD ? "Безналичный" : "Наличный"}</span></p>
-                                <p>Общая сумма: <span className={styles.selectedText}>{check.total}</span> руб.</p>
+                            <div className="mt-1">
+                                <p >{check.date}</p>
+                                <p>Тип оплаты: <span className="link">{check.payment === CARD ? "Безналичный" : "Наличный"}</span></p>
+                                <p>Общая сумма: <span className="link">{check.total}</span> руб.</p>
                             </div>
                         </li>
                     )
@@ -212,53 +203,56 @@ export const StatSessionConstructor = () => {
             </>
         );
     };
+
     return (
         <>
             {!loading
                 ? <>
-                    <article>
-                        <ul className={`${styles.card}`}>
-                            <li className={`${styles.cardStat}`}>
-                                <h2>Выручка компютеров: <span className={styles.textShadows}>{calculateComputersTotal()}</span> руб.</h2>
-                                <h2>Выручка магазина: <span className={styles.textShadows}>{calculateStoreTotal()}</span> руб.</h2>
+                    <article className="mt-2">
+                        <ul className={`${styles.cardList} grid grid-column-3 gap-0-6`}>
+                            <li className="w-100 flex flexColumn flexAlignCenter p-2 mr-2">
+                                <p className="whiteMessage">Выручка компютеров: <span className="link">{calculateComputersTotal()}</span> руб.</p>
+                                <p className="whiteMessage mt-1">Выручка магазина: <span className="link">{calculateStoreTotal()}</span> руб.</p>
                             </li>
 
-                            <li className={`${styles.cardStat}`}>
-                                <h2>Наличные: <span className={styles.textShadows}>{calculatePCStore()?.cash}</span> руб.</h2>
-                                <h2>Безналичные: <span className={styles.textShadows}>{calculatePCStore()?.card}</span> руб.</h2>
-                                <h2>Общая сумма: <span className={styles.textShadows}>{calculatePCStore()?.total}</span> руб.</h2>
+                            <li className="w-100 flex flexColumn flexAlignCenter p-2 mr-2">
+                                <p className="whiteMessage">Наличные: <span className="link">{calculatePCStore()?.cash}</span> руб.</p>
+                                <p className="whiteMessage mt-1">Безналичные: <span className="link">{calculatePCStore()?.card}</span> руб.</p>
+                            </li>
+
+                            <li className="w-100 flex flexColumn flexCenter flexAlignCenter p-2">
+                                <p className="whiteMessage">Общая сумма: <span className="link">{calculatePCStore()?.total}</span> руб.</p>
                             </li>
                         </ul>
                     </article>
 
-                    <article>
-                        <h2>Чеки:</h2>
-                        <ul className={styles.card}>
+                    <article className="mt-2">
+                        <h3 className="whiteMessage">Чеки:</h3>
+                        <ul className={`${styles.cardList} grid grid-column-4 gap-0-6 mt-1`}>
                             {combinedCheckPositions()}
                         </ul>
                     </article>
 
-                    <article>
-                        <h2>Продано:</h2>
-                        <ul className={styles.card}>
+                    <article className="mt-2 mb-2">
+                        <h3 className="whiteMessage">Продано:</h3>
+                        <ul className={`${styles.cardList} grid grid-column-4 gap-2-0 mt-1`}>
                             {soldPositions()}
                         </ul>
+                    </article>
+
+                    <article className="mt-2 mb-2">
+                        <h3 className="whiteMessage">Отменено: <span className="link">{cancelOrders}</span></h3>
                     </article>
                 </>
                 :
                 <Modal onClose={closeModal} header="Загрузка данных">
-                    <div className="mb-4 mt-4">
-                    </div>
                     <div>
-                        <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
-                            Пожалуйста подождите
-                        </p>
-                        <div className={`${styles.flex} text_color_inactive`}>
+                        <p>Пожалуйста подождите</p>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faSpinner}
                                 spin
                                 size="5x"
-                                className={`${styles.faSpinner}`}
                             />
                         </div>
                     </div>

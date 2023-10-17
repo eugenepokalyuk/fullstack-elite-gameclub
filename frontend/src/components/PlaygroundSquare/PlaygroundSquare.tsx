@@ -108,22 +108,20 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                 onDrop={(e) => onDrop(e, id)}
                 onClick={() => { handleClick(computer) }}
             >
-                <h1>{computer && computer.name}</h1>
+                <p>{computer && computer.name}</p>
             </li>
 
             {isLoading && (
                 <Modal onClose={closeModal}>
-                    <div className={styles.modalContent}>
-                        <h1 className="text text_type_main-large mb-8">Оформляем заказ</h1>
-                        <p className="text text_type_main-medium text_color_inactive mb-8">
-                            Подождите пожалуйста, примерное время ожидание 15 сек.
-                        </p>
-                        <FontAwesomeIcon
-                            icon={faSpinner}
-                            spin
-                            size="5x"
-                            className={`${styles.faSpinner}`}
-                        />
+                    <div>
+                        <p>Пожалуйста подождите</p>
+                        <div>
+                            <FontAwesomeIcon
+                                icon={faSpinner}
+                                spin
+                                size="5x"
+                            />
+                        </div>
                     </div>
                 </Modal>
             )}
@@ -133,7 +131,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                     {computer ? (
                         <ComputerDetails computer={computer} statement={statement} />
                     ) : (
-                        <p className="text text_type_main-medium text_color_inactive">Ошибка при создании заказа. Попробуйте еще раз.</p>
+                        <p className="text text_type_main-medium">Ошибка при создании заказа. Попробуйте еще раз.</p>
                     )}
                 </Modal>
             )}

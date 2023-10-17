@@ -1,9 +1,7 @@
 import styles from './AppHeader.module.css';
-import image from '../../images/logo.jpeg'
 import { NavLink, useMatch } from 'react-router-dom';
 import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH, PROFILE_PATH, STAT_SESSION_PATH } from '../../utils/routePath';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from '../../services/hooks/useTheme';
 
 const AppHeader = () => {
     const homeRoute = useMatch(DEFAULT_PATH);
@@ -17,41 +15,34 @@ const AppHeader = () => {
     return (
         <header className={styles.header}>
             <nav className={styles.nav}>
-
-                {/* <div className={styles.imageContainer}>
-                    <NavLink to="/">
-                        <img src={image} alt="elite logo" />
-                    </NavLink>
-                </div> */}
-
                 <div className={styles.linksContainer}>
-                    <NavLink to="/" className={`${styles.link} ${homeRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/" className={`whiteMessage ml-2 mr-2 ${homeRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Главная
                     </NavLink>
 
-                    <NavLink to="/store" className={`${styles.link} ${storeRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/store" className={`whiteMessage ml-2 mr-2 ${storeRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Магазин
                     </NavLink>
 
-                    <NavLink to="/warehouse" className={`${styles.link} ${warehouseRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/warehouse" className={`whiteMessage ml-2 mr-2 ${warehouseRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Склад
                     </NavLink>
 
-                    <NavLink to="/stat-session" className={`${styles.link} ${statSessionRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/stat-session" className={`whiteMessage ml-2 mr-2 ${statSessionRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Смена
                     </NavLink>
 
-                    <NavLink to="/stat" className={`${styles.link} ${statRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/stat" className={`whiteMessage ml-2 mr-2 ${statRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Статистика
                     </NavLink>
 
-                    <NavLink to="/settings" className={`${styles.link} ${settingsRoute ? styles.linkActive : styles.link}`}>
+                    <NavLink to="/settings" className={`whiteMessage ml-2 mr-2 ${settingsRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Настройки
                     </NavLink>
                 </div>
 
-                <div className={styles.mr2}>
-                    <NavLink to="/profile" className={`${styles.link} ${profileRoute ? styles.linkActive : styles.link}`}>
+                <div className='flex mr-2'>
+                    <NavLink to="/profile" className={`whiteMessage ml-2 mr-2 ${profileRoute ? styles.linkActive : 'whiteMessage'}`}>
                         Профиль
                     </NavLink>
                 </div>
