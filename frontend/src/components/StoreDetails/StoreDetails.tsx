@@ -42,15 +42,15 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
     const detailsBody = () => {
         if (finish) {
             return (
-                <h2>{finishDescription}</h2>
+                <h2 className='whiteMessage'>{finishDescription}</h2>
             )
         }
 
         if (error) {
             return (
                 <>
-                    <h2>Неопознанная Ошибка!</h2>
-                    <p>Запиши свои действия и опиши проблеум программисту!</p>
+                    <h2 className='whiteMessage'>Неопознанная Ошибка!</h2>
+                    <p className='whiteMessage'>Запиши свои действия и опиши проблеум программисту!</p>
                 </>
             )
         }
@@ -59,21 +59,17 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
             case STORE_OPEN_CART:
                 return (
                     <>
-                        <ul className={styles.cartBody}>
+                        <ul className={`${styles.cartBody} scrollable`}>
                             {selectedProducts.map((item: any) => (
-                                <li key={item.id} className={styles.cartItem}>
+                                <li key={item.id} className={`${styles.cartItem} mt-1 activeLink`}>
                                     <p className={styles.name}>{item.name}</p>
-                                    <p className={styles.qty}>{item.qty}</p>
+                                    <p className={`circle blackMessage`}>{item.qty}</p>
                                 </li>
                             ))}
                         </ul>
-                        <p
-                            className={`${styles.alignLeft}`}
-                        >
-                            Способ оплаты: <span className={styles.selectedText}>{payment === CASH ? "Наличный" : "Безналичный"}</span>
-                        </p>
+                        <p>Способ оплаты: <span className='link'>{payment === CASH ? "Наличный" : "Безналичный"}</span></p>
 
-                        <button className={styles.button} onClick={() => handleAcceptClick(selectedProducts, payment)}>
+                        <button className='buttonDefault mt-1' onClick={() => handleAcceptClick(selectedProducts, payment)}>
                             Подтвердить
                         </button>
                     </>
@@ -89,13 +85,13 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
                 {!loading
                     ? detailsBody()
                     : <Modal onClose={closeModal} header="Загрузка данных">
-                        <div className="mb-4 mt-4">
+                        <div>
                         </div>
                         <div>
-                            <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
+                            <p className={`${styles.textOrangeColor}`}>
                                 Пожалуйста подождите
                             </p>
-                            <div className={`${styles.flex} text_color_inactive`}>
+                            <div className={`${styles.flex}`}>
                                 <FontAwesomeIcon
                                     icon={faSpinner}
                                     spin

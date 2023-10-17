@@ -1,7 +1,7 @@
-import { TComputer, TPlayBody } from "../services/types/types";
+import { TComputer, TPlayBody, TWriteOff } from "../services/types/types";
 
-// const ApiUrlPath = 'http://172.20.10.4:80';
-const ApiUrlPath = 'http://localhost:8000';
+const ApiUrlPath = 'http://172.20.10.4:80';
+// const ApiUrlPath = 'http://localhost:8000';
 
 const routeStore = "/store";
 const routePlayground = "/pc";
@@ -75,6 +75,32 @@ export const fetchFinish = async (computer: TComputer, newPrice: number | undefi
             payment: paymentType
         }) : JSON.stringify({
             id: computer.id,
+        })
+    }
+    return request(endpoint, options);
+}
+export const fetchCancel = async (computer: TComputer) => {
+    const endpoint = routePlayground + `/cancel?id=${computer.id}`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        }
+    }
+    return request(endpoint, options);
+}
+export const fetchSwap = async (computer: TComputer, newId: number | undefined) => {
+    const endpoint = routePlayground + `/swap`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
+        body: JSON.stringify({
+            id: computer.id,
+            new_id: newId
         })
     }
     return request(endpoint, options);
@@ -269,19 +295,22 @@ export const fetchStoreStatData = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
-export const fetchStatSessionData = async () => {
+export const fetchStatSessionData = async (from?: any, until?: any) => {
     const endpoint = routeStat + `/session`;
     const options = {
-        method: "GET",
+        method: "POST",
         headers: {
             'Content-Type': 'application/json',
             Authorization: localStorage.getItem('uuid'),
             SessionId: localStorage.getItem('sessionId')
-        }
+        },
+        body: JSON.stringify({
+            From: from,
+            Until: until
+        })
     }
     return request(endpoint, options);
 }
-
 export const fetchRemoveComputer = async (computer: TComputer) => {
     const endpoint = routePlayground + `/remove?id=${computer.id}`;
     const options = {
@@ -358,6 +387,42 @@ export const fetchUserFinish = async (uuid: string, sessionId: string) => {
             'Content-Type': 'application/json',
             Authorization: uuid,
             SessionId: sessionId
+        }
+    }
+    return request(endpoint, options);
+}
+export const fetchGetUsers = async () => {
+    const endpoint = routeUser + `/all`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        }
+    }
+    return request(endpoint, options);
+}
+export const fetchStoreWriteOff = async (object: TWriteOff) => {
+    const endpoint = routeStore + `/writeoff`;
+    const options = {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid'),
+            SessionId: localStorage.getItem('sessionId')
+        },
+        body: JSON.stringify(object)
+    }
+    return request(endpoint, options);
+}
+export const fetchStatPopularPrices = async () => {
+    const endpoint = routeStat + `/prices`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid'),
+            SessionId: localStorage.getItem('sessionId')
         }
     }
     return request(endpoint, options);

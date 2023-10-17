@@ -9,8 +9,7 @@ import Modal from '../Modal/Modal';
 import WarehouseDetails from '../WarehouseDetails/WarehouseDetails';
 import { fetchStoreData } from '../../utils/api';
 import { SELECT_WAREHOUSE_REQUEST, SELECT_WAREHOUSE_SUCCESS } from '../../services/actions/warehouse';
-import { ADD_ITEM, ADD_SUPPLY, EDIT_ITEM, HIDE_ITEM, SHOW_ITEM } from '../../utils/constants';
-
+import { ADD_ITEM, ADD_SUPPLY, EDIT_ITEM, HIDE_ITEM, REMOVE_ITEM, SHOW_ITEM, WRITE_OFF } from '../../utils/constants';
 export const Warehouse: FC = () => {
     const dispatch = useAppDispatch();
     const [isLoading,] = useState<boolean>(false);
@@ -19,6 +18,22 @@ export const Warehouse: FC = () => {
     const [, setTotalPrice] = useState<number>(0);
     const [statement, setStatement] = useState<string>('');
     const storeItems = useAppSelector((store) => store.store.items);
+
+    const sortStoreItems = storeItems && storeItems.sort((a: TStoreItem, b: TStoreItem) => {
+        // Первым делом проверяем значение hide
+        if (a.hide && !b.hide) {
+            return 1; // a.hide идет после b.hide
+        }
+        if (!a.hide && b.hide) {
+            return -1; // a.hide идет перед b.hide
+        }
+
+        // Если значения hide одинаковы или отсутствуют,
+        // сравниваем значения qty
+        return b.qty - a.qty; // сортируем по убыванию qty
+    });
+    const [error,] = useState<boolean>(false);
+    const [errorDesription,] = useState<string>('');
 
     const closeModal = () => {
         dispatch({ type: FETCH_STORE_REQUEST });
@@ -73,88 +88,90 @@ export const Warehouse: FC = () => {
         setStatement(SHOW_ITEM)
     }
 
+    const handleWriteOffClick = () => {
+        setModalOpen(true)
+        setStatement(WRITE_OFF)
+    }
+
     return (
         <>
-            <article className={`${styles.mt2}`}>
+            <article className={`${styles.container} mt-1`}>
+                <div className={`${styles.card} flexBetween`}>
+                    <table className={`${styles.table} table`}>
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Стоимость, руб.</th>
+                                <th>Количество, шт.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sortStoreItems.map((item: TStoreItem) => (
+                                <tr
+                                    key={item.id}
+                                    className={`
+                                                ${item.hide ? styles.hideRow : styles.nonHideRow} 
+                                                ${selectedItems.includes(item.id) ? styles.selectedRow : ""}
+                                            `}
+                                    onClick={() => handleItemClick(item.id)}
+                                >
+                                    <td>{item.name}</td>
+                                    <td>{item.price}</td>
+                                    <td>{item.qty}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
 
-                <div className={`${styles.header}`}>
-                    <button className={`${styles.mr2}`} onClick={handleAddItemClick}>Добавить новый товар</button>
-                    <button className={`${styles.mr2}`} onClick={handleAddSupplyClick}>Приход товара</button>
+                    <div>
+                        <button className='buttonDefault mr-1' onClick={handleAddItemClick}>Добавить новый товар</button>
+                        <button className='buttonDefault mr-1' onClick={handleAddSupplyClick}>Приход товара</button>
+                        <button className='buttonDefault' onClick={handleWriteOffClick}>Списание</button>
+                    </div>
                 </div>
 
-                <div className={`${styles.warehouseContainer} ${styles.mt2}`}>
-                    <div className={styles.card}>
-                        <table className={styles.table}>
-                            <thead>
-                                <tr>
-                                    <th>Название</th>
-                                    <th>Стоимость</th>
-                                    <th>Количество</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {storeItems.map((item: TStoreItem) => (
-                                    <tr
-                                        key={item.id}
-                                        className={selectedItems.includes(item.id) ? styles.selectedRow : ""}
-                                        onClick={() => handleItemClick(item.id)}
-                                    >
-                                        <td>{item.name}</td>
-                                        <td>{item.price}</td>
-                                        <td>{item.qty}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                <div className={`${styles.card}`}>
+                    <div>
+                        <h3 className='whiteMessage'>Редактировать</h3>
+                        {selectedItems.length > 0 ? (
+                            <ul>
+                                {selectedItems.map((itemId) => {
+                                    const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
+                                    return (
+                                        <li key={item.id} className='mt-2'>
+                                            <p>Название: <span className='link'>{item.name}</span></p>
+                                            <p>Стоимость: <span className='link'>{item.price}</span> руб.</p>
+                                            <p>Кол-во: <span className='link'>{item.qty}</span> шт.</p>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        ) : error
+                            ? <p className='errorMessage'>{errorDesription}</p> : <p className='mt-2'>Товар не выбран</p>
+                        }
                     </div>
 
-                    <div className={styles.cart}>
-                        <div className={styles.cartHeader}>
-                            <h2>Редактировать</h2>
-                        </div>
+                    <div>
+                        {selectedItems.map((itemId) => {
+                            const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
 
-                        <div className={styles.cartBody}>
-                            {selectedItems.length > 0 ? (
-                                <ul>
-                                    {selectedItems.map((itemId) => {
-                                        const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
-                                        return (
-                                            <li key={item.id}>
-                                                <p>Название: <span className={styles.selectedOption}>{item.name}</span></p>
-                                                <p>Стоимость: <span className={styles.selectedOption}>{item.price}</span></p>
-                                                <p>Кол-во: <span className={styles.selectedOption}>{item.qty}</span></p>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            ) : (
-                                <p>Выбери товар</p>
-                            )}
-                        </div>
+                            return (
+                                <div key={item.id}>
+                                    {item.hide
+                                        ? <button className='buttonDefault restoreDefault w-100' onClick={handleShowItemClick} disabled={selectedItems.length === 0}>
+                                            Восстановить
+                                        </button>
+                                        : <button className='buttonDefault dangerDefault w-100' onClick={handleHideItemClick} disabled={selectedItems.length === 0}>
+                                            Удалить
+                                        </button>
+                                    }
+                                </div>
+                            )
+                        })}
 
-                        <div className={styles.cartFooter}>
-                            {selectedItems.map((itemId) => {
-                                const item: TStoreItem = storeItems.find((item: TStoreItem) => item.id === itemId);
-
-                                return (
-                                    <div key={item.id}>
-                                        {item.hide
-                                            ? <button className={`${styles.deleteButton} ${styles.mt2}`} onClick={handleShowItemClick} disabled={selectedItems.length === 0}>
-                                                Восстановить
-                                            </button>
-                                            : <button className={`${styles.deleteButton} ${styles.mt2}`} onClick={handleHideItemClick} disabled={selectedItems.length === 0}>
-                                                Удалить
-                                            </button>
-                                        }
-                                    </div>
-                                )
-                            })}
-
-                            <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleEditItemClick} disabled={selectedItems.length === 0}>
-                                Изменить
-                            </button>
-                        </div>
-
+                        <button className='buttonDefault w-100 mt-1' onClick={handleEditItemClick} disabled={selectedItems.length === 0}>
+                            Изменить
+                        </button>
                     </div>
                 </div>
 
@@ -162,16 +179,15 @@ export const Warehouse: FC = () => {
 
             {isLoading && (
                 <Modal onClose={closeModal}>
-                    <div className={styles.modalContent}>
-                        <h1 className="text text_type_main-large mb-8">Оформляем заказ</h1>
-                        <p className="text text_type_main-medium text_color_inactive mb-8">
+                    <div>
+                        <h1>Оформляем заказ</h1>
+                        <p>
                             Подождите пожалуйста, примерное время ожидание 15 сек.
                         </p>
                         <FontAwesomeIcon
                             icon={faSpinner}
                             spin
                             size="5x"
-                            className={`${styles.faSpinner}`}
                         />
                     </div>
                 </Modal>
@@ -179,18 +195,20 @@ export const Warehouse: FC = () => {
 
             {isModalOpen && (
                 <Modal onClose={closeModal} header={
-                    statement === "addItem"
+                    statement === ADD_ITEM
                         ? "Добавить новый товар"
-                        : statement === "addSupply"
+                        : statement === ADD_SUPPLY
                             ? "Приход товаров"
-                            : statement === "editItem"
+                            : statement === EDIT_ITEM
                                 ? "Изменение товара"
-                                : statement === "removeItem"
+                                : statement === REMOVE_ITEM
                                     ? "Удаление товара"
-                                    : statement === "hideItem"
+                                    : statement === HIDE_ITEM
                                         ? "Удалить товар"
-                                        : statement === "showItem"
-                                            ? "Восстановить товар" : "Новое окно"
+                                        : statement === SHOW_ITEM
+                                            ? "Восстановить товар"
+                                            : statement === WRITE_OFF
+                                                ? "Списание товара" : "Новое окно"
                 }>
                     <WarehouseDetails statement={statement} />
                 </Modal >

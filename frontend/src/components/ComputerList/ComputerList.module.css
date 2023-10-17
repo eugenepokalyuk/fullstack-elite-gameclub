@@ -8,7 +8,7 @@
     width: 20vh;
     height: 5vh;
 
-    background: #ef7912;
+    background: var(--main-color);
     padding: 0.5vh;
     margin: 0.5vh;
 
@@ -26,5 +26,6 @@
 
 .listItem:hover {
     cursor: pointer;
-    background: #ef791280;
+    background: var(--main-color);
+    filter: brightness(1.2);
 }

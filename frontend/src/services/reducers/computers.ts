@@ -7,7 +7,6 @@ import {
 
 const initialState: any = {
     computers: [],
-    playingComputers: [],
     loading: false,
     error: null,
 };

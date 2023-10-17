@@ -2,6 +2,7 @@ import {
     SELECT_WAREHOUSE_REQUEST,
     SELECT_WAREHOUSE_SUCCESS,
     SELECT_WAREHOUSE_FAILURE,
+    ActionTypes
 } from "../actions/warehouse";
 
 const initialState: any = {

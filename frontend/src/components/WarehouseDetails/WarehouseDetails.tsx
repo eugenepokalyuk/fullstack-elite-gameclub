@@ -1,12 +1,18 @@
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import styles from './WarehouseDetails.module.css';
 import { useAppSelector } from '../../services/hooks/hooks';
-import { TStoreItem, WarehouseDetailsProps } from '../../services/types/types';
-import { fetchWarehouseAddItem, fetchWarehouseAddSupply, fetchWarehouseEditItemName, fetchWarehouseEditItemPrice, fetchWarehouseHideItem, fetchWarehouseItem, fetchWarehouseShowItem } from '../../utils/api';
+import { TStoreItem, TWriteOff, WarehouseDetailsProps } from '../../services/types/types';
+import { fetchGetUsers, fetchStoreWriteOff, fetchWarehouseAddItem, fetchWarehouseAddSupply, fetchWarehouseEditItemName, fetchWarehouseEditItemPrice, fetchWarehouseHideItem, fetchWarehouseItem, fetchWarehouseShowItem } from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { ADD_ITEM, ADD_SUPPLY, EDIT_ITEM, HIDE_ITEM, SHOW_ITEM, WRITE_OFF } from '../../utils/constants';
+
+interface TEmployee {
+    name: string;
+    uuid: string;
+}
 
 const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const [itemName, setItemName] = useState<string>('');
@@ -23,10 +29,15 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
 
+    const [selectedItem, setSelectedItem] = useState<number>();
+    const [selectedEmployee, setSelectedEmployee] = useState<string>('');
+    const [selectedReason, setSelectedReason] = useState<string>('');
+    const [employees, setEmployees] = useState<TEmployee[]>([]);
+    const [selectedCount, setSelectedCount] = useState<number>();
+
     const closeModal = () => {
         navigate(-1);
     };
-
     useEffect(() => {
         isLoading(true);
         fetchWarehouseItem(warehouseSelectedItem)
@@ -38,9 +49,74 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 setItemPrice(price);
             })
             .catch(error => {
-                // console.log({ error });
             });
     }, [])
+    useEffect(() => {
+        if (selectedReason !== 'Сотрудник') {
+            setEmployees([]);
+        }
+    }, [selectedReason]);
+
+    const handleSelectPersonChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setSelectedEmployee(e.target.value);
+    }
+    const handleSelectItemChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setSelectedItem(Number(e.target.value));
+    }
+    const handleSelectCountChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSelectedCount(Number(e.target.value));
+    }
+    const handleReasonChange = async (e: ChangeEvent<HTMLSelectElement>) => {
+        setSelectedReason(e.target.value);
+        setSelectedEmployee('');
+
+        if (e.target.value === 'Сотрудник') {
+            try {
+                await fetchGetUsers()
+                    .then(res => {
+                        setEmployees(res);
+                    })
+                    .catch(error => {
+                        setError(true)
+                    });
+            } catch (error) {
+                setError(true)
+                console.error('Ошибка при получении данных сотрудников:', error);
+                // Обработка ошибки при получении данных сотрудников
+            }
+        }
+    };
+    const handleConfirmClick = () => {
+        const writeOffType = selectedReason === 'Срок годности' ? 'exp' : selectedReason === 'Сотрудник' ? 'person' : undefined;
+
+        const dataExp: TWriteOff = {
+            type: writeOffType,
+            details: {
+                id: selectedItem,
+                qty: selectedCount
+            }
+        }
+
+        const dataPerson: TWriteOff = {
+            type: writeOffType,
+            details: {
+                id: selectedItem,
+                qty: selectedCount,
+                name: selectedEmployee
+            }
+        }
+
+        isLoading(true);
+        fetchStoreWriteOff(writeOffType === "exp" ? dataExp : dataPerson)
+            .then(res => {
+                isLoading(false);
+                setFinish(true);
+                setFinishDescription(`Товар успешно списан`);
+            })
+            .catch(error => {
+                setError(true)
+            });
+    };
 
     const handleAddItem = () => {
         isLoading(true);
@@ -54,7 +130,6 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 setError(true)
             });
     }
-
     const handleAddSupply = () => {
         const selectedItems = [];
         for (const itemId in itemCounts) {
@@ -73,25 +148,15 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 setError(true)
             });
     }
+    const handleChangeItemCount = (e: React.ChangeEvent<HTMLInputElement>, itemId: number) => {
+        // setItemCounts(Number(e.target.value));
+        // setItemCounts(e.target.value);
 
-    const handleIncrement = (itemId: number, number: number) => {
         setItemCounts((prevCounts) => ({
             ...prevCounts,
-            [itemId]: (prevCounts[itemId] || 0) + number
+            [itemId]: (prevCounts[itemId] || 0) + Number(e.target.value)
         }));
-    };
-
-    const handleDecrement = (itemId: number, number: number) => {
-        setItemCounts((prevCounts) => {
-            const currentCount = prevCounts[itemId] || 0;
-            const updatedCount = Math.max(0, currentCount - number);
-            return {
-                ...prevCounts,
-                [itemId]: updatedCount
-            };
-        });
-    };
-
+    }
     const handleEditItem = () => {
         if (itemNewName) {
             isLoading(true);
@@ -120,7 +185,6 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 });
         }
     }
-
     const handleHideItem = () => {
         isLoading(true);
         fetchWarehouseHideItem(itemId)
@@ -145,7 +209,6 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 setError(true)
             });
     }
-
     const detailsBody = () => {
         if (finish) {
             return (
@@ -163,110 +226,162 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
         }
 
         switch (statement) {
-            case "addItem":
+            case ADD_ITEM:
                 return (
-                    <ul className={styles.cardList}>
-                        <li className={styles.listItem}>
-                            <p className={styles.listText}>Название товара</p>
+                    <ul className={`${styles.cardList} flex flexColumn flexCenter`}>
+                        <li>
+                            <p>Название товара</p>
+                            <input className='inputDefault mt-1' type="text" value={itemName} onChange={(event) => setItemName(event.target.value)} placeholder='Название товара' />
                         </li>
 
-                        <li className={styles.listItem}>
-                            <input className={styles.listInput} type="text" value={itemName} onChange={(event) => setItemName(event.target.value)} placeholder='Название товара' />
+                        <li className='mt-1'>
+                            <p>Стоимость товара</p>
+                            <input onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }} className='inputDefault mt-1' type="text" value={itemPrice} onChange={(event) => setItemPrice(Number(event.target.value))} placeholder='Стоимость товара' />
                         </li>
 
-                        <li className={styles.listItem}>
-                            <p className={styles.listText}>Стоимость товара</p>
-                        </li>
-
-                        <li className={styles.listItem}>
-                            <input className={styles.listInput} type="text" value={itemPrice} onChange={(event) => setItemPrice(Number(event.target.value))} placeholder='Стоимость товара' />
-                        </li>
-
-                        <li className={`${styles.listItem} ${styles.mt4}`}>
-                            <button className={styles.listInputSubmit} onClick={handleAddItem}>Добавить</button>
+                        <li className='mt-1'>
+                            <button className="buttonDefault" onClick={handleAddItem}>Добавить</button>
                         </li>
                     </ul>
                 )
-            case "addSupply":
+            case ADD_SUPPLY:
                 return (
                     <>
-                        <ul className={`${styles.cardList} ${styles.cardScroll}`}>
-                            {storeItems.map((item: TStoreItem) => {
-                                return (
-                                    <li className={`${styles.listItem} ${styles.supplyContainer} ${styles.alignLeft}`} key={item.id}>
-                                        <div className={styles.containerTitle}>
-                                            {item.name}
-                                        </div>
-                                        <div className={styles.containerCounter}>
-                                            <div className={styles.symbolsCircleContainer}>
-                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 5)}>-5</button>
-                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id, 1)}>-</button>
-                                            </div>
-                                            <span>
-                                                {itemCounts[item.id] || 0}
-                                            </span>
-                                            <div className={styles.symbolsCircleContainer}>
-                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 1)}>+</button>
-                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id, 5)}>+5</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                )
-                            })}
-                        </ul>
-                        <div className={`${styles.mt4}`}>
-                            <button className={styles.listInputSubmit} onClick={handleAddSupply}>Подтвердить приход товаров</button>
-                        </div>
+                        {storeItems.length > 0
+                            ? <>
+                                <ul className='flex flexColumn marginAuto w-65 scrollable'>
+                                    {storeItems.map((item: TStoreItem) => {
+                                        return item && !item.hide && (
+                                            <li key={item.id} className={`${styles.suppliesList}`}>
+                                                <p className='mr-2'>{item.name}</p>
+                                                <div className='flex flexAlignCenter flexCenter'>
+                                                    <input onKeyPress={(event) => {
+                                                        if (!/[0-9]/.test(event.key)) {
+                                                            event.preventDefault();
+                                                        }
+                                                    }} className='inputDefault mt-1' type="text" onChange={e => handleChangeItemCount(e, item.id)} placeholder='Кол-во' />
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                                <div>
+                                    <button className="buttonDefault w-30 mt-2" onClick={handleAddSupply}>Подтвердить приход товаров</button>
+                                </div>
+                            </>
+                            : <p>
+                                Сначала нужно добавить товары
+                            </p>
+                        }
+
                     </>
                 )
-            case "editItem":
+            case EDIT_ITEM:
                 return (
                     <>
-                        <ul className={`${styles.cardList} ${styles.cardScroll}`}>
+                        <ul className='flex flexColumn flexCenter'>
 
-                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                            <li className='mt-1'>
                                 <p>Старое название</p>
-                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemName} disabled />
+                                <input className='inputDefault mt-1' type="text" value={itemName} disabled />
                             </li>
 
-                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                            <li className='mt-1'>
                                 <p>Новое название</p>
-                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewName} onChange={(event) => setItemNewName(event.target.value)} placeholder='Новое название' />
+                                <input className='inputDefault mt-1' type="text" value={itemNewName} onChange={(event) => setItemNewName(event.target.value)} placeholder='Новое название' />
                             </li>
 
-                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft} ${styles.mt4}`}>
+                            <li className='mt-1'>
                                 <p>Старая цена</p>
-                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemPrice} disabled />
+                                <input className='inputDefault mt-1' type="text" value={itemPrice} disabled />
                             </li>
 
-                            <li className={`${styles.listItem} ${styles.flexBetween} ${styles.alignLeft}`}>
+                            <li className='mt-1'>
                                 <p>Новая цена</p>
-                                <input className={`${styles.listInput} ${styles.ml2}`} type="text" value={itemNewPrice} onChange={(event) => setItemNewPrice(Number(event.target.value))} placeholder='Стоимость товара' />
+                                <input onKeyPress={(event) => {
+                                    if (!/[0-9]/.test(event.key)) {
+                                        event.preventDefault();
+                                    }
+                                }} className='inputDefault mt-1' type="text" value={itemNewPrice} onChange={(event) => setItemNewPrice(Number(event.target.value))} placeholder='Стоимость товара' />
                             </li>
 
                         </ul>
-                        <div className={`${styles.mt4}`}>
-                            <p>Если не нужно менять один из параметров, оставь поле пустым</p>
-                        </div>
 
-                        <div className={`${styles.mt4}`}>
-                            <button className={styles.listInputSubmit} onClick={handleEditItem}>Подтвердить изменение</button>
-                        </div>
+                        <button className="buttonDefault mt-2" onClick={handleEditItem}>Подтвердить изменение</button>
                     </>
                 )
-            case "hideItem":
+            case HIDE_ITEM:
                 return (
                     <>
-                        <div className={`${styles.mt4}`}>
-                            <button className={styles.listInputSubmit} onClick={handleHideItem}>Подтвердить удаление</button>
+                        <div>
+                            <button className="buttonDefault w-30" onClick={handleHideItem}>Подтвердить удаление</button>
                         </div>
                     </>
                 )
-            case "showItem":
+            case SHOW_ITEM:
                 return (
-                    <div className={`${styles.mt4}`}>
-                        <button className={styles.listInputSubmit} onClick={handleShowItem}>Подтвердить восстановление</button>
+                    <div>
+                        <button className="buttonDefault w-30" onClick={handleShowItem}>Подтвердить восстановление</button>
                     </div>
+                )
+            case WRITE_OFF:
+                const isButtonDisabled = !selectedItem || !selectedReason || !selectedCount || (selectedReason === 'Сотрудник' && !selectedEmployee);
+                return (
+                    <>
+                        {storeItems.length > 0
+                            ? <>
+                                <div className='flex flexColumn flexCenter marginAuto w-50'>
+                                    <select className='selectDefault w-100' onChange={handleSelectItemChange}>
+                                        <option value="">--</option>
+                                        {storeItems.map((item: TStoreItem) => {
+                                            return (
+                                                item.qty > 0 && <option key={item.id} value={item.id}>{item.name}</option>
+                                            )
+                                        })}
+                                    </select>
+
+                                    <select className='selectDefault w-100' onChange={handleReasonChange}>
+                                        <option value="">--</option>
+                                        <option>Срок годности</option>
+                                        <option>Сотрудник</option>
+                                    </select>
+
+                                    {selectedReason === 'Сотрудник' && (
+                                        <select className='selectDefault w-100' onChange={handleSelectPersonChange}>
+                                            <option value="">--</option>
+                                            {employees.map((employee: TEmployee) => {
+                                                return <option key={employee.uuid}>{employee.name}</option>;
+                                            })}
+                                        </select>
+                                    )}
+
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={100}
+                                        onChange={handleSelectCountChange}
+                                        className='inputNumberDefault w-95'
+                                        placeholder='Кол-во'
+                                    />
+
+                                    < button
+                                        className="buttonDefault mt-1 w-50"
+                                        onClick={handleConfirmClick}
+                                        disabled={isButtonDisabled}
+                                    >
+                                        Подтвердить списание
+                                    </button>
+                                </div>
+                            </>
+                            : <p>
+                                Сначала нужно добавить товары
+                            </p>
+                        }
+                    </>
                 )
             default:
                 return (
@@ -274,32 +389,44 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                 )
         }
     }
-
     return (
         <article>
             {!loading
                 ? <div className={styles.card}>
                     {detailsBody()}
                 </div>
-                :
-                <Modal onClose={closeModal} header="Загрузка данных">
-                    <div className="mb-4 mt-4">
-                    </div>
-                    <div>
-                        <p className={`${styles.textOrangeColor} text text_type_main-medium mb-8`}>
-                            Пожалуйста подождите
-                        </p>
-                        <div className={`${styles.flex} text_color_inactive`}>
-                            <FontAwesomeIcon
-                                icon={faSpinner}
-                                spin
-                                size="5x"
-                                className={`${styles.faSpinner}`}
-                            />
+                : error
+                    ? <Modal onClose={closeModal} header="Ошибка загрузки данных">
+                        <div>
+                            <p className={`${styles.textOrangeColor}`}>
+                                Действие не выполнено, закройте окно
+                            </p>
+                            <div className={`${styles.flex}`}>
+                                <FontAwesomeIcon
+                                    icon={faWarning}
+                                    size="5x"
+                                    className={`${styles.faSpinner}`}
+                                />
+                            </div>
                         </div>
-                    </div>
-                </Modal>
+                    </Modal>
+                    : <Modal onClose={closeModal} header="Загрузка данных">
+                        <div>
+                            <p className={`${styles.textOrangeColor}`}>
+                                Пожалуйста подождите
+                            </p>
+                            <div className={`${styles.flex}`}>
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    spin
+                                    size="5x"
+                                    className={`${styles.faSpinner}`}
+                                />
+                            </div>
+                        </div>
+                    </Modal>
             }
+            {/* {!error && <>Ошибка</>} */}
         </article>
     );
 }

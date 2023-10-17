@@ -1,85 +1,20 @@
-* {
-    margin: 0;
-    padding: 0;
+.cardList {
+    width: 100%;
 }
 
-.textShadows {
-    color: #ef7912;
-}
-
-.selectedText {
-    color: #ef7912;
-}
-
-.card {
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 1.5vh;
-    margin-right: 1vh;
-}
-
-.card li {
-    margin: 0;
-    margin: 1vh;
-}
-
-.card ul li {
-    margin: 0;
-}
-
-.cardStat {
-    background: #333;
+.cardList li {
+    background: #333333;
     border-radius: 1vh;
-    padding: 2vh;
+    opacity: 0.9;
 }
 
-.cardStat h2 {
-    margin: 1vh 0vh;
+.combinedChecksItem {
+    width: 100%;
+    transition: 200ms;
 }
 
-article h2 {
-    font-size: 2vh;
-}
-
-.cardItem {
-    width: 20%;
-    background: #333;
-    border-radius: 1vh;
-    padding: 1vh;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.cardItem * {
-    font-size: 1.5vh;
-    margin: 0;
-    padding: 0;
-    margin: 0.3vh 0;
-}
-
-.textOrangeColor,
-.faSpinner {
-    color: #ef7912;
-}
-
-.checksBlock {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* background: hotpink; */
-}
-
-.priceBlock {
-    width: 1.5vh;
-    height: 1.5vh;
-    background: #ef7912;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 1.25vh;
-    padding: .75vh;
-    border-radius: 3vh;
+.combinedChecksItem:hover {
+    background: #333333;
+    scale: 1.05;
+    opacity: 1;
 }

@@ -18,15 +18,16 @@ export const Store: FC = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
-    const [error, setError] = useState<boolean>(false);
-    const [errorDesription, ] = useState<string>('');
+    const [error,] = useState<boolean>(false);
+    const [errorDesription,] = useState<string>('');
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
 
     const paymentType = useAppSelector((store) => store.payment.paymentType)
 
     const closeModal = () => {
-        navigate(-1)
+        // navigate(0)
+        setModalOpen(false)
     };
 
     const storeRender = async () => {
@@ -70,8 +71,9 @@ export const Store: FC = () => {
         }, 0);
         setTotalPrice(price);
 
-        storeRender();
-    }, [selectedItems, dispatch]);
+        // storeRender();
+    }, [selectedItems, dispatch, itemCounts]);
+
     let qty = 0;
 
     const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id))
@@ -87,9 +89,9 @@ export const Store: FC = () => {
 
     return (
         <>
-            <article className={`${styles.storeContainer} ${styles.mt4}`}>
-                <div className={styles.card}>
-                    <table className={styles.table}>
+            <article className={styles.container}>
+                <div className={`${styles.card}`}>
+                    <table className={`${styles.table} table`}>
                         <thead>
                             <tr>
                                 <th>Название</th>
@@ -97,7 +99,7 @@ export const Store: FC = () => {
                                 <th>Количество</th>
                             </tr>
                         </thead>
-                        <tbody className={styles.cardScroll}>
+                        <tbody>
                             {storeItems.map((item: TStoreItem) => (
                                 <tr
                                     key={item.id}
@@ -113,27 +115,24 @@ export const Store: FC = () => {
                     </table>
                 </div>
 
-                <div className={styles.cart}>
-                    <div className={styles.cartHeader}>
-                        <h2>Корзина</h2>
-                    </div>
-
-                    <div className={styles.cartBody}>
+                <div className={`${styles.card}`}>
+                    <div>
+                        <h3 className='whiteMessage'>Корзина</h3>
                         {selectedItems.length > 0 ? (
-                            <ul>
+                            <ul className={`${styles.minHeight50} scrollable`}>
                                 {selectedItems.map((itemId) => {
                                     const item = storeItems.find((item: TStoreItem) => item.id === itemId);
                                     return (
-                                        <li className={styles.cartRow} key={itemId}>
+                                        <li key={itemId} className={`${styles.cardList} mt-1 whiteMessage activeLink`}>
                                             {item.name}
-                                            <div className={styles.cartRow}>
-                                                <button className={styles.symbolsCircle} onClick={() => handleDecrement(item.id)}>
+                                            <div>
+                                                <button className='smallIncrementButton' onClick={() => handleDecrement(item.id)}>
                                                     -
                                                 </button>
 
                                                 {itemCounts[item.id] || 1}
 
-                                                <button className={styles.symbolsCircle} onClick={() => handleIncrement(item.id)}>
+                                                <button className='smallIncrementButton' onClick={() => handleIncrement(item.id)}>
                                                     +
                                                 </button>
                                             </div>
@@ -143,28 +142,28 @@ export const Store: FC = () => {
                             </ul>
                         )
                             : error
-                                ? <p className={styles.warningMessage}>{errorDesription}</p> : <p>Корзина пуста</p>
+                                ? <p className='errorMessage'>{errorDesription}</p> : <p className='mt-2'>Корзина пуста</p>
                         }
                     </div>
 
-                    <div className={styles.cartFooter}>
+                    <div>
                         <PaymentSwitcher />
-                        <button className={`${styles.submitButton}`} onClick={handleAddToCart} disabled={selectedItems.length === 0}>
+                        <button className='flex flexCenter buttonDefault mt-1 w-100' onClick={handleAddToCart} disabled={selectedItems.length === 0}>
                             Оплатить
-                            <span>
+                            <span className='ml-1'>
                                 {totalPrice} руб.
                             </span>
                         </button>
                     </div>
-
                 </div>
-            </article>
+            </article >
 
             {isModalOpen && storeItems && (
                 <Modal onClose={closeModal} header={"Корзина"}>
                     <StoreDetails statement={statement} selectedProducts={selectedProducts} payment={paymentType} />
                 </Modal>
-            )}
+            )
+            }
         </>
     );
 };

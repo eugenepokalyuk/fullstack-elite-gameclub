@@ -38,16 +38,16 @@ export const LoginPage: FC = () => {
                 }
             })
             .catch(error => {
-                // dispatch({ type: 'REGISTER_FAILURE' });
+                dispatch({ type: 'REGISTER_FAILURE' });
                 setError('Ой, произошла ошибка!');
             });
     };
 
     return (
-        <div className={styles.wrapper}>
+        <section className={styles.wrapper}>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit} className={styles.content}>
-                    <h1 className={`${styles.colorWhite}`}>Вход</h1>
+                    <h1 className='whiteMessage mb-2'>Вход</h1>
 
                     <input
                         type='text'
@@ -55,7 +55,7 @@ export const LoginPage: FC = () => {
                         onChange={e => setLogin(e.target.value)}
                         name={'login'}
                         value={login}
-                        className={`${styles.inputDefault} ${styles.inputLogin} mb-6`}
+                        className='inputDefault mb-1'
                     />
 
                     <input
@@ -64,25 +64,25 @@ export const LoginPage: FC = () => {
                         onChange={e => setPassword(e.target.value)}
                         name={'password'}
                         value={password}
-                        className={`${styles.inputDefault} ${styles.inputPwd} mb-6`}
+                        className='inputDefault mb-1'
                     />
 
                     {error && (
-                        <p className={`${styles.errorMessage}`}>
+                        <p className="errorMessage mt-1 mb-1">
                             {error}
                         </p>
                     )}
 
-                    <button className={`${styles.buttonDefault} ${styles.mb2}`}>
+                    <button className={`buttonDefault mb-2`}>
                         Начать смену
                     </button>
 
-                    <div>
-                        <span className={`${styles.colorWhite}`}>Вы - новый пользователь? </span>
-                        <Link to='/register' className={styles.link}> Зарегистрироваться</Link>
+                    <div className='flex flexCenter'>
+                        <p><span className='whiteMessage mr-1'>Вы - новый пользователь? </span></p>
+                        <Link to='/register' className='link'> Зарегистрироваться</Link>
                     </div>
                 </form>
             </div>
-        </div>
+        </section>
     );
 }

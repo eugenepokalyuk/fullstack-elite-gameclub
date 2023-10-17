@@ -40,9 +40,9 @@ const ComputerList: FC = () => {
 
     return (
         <>
-            <h3>Список ваших устройств:</h3>
+            <h3 className='mt-1 whiteMessage'>Список ваших устройств:</h3>
 
-            <ul className={styles.list}>
+            <ul className='flex flexWrap mt-1'>
                 {computerList && computerList.map((item: TComputer) => {
                     return (
                         <li key={item.id} className={styles.listItem} onClick={() => handleComputerClick(item)}>{item.name}</li>
@@ -51,17 +51,15 @@ const ComputerList: FC = () => {
             </ul>
             {isLoading && (
                 <Modal onClose={closeModal}>
-                    <div className={styles.modalContent}>
-                        <h1 className="text text_type_main-large mb-8">Оформляем заказ</h1>
-                        <p className="text text_type_main-medium text_color_inactive mb-8">
-                            Подождите пожалуйста, примерное время ожидание 15 сек.
-                        </p>
-                        <FontAwesomeIcon
-                            icon={faSpinner}
-                            spin
-                            size="5x"
-                            className={`${styles.faSpinner}`}
-                        />
+                    <div>
+                        <p>Пожалуйста подождите</p>
+                        <div>
+                            <FontAwesomeIcon
+                                icon={faSpinner}
+                                spin
+                                size="5x"
+                            />
+                        </div>
                     </div>
                 </Modal>
             )}
@@ -71,7 +69,7 @@ const ComputerList: FC = () => {
                     {computer ? (
                         <ComputerDetails computer={computer} statement={statement} />
                     ) : (
-                        <p className="text text_type_main-medium text_color_inactive">Ошибка при создании заказа. Попробуйте еще раз.</p>
+                        <p className="text text_type_main-medium">Ошибка при создании заказа. Попробуйте еще раз.</p>
                     )}
                 </Modal>
             )}

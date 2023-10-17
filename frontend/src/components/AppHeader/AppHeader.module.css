@@ -45,21 +45,9 @@
     color: #fff;
 }
 
-.link {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 4vh;
-
-    font-weight: 800;
-}
-
-.link:hover {
-    color: #ef7912;
-}
-
 .linkActive {
     font-weight: 900;
-    color: #ef7912;
+    color: var(--main-color);
 }
 
 .mr2 {

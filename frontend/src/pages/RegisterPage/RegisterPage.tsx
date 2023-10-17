@@ -7,15 +7,11 @@ import { useAppDispatch } from '../../services/hooks/hooks';
 
 export const RegisterPage: FC = () => {
     const dispatch = useAppDispatch();
-
     const [name, setName] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-
     const [error, setError] = useState('');
-
     const navigate = useNavigate();
-
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         fetchUserRegister(name, login, password)
@@ -54,7 +50,7 @@ export const RegisterPage: FC = () => {
         <div className={styles.wrapper}>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit} className={styles.content}>
-                    <h1 className={`${styles.colorWhite}`}>Регистрация</h1>
+                    <h1 className='whiteMessage mb-2'>Регистрация</h1>
 
                     <input
                         type='text'
@@ -62,7 +58,7 @@ export const RegisterPage: FC = () => {
                         onChange={e => setName(e.target.value)}
                         name={'name'}
                         value={name}
-                        className={`${styles.inputDefault} ${styles.inputLogin} mb-6`}
+                        className='inputDefault mb-1'
                     />
 
                     <input
@@ -71,7 +67,7 @@ export const RegisterPage: FC = () => {
                         onChange={e => setLogin(e.target.value)}
                         name={'login'}
                         value={login}
-                        className={`${styles.inputDefault} ${styles.inputLogin} mb-6`}
+                        className='inputDefault mb-1'
                     />
 
                     <input
@@ -80,22 +76,22 @@ export const RegisterPage: FC = () => {
                         onChange={e => setPassword(e.target.value)}
                         name={'password'}
                         value={password}
-                        className={`${styles.inputDefault} ${styles.inputPwd} mb-6`}
+                        className='inputDefault mb-1'
                     />
 
                     {error && (
-                        <p className={`${styles.errorMessage} text text_type_main-default mb-4`} >
+                        <p className="errorMessage mt-1 mb-1">
                             {error}
                         </p>
                     )}
 
-                    <button className={`${styles.buttonDefault} ${styles.mb2}`}>
+                    <button className={`buttonDefault mb-2`}>
                         Зарегистрироваться
                     </button>
 
-                    <div>
-                        <span className={`${styles.colorWhite}`}>Уже зарегистрированы?</span>
-                        <Link to='/login' className={styles.link}> Войти</Link>
+                    <div className='flex flexCenter'>
+                        <p><span className='whiteMessage mr-1'>Уже зарегистрированы?</span></p>
+                        <Link to='/login' className='link'> Войти</Link>
                     </div>
 
                 </form>

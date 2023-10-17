@@ -1,13 +1,11 @@
 import React, { FC } from 'react';
 import styles from "./PersonalSettings.module.css";
-import { useAppDispatch } from '../../services/hooks/hooks';
+import { ThemeSwitch } from '../ThemeSwitch/ThemeSwitch';
 
 export const PersonalSettings: FC = () => {
-    const dispatch = useAppDispatch();
-
     const themeColor = {
         theme: "#1c1c21",
-        mainColor: "#ef7912"
+        mainColor: "var(--main-color)"
     }
 
     const styleMainColor = {
@@ -26,14 +24,19 @@ export const PersonalSettings: FC = () => {
 
     return (
         <>
-            <h3>Персональные изменения</h3>
+            <h3 className='whiteMessage'>Персональные изменения</h3>
             <ul>
-                <li className={styles.flex}>
+                <li className='mt-1'>
+                    <p>Выбери тему:</p>
+                    <ThemeSwitch />
+                </li>
+
+                <li className='flex flexAlignCenter'>
                     <p>Основной цвет:</p>
                     <div style={styleMainColor}></div>
                 </li>
 
-                <li className={styles.flex}>
+                <li className='flex flexAlignCenter'>
                     <p>Тема:</p>
                     <div style={styleMainTheme}></div>
                 </li>
