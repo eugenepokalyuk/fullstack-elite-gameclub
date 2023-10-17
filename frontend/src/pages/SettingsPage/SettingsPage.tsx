@@ -7,10 +7,6 @@ export const SettingsPage = () => (
     <section className={styles.container}>
         <h1>Настройки</h1>
 
-        <div className={styles.imageContainer}>
-            <img src={Image} alt="" />
-        </div>
-
         <article>
             <PersonalSettings />
             <ComputerList />
