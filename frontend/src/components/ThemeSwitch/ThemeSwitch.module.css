@@ -1,0 +1,25 @@
+.themeContainer {
+    display: flex;
+    background: #333;
+    width: 200px;
+    border-radius: 3vh;
+}
+
+.themeButton {
+    border: none;
+    width: 50%;
+    border-radius: 3vh;
+}
+
+.themeButton:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+}
+
+.themeLight {
+    background: #008080;
+}
+
+.themeDark {
+    background: #b35b0d;
+}
