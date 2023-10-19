@@ -32,3 +32,13 @@ def get_popular_prices():
         return JSONResponse(content=arr, status_code=200)
     except Exception as e:
         return JSONResponse(content='', status_code=400)
+
+
+@router.put('/expense', dependencies=[Depends(auth)])
+def add_expense(data: model.Expense):
+    """ Добавить расход """
+    try:
+        stat.add_expense(data.amount, data.reason)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
+        return JSONResponse(content='', status_code=400)

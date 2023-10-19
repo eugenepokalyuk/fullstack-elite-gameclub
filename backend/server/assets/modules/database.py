@@ -96,6 +96,14 @@ class WriteOff(Base):
     wo_date = Column(String)
 
 
+class Expenses(Base):
+    __tablename__ = "expenses"
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    amount = Column(Numeric)
+    reason = Column(String)
+    date = Column(String)
+
+
 Base.metadata.create_all(bind=engine)
 
 
