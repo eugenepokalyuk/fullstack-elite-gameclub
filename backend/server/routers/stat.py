@@ -35,7 +35,7 @@ def get_popular_prices():
 
 
 @router.post('/expense', dependencies=[Depends(auth)])
-def add_expense(data: model.Expense, authorization: str = Header(description="UUID Пользователя")):
+def add_expense(data: model.ExpenseRequest, authorization: str = Header(description="UUID Пользователя")):
     """ Добавить расход """
     try:
         stat.add_expense(data.amount, data.reason, authorization)
