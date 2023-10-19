@@ -21,6 +21,7 @@ def get_stat(body: model.StatDates, sessionId: str = Header(description="Session
         data = stat.get_stat(sessionId, body.From, body.Until)
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
+        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -41,5 +42,4 @@ def add_expense(data: model.ExpenseRequest, authorization: str = Header(descript
         stat.add_expense(data.amount, data.reason, authorization)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
-        print(e)
         return JSONResponse(content='', status_code=400)
