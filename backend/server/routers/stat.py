@@ -42,4 +42,4 @@ def add_expense(data: model.ExpenseRequest, authorization: str = Header(descript
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         print(e)
-        return JSONResponse(content=e, status_code=400)
+        return JSONResponse(content='', status_code=400)
