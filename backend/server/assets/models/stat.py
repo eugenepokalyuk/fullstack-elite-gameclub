@@ -55,7 +55,6 @@ class ExpenseRequest(BaseModel):
 class ExpenseStat(BaseModel):
     amount: float = Field(description="Сумма расхода")
     reason: str = Field(description="Причина")
-    user: str = Field(description="Пользователь, который внес расход")
     
 
 class SessionStatResponse(BaseModel):
