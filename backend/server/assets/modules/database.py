@@ -99,6 +99,7 @@ class WriteOff(Base):
 class Expenses(Base):
     __tablename__ = "expenses"
     id = Column(Integer, autoincrement=True, primary_key=True)
+    user_uuid = Column(String)
     amount = Column(Numeric)
     reason = Column(String)
     date = Column(String)

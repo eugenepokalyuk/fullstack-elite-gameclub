@@ -34,11 +34,11 @@ def get_popular_prices():
         return JSONResponse(content='', status_code=400)
 
 
-@router.put('/expense', dependencies=[Depends(auth)])
-def add_expense(data: model.Expense):
+@router.post('/expense', dependencies=[Depends(auth)])
+def add_expense(data: model.Expense, authorization: str = Header(description="UUID Пользователя")):
     """ Добавить расход """
     try:
-        stat.add_expense(data.amount, data.reason)
+        stat.add_expense(data.amount, data.reason, authorization)
         return JSONResponse(content='', status_code=200)
     except Exception as e:
         return JSONResponse(content='', status_code=400)
