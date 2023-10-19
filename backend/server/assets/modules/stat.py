@@ -19,7 +19,7 @@ def get_stat(sessionId, start=None, finish=None):
 
     store_data = get_store_stat(start_time, finish_time, db)
     
-    device_data = get_device_stat(start_time, finish_time, db)
+    device_data = get_device_stat(start_time, db)
 
     canceled_orders_count = db.scalars(select(func.count(Orders.id))\
                                        .where(and_(Orders.status == 'canceled'),\
@@ -90,10 +90,10 @@ def get_supply_stat(start, finish, db):
     } for id, qty, name, date in data]
 
 
-def get_device_stat(start, finish, db):
+def get_device_stat(start, db):
     device_data = db.query(Orders, Pcs.name)\
         .join(Pcs, Orders.pc_id == Pcs.id)\
-        .filter(and_(Orders.start >= start), and_(Orders.status != 'canceled')).all()
+        .where(and_(Orders.start >= start), and_(Orders.status != 'canceled')).all()
     return [
         {
             'id': order.id,
