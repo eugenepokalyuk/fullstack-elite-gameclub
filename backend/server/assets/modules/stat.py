@@ -93,7 +93,7 @@ def get_supply_stat(start, finish, db):
 def get_device_stat(start, finish, db):
     device_data = db.query(Orders, Pcs.name)\
         .join(Pcs, Orders.pc_id == Pcs.id)\
-        .filter(and_(Orders.start >= start, Orders.finish <= finish), and_(Orders.status != 'canceled')).all()
+        .filter(and_(Orders.start >= start), and_(Orders.status != 'canceled')).all()
     return [
         {
             'id': order.id,
