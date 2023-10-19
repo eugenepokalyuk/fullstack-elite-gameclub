@@ -51,7 +51,7 @@ def get_expenses_stat(start, finish, db):
     expenses_data = db.query(Expenses).filter(and_(Expenses.date >= start),and_(Expenses.date <= finish)).all()
     return [{
         'user': exp.user_uuid,
-        'amount': exp.amount,
+        'amount': float(exp.amount),
         'reason': exp.reason
     } for exp in expenses_data]
 
