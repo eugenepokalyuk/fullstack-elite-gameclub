@@ -48,3 +48,10 @@ class SessionStatResponse(BaseModel):
     supplies: list[SupplyStat]
     writeoff: WriteOffStat = Field(description="Списания")
     session_start: str = Field(None, description="Время начала смены")
+    expenses: float = Field(description="Сумма расходов")
+
+
+class Expense(BaseModel):
+    amount: float = Field(description="Сумма расхода")
+    reason: str = Field(description="Причина")
+    

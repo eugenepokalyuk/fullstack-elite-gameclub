@@ -30,18 +30,29 @@ def get_stat(sessionId, start=None, finish=None):
 
     supplies_data = get_supply_stat(start_time, finish_time, db)
 
+    expenses_data = get_expenses_stat(start_time, finish_time, db)
+
     response_obj = {
         'storefront': store_data,
         'devices': device_data,
         'canceled': canceled_orders_count,
         'supplies': supplies_data,
         'writeoff': writeoff_data,
+        'expenses': expenses_data
     }
 
     if start is None and finish is None:
         response_obj['start_time']: start_time
     
     return response_obj
+
+
+def get_expenses_stat(start, finish, db):
+    expenses_data = db.query(func.sum(Expenses.amount)).filter(and_(Expenses.date >= start),and_(Expenses.date <= finish)).one()
+    total = expenses_data[0]
+    if total is None:
+        total = 0
+    return float(total)
 
 
 def get_store_stat(start, finish, db):
@@ -120,3 +131,10 @@ def get_popular_prices():
         order_by(text('count DESC')).\
         limit(3).all()
     return [float(o.price) for o in rows]
+
+
+def add_expense(amount, reason):
+    db = Session()
+    now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
+    db.add(Expenses(amount=amount, reason=reason, date=now))
+    db.commit()
