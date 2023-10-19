@@ -41,6 +41,18 @@ class SupplyStat(BaseModel):
     qty: int = Field(description="Количество позиций на приход")
 
 
+class Expense(BaseModel):
+    amount: float = Field(description="Сумма расхода")
+    reason: str = Field(description="Причина")
+    user: str = Field(description="ID Пользователя внесшего запись")
+    
+    @validator('amount')
+    def validate_amount(value):
+        if value <= 0:
+            raise ValueError("Amount must be greater then 0")
+        return value
+    
+
 class SessionStatResponse(BaseModel):
     storefront: list[StoreStatItem]
     devices: list[DeviceStatItem]
@@ -48,15 +60,4 @@ class SessionStatResponse(BaseModel):
     supplies: list[SupplyStat]
     writeoff: WriteOffStat = Field(description="Списания")
     session_start: str = Field(None, description="Время начала смены")
-    expenses: float = Field(description="Сумма расходов")
-
-
-class Expense(BaseModel):
-    amount: float = Field(description="Сумма расхода")
-    reason: str = Field(description="Причина")
-    
-    @validator('amount')
-    def validate_amount(value):
-        if value <= 0:
-            raise ValueError("Amount must be greater then 0")
-        return value
+    expenses: list[Expense]

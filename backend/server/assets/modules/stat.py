@@ -48,11 +48,12 @@ def get_stat(sessionId, start=None, finish=None):
 
 
 def get_expenses_stat(start, finish, db):
-    expenses_data = db.query(func.sum(Expenses.amount)).filter(and_(Expenses.date >= start),and_(Expenses.date <= finish)).one()
-    total = expenses_data[0]
-    if total is None:
-        total = 0
-    return float(total)
+    expenses_data = db.query(Expenses).filter(and_(Expenses.date >= start),and_(Expenses.date <= finish)).all()
+    return [{
+        'user': exp.user_uuid,
+        'amount': exp.amount,
+        'reason': exp.reason
+    } for exp in expenses_data]
 
 
 def get_store_stat(start, finish, db):
@@ -133,8 +134,8 @@ def get_popular_prices():
     return [float(o.price) for o in rows]
 
 
-def add_expense(amount, reason):
+def add_expense(amount, reason, user_uuid):
     db = Session()
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
-    db.add(Expenses(amount=amount, reason=reason, date=now))
+    db.add(Expenses(amount=amount, reason=reason, date=now, user_uuid=user_uuid))
     db.commit()
