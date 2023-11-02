@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, Query
 from starlette.responses import JSONResponse
-from sqlalchemy.orm import Session
 from assets.models import pc as models
 from assets.modules import pc
 from assets.modules.auth import auth
