@@ -1,4 +1,4 @@
-from .workflow import get_session_start_time, DATE_FORMAT_DEFAULT
+from .workflow import get_session_start_time, DATE_FORMAT_DEFAULT, get_cashout, edit_cashout
 from .database import *
 from datetime import datetime, timedelta
 
@@ -32,13 +32,16 @@ def get_stat(sessionId, start=None, finish=None):
 
     expenses_data = get_expenses_stat(start_time, finish_time, db)
 
+    cashout_data = get_cashout()
+
     response_obj = {
         'storefront': store_data,
         'devices': device_data,
         'canceled': canceled_orders_count,
         'supplies': supplies_data,
         'writeoff': writeoff_data,
-        'expenses': expenses_data
+        'expenses': expenses_data,
+        'cashout': cashout_data,
     }
 
     if start is None and finish is None:
@@ -139,3 +142,4 @@ def add_expense(amount, reason, user_uuid):
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     db.add(Expenses(amount=amount, reason=reason, date=now, user_uuid=user_uuid))
     db.commit()
+    edit_cashout(amount=(0-amount), reason=reason)

@@ -54,6 +54,7 @@ def play(time, price, pc_id, payment_type):
         pc_session_id = str(uuid4())
         new_order = Orders(uuid=pc_session_id, pc_id=pc_id, start=start, finish=finish, price=price, payment=payment_type, status='play')
         db.add(new_order)
+        # change cashout balance
         pc.status = 'playing'
         db.commit()
         return pc_session_id
@@ -126,6 +127,7 @@ def finish(pc_id, price=None, payment=None):
                     new_payment = payment
                 else:
                     new_payment = order.payment
+                    # change cashout balance
                 new_price = price - float(order.price)
                 new_order = Orders(uuid=new_uuid, pc_id=pc_id, start=order.finish, finish=real_finish, price=new_price, payment=new_payment, status='finished')
                 db.add(new_order)
@@ -160,19 +162,21 @@ def cancel(pc_id):
 
 
 def start_tech_works(pc_id, reason):
-    db = Session()
-    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
-    pc.status = 'techWorks'
-    pc.description = reason
-    db.commit()
+    with Session() as db:
+        pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+        pc.status = 'techWorks'
+        pc.description = reason
+        db.commit()
+        # send block request
 
 
 def stop_tech_works(pc_id):
-    db = Session()
-    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
-    pc.status = 'techWorks'
-    pc.description = None
-    db.commit()
+    with Session() as db:
+        pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+        pc.status = 'techWorks'
+        pc.description = None
+        db.commit()
+        # send unblock request
 
 
 def set_grid_id(pc_id, grid_id):
@@ -186,6 +190,13 @@ def set_pc_name(pc_id, name):
     db = Session()
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     pc.name = name
+    db.commit()
+
+
+def set_pc_ip(pc_id, ip):
+    db = Session()
+    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+    pc.ip = ip
     db.commit()
 
 

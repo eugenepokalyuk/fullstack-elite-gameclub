@@ -3,7 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from assets.models import workflow as models
 from assets.modules import workflow
-from assets.modules.auth import auth
+from assets.modules.auth import auth, auth_admin
+import os
 
 
 router = APIRouter()
@@ -16,7 +17,7 @@ def create_user(data: models.CreateUser):
         uuid = workflow.create_user(data)
         return JSONResponse(content={'uuid':uuid}, status_code=200)
     except Exception as e:
-        return JSONResponse(content='', status_code=400)
+        return JSONResponse(content=e, status_code=400)
 
 
 @router.post('/login', response_model=models.LoginResponse)
@@ -28,12 +29,13 @@ def login_user(data: models.LoginUser):
         response = {'success':success}
         if success:
             session_id = workflow.start_session(user_data['uuid'])
+            response['checkout'] = workflow.get_cashout()
             response['sessionId'] = session_id
             response['uuid'] = user_data['uuid']
             response['name'] = user_data['name']
         return JSONResponse(content=response, status_code=200)
     except Exception as e:
-        return JSONResponse(content='', status_code=400)
+        return JSONResponse(content=e, status_code=400)
 
 
 @router.get('/auth', response_model=models.AuthResponse, dependencies=[Depends(auth)])
@@ -62,6 +64,19 @@ def get_list_of_users():
     try:
         arr = workflow.get_all_users()
         return JSONResponse(content=arr, status_code=200)
+    except Exception as e:
+        return JSONResponse(content='', status_code=400)
+    
+
+@router.post('/cashout/set', dependencies=[Depends(auth)])
+def set_cashout_balance(data: models.CashoutBalanceEditRequest):
+    """ Установит в кассу указанное значение """
+    try:
+        # После сверки пароля
+        if auth_admin(data.password):
+            workflow.set_cashout(data.amount)
+        else:
+            return JSONResponse(content='Unauthorized', status_code=401)
     except Exception as e:
         return JSONResponse(content='', status_code=400)
     
