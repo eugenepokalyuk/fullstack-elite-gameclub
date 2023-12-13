@@ -1,4 +1,4 @@
-from .workflow import DATE_FORMAT_DEFAULT
+from .workflow import DATE_FORMAT_DEFAULT, edit_cashout
 from .database import *
 from datetime import datetime
 from uuid import uuid4
@@ -90,10 +90,12 @@ def sell_products(items_array, payment_type):
     sell_uuid = str(uuid4())
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
 
+    all_sum = 0
     for item in items_array:
         new_qty = int(warehouse[item.id]['qty']) - int(item.qty)
         price = warehouse[item.id]['price']
         total_sum = int(item.qty) * price
+        all_sum = all_sum + total_sum
 
         new_sell = Sold(uuid=sell_uuid, item_id=item.id, qty=item.qty, total=total_sum, payment=payment_type, sell_date=now)
         db.add(new_sell)
@@ -102,6 +104,9 @@ def sell_products(items_array, payment_type):
         item_db.qty = new_qty
         
         db.commit()
+
+    if payment_type == 'cash':
+        edit_cashout(all_sum, 'sell')
 
 
 # Поставка
@@ -130,7 +135,8 @@ def writeoff(data, writeoff_initiator):
     now = datetime.now().strftime(DATE_FORMAT_DEFAULT)
     if data.type == 'person':
         person = data.details.name
-    else: person = None
+    else: 
+        person = None
     wo = WriteOff(user_uuid=writeoff_initiator, item_id=data.details.id, qty=data.details.qty, type=data.type, description=person, wo_date=now)
     db.add(wo)
     product = db.scalars(select(Storefront).where(Storefront.id==data.details.id)).one()

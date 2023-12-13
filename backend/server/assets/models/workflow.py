@@ -31,3 +31,11 @@ class UserDataResponse(BaseModel):
     name: str = Field(description="Имя пользователя")
     uuid: str = Field(description="UUID Пользователя")
     
+
+class CashoutBalance(BaseModel):
+    balance: float = Field(description="Текущий баланс кассы")
+    
+
+class CashoutBalanceEditRequest(BaseModel):
+    amount: float = Field(description="Сколько добавить к кассе")
+    password: str = Field(None, description="Пароль администратора")

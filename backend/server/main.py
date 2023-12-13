@@ -35,5 +35,7 @@ app.include_router(workflow.router, prefix="/user", tags=["User"])
 if __name__ == '__main__':
     init_basic_folders()
     # create_default_devices()
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
+    uvicorn.run("main:app", host="172.20.10.4", port=80, log_level="info")
+    # uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
+    # 172.20.10.4
     # uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", log_config='./log.ini')

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Header, HTTPException
 from .database import *
+import bcrypt
 
 
 def auth_by_uuid(_uuid):
@@ -9,6 +10,14 @@ def auth_by_uuid(_uuid):
         return True
     else:
         return None
+
+
+def auth_admin(input_pwd) -> bool:
+    # Проверка пароля с использованием хэша
+    db = Session()
+    hashed_password = db.query(Cashout.hashed_password).scalar()
+    password_valid = bcrypt.checkpw(input_pwd.encode('utf-8'), hashed_password.encode('utf-8'))
+    return password_valid
 
 
 def auth(authorization: str = Header(description="UUID Пользователя")):
