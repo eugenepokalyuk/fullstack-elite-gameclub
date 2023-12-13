@@ -1,4 +1,4 @@
-from .workflow import DATE_FORMAT_DEFAULT
+from .workflow import DATE_FORMAT_DEFAULT, edit_cashout
 from .database import *
 from datetime import datetime, timedelta
 from uuid import uuid4
@@ -54,9 +54,10 @@ def play(time, price, pc_id, payment_type):
         pc_session_id = str(uuid4())
         new_order = Orders(uuid=pc_session_id, pc_id=pc_id, start=start, finish=finish, price=price, payment=payment_type, status='play')
         db.add(new_order)
-        # change cashout balance
         pc.status = 'playing'
         db.commit()
+        if payment_type == 'cash':
+            edit_cashout(price, 'order')
         return pc_session_id
     else:
         raise Exception("PC Status is not online")
