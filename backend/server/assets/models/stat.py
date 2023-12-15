@@ -5,6 +5,7 @@ from datetime import datetime
 class StatDates(BaseModel):
     From: datetime = Field(None, description="С какого времени")
     Until: datetime = Field(None, description="По какое время")
+    password: str = Field(None, description="Пароль администратора для просмотра более широкой статистики")
 
 
 class StoreStatItem(BaseModel):

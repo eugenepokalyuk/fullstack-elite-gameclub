@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Header
 from starlette.responses import JSONResponse
 from assets.modules import stat
 from assets.models import stat as model
-from assets.modules.auth import auth
+from assets.modules.auth import auth, auth_admin
 
 
 router = APIRouter()
@@ -16,8 +16,13 @@ def get_stat(body: model.StatDates, sessionId: str = Header(description="Session
     Если параметр Start не отправляется, то статистика считается с начал текущей смены
     <br>
     Если параметр From не отправляется, то статистика считается до текущего времени
+    <br>
+    Если нужно посмотреть статистику не за смену, то в запросе нужно указать пароль администратора
     """
     try:
+        if data.From or data.Until:
+            if not auth_admin(data.password):
+                return JSONResponse(content='Unauthorized', status_code=401)
         data = stat.get_stat(sessionId, body.From, body.Until)
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
