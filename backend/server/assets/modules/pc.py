@@ -2,7 +2,7 @@ from .workflow import DATE_FORMAT_DEFAULT, edit_cashout
 from .database import *
 from datetime import datetime, timedelta
 from uuid import uuid4
-
+import requests
 
 
 def get_pc_data():
@@ -16,6 +16,11 @@ def get_pc_data():
             'name': row.name,
             'grid_id': row.grid_id
         }
+
+        if row.ip != None and row.ip != "":
+            if not ping_pc(row.ip):
+                pc_obj["status"] = 'offline'
+                
         if row.status == 'playing' or row.status == 'pause':
             order_data = db.query(Orders).where(Orders.pc_id == row.id).all()[0]
             start = datetime.strptime(order_data.start, DATE_FORMAT_DEFAULT)
@@ -40,6 +45,17 @@ def get_pc_data():
             }
         pc_array.append(pc_obj)
     return pc_array
+
+
+def ping_pc(ip):
+    try:
+        response = requests.get(f'http://{ip}/ping', timeout=3)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.exceptions.Timeout:
+        return False
 
 
 def play(time, price, pc_id, payment_type):
@@ -206,3 +222,23 @@ def remove_pc(pc_id):
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     db.delete(pc)    
     db.commit()
+
+
+def block_pc(pc_id, text):
+    db = Session()
+    pc = db.query(Pcs).where(Pcs.id == pc_id).one()
+    if pc.ip != None and pc.ip != "":
+        try:
+            requests.get(f'http://{pc.ip}/block?text={text}', timeout=3)
+        except requests.exceptions.Timeout:
+            print('PC недоступен')
+
+
+def unblock_pc(pc_id):
+    db = Session()
+    pc = db.query(Pcs).where(Pcs.id == pc_id).one()
+    if pc.ip != None and pc.ip != "":
+        try:
+            requests.get(f'http://{pc.ip}/unblock', timeout=3)
+        except requests.exceptions.Timeout:
+            print('PC недоступен')

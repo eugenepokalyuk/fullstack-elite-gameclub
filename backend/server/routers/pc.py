@@ -128,3 +128,23 @@ def remove_device(id: int = Query(description="ID Удаляемого дева�
     except Exception as e:
         return JSONResponse(content='', status_code=400)
     
+
+@router.get('/block', dependencies=[Depends(auth)])
+def block_pc_display_with_msg(text: str = Query(description="Текст для отображения на экране"), id: int = Query(description="ID Девайса для блокировки")):
+    """ Заблокировать экран, клавиатуру и показать текст """
+    try:
+        pc.block_pc(id, text)
+        return JSONResponse(content='Success', status_code=200)
+    except Exception:
+        return JSONResponse(content='Failed', status_code=400)
+
+
+@router.get('/unblock', dependencies=[Depends(auth)])
+def ubblock_pc_display(id: int = Query(description="ID Девайса для разблокировки")):
+    """ Разблокировать дисплей и клавиатуру """
+    try:
+        pc.unblock_pc(id)
+        return JSONResponse(content='Success', status_code=200)
+    except Exception:
+        return JSONResponse(content='Failed', status_code=400)
+    
