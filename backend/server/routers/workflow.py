@@ -48,6 +48,16 @@ def auth_user(authorization: str = Header(description="UUID Пользовате
         return JSONResponse(content={'success':False}, status_code=400)
     
 
+@router.post('/auth-admin', dependencies=[Depends(auth)], response_model=models.AdminAuthResponse)
+def auth_admin_with_password(data: models.AdminAuthRequest):
+    """ Авторизация администратора """
+    try:
+        success = auth_admin(data.password)
+        return JSONResponse(content={'success': success}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={'success': False}, status_code=400)
+    
+
 @router.get('/finish', dependencies=[Depends(auth)])
 def finish_session(sessionId: str = Header(description="UUID Смены")):
     """ Завершить рабочую смену """

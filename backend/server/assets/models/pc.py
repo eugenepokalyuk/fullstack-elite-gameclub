@@ -54,6 +54,11 @@ class StartTechWorks(BaseModel):
     reason: str = Field(description="Причина")
 
 
+class PcIP(BaseModel):
+    id: int = Field(description="ID девайса")
+    ip: str = Field(description="Новый IP девайса")
+
+
 class GridId(BaseModel):
     id: int = Field(description="ID девайса")
     grid_id: int = Field(description="Новый GridID")

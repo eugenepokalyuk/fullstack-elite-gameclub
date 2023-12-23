@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from starlette.responses import JSONResponse
 from assets.models import pc as models
 from assets.modules import pc
@@ -7,6 +7,12 @@ from assets.modules.auth import auth
 
 
 router = APIRouter()
+
+
+@router.get('/init')
+def init_pc( request: Request, name: str = Query(description="Имя устройства")):
+    pc_ip = request.client.host
+    print(pc_ip)
 
 
 @router.get("/ping", response_model=list[models.ResponsePing], dependencies=[Depends(auth)])
@@ -118,6 +124,16 @@ def set_grid_id_for_pc(data: models.GridId):
     except Exception as e:
         return JSONResponse(content='', status_code=400)
     
+
+@router.patch('/edit/ip', dependencies=[Depends(auth)])
+def edit_pc_ip(data: models.PcIP):
+    """ Изменить местоположение ПК """
+    try:
+        pc.set_pc_ip(data.id, data.ip)
+        return JSONResponse(content='', status_code=200)
+    except Exception as e:
+        return JSONResponse(content='', status_code=400)
+   
 
 @router.delete('/remove', dependencies=[Depends(auth)])
 def remove_device(id: int = Query(description="ID Удаляемого девайса")):

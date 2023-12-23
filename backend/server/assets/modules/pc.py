@@ -14,7 +14,8 @@ def get_pc_data():
             'id': row.id,
             'status': row.status,
             'name': row.name,
-            'grid_id': row.grid_id
+            'grid_id': row.grid_id,
+            'blocked': row.blocked == 1
         }
 
         if row.ip != None and row.ip != "":
@@ -196,6 +197,13 @@ def stop_tech_works(pc_id):
         # send unblock request
 
 
+def set_pc_ip(pc_id, ip):
+    db = Session()
+    pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
+    pc.ip = ip
+    db.commit()
+
+
 def set_grid_id(pc_id, grid_id):
     db = Session()
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
@@ -229,7 +237,10 @@ def block_pc(pc_id, text):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            requests.get(f'http://{pc.ip}/block?text={text}', timeout=3)
+            res = requests.get(f'http://{pc.ip}/block?text={text}', timeout=3)
+            if res.status_code == 200:
+                pc.blocked = 1
+                db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')
 
@@ -239,6 +250,9 @@ def unblock_pc(pc_id):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            requests.get(f'http://{pc.ip}/unblock', timeout=3)
+            res = requests.get(f'http://{pc.ip}/unblock', timeout=3)
+            if res.status_code == 200:
+                pc.blocked = 0
+                db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')

@@ -39,3 +39,11 @@ class CashoutBalance(BaseModel):
 class CashoutBalanceEditRequest(BaseModel):
     amount: float = Field(description="Сколько добавить к кассе")
     password: str = Field(None, description="Пароль администратора")
+
+
+class AdminAuthRequest(BaseModel):
+    password: str = Field(description="Пароль администратора")
+
+
+class AdminAuthResponse(BaseModel):
+    success: bool
