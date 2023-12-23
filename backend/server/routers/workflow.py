@@ -29,7 +29,7 @@ def login_user(data: models.LoginUser):
         response = {'success':success}
         if success:
             session_id = workflow.start_session(user_data['uuid'])
-            response['checkout'] = workflow.get_cashout()
+            response['cashout'] = workflow.get_cashout()
             response['sessionId'] = session_id
             response['uuid'] = user_data['uuid']
             response['name'] = user_data['name']
