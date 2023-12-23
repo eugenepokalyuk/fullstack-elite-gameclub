@@ -3,6 +3,7 @@ from .database import *
 from datetime import datetime, timedelta
 from uuid import uuid4
 import requests
+import time
 
 
 def get_pc_data():
@@ -31,12 +32,14 @@ def get_pc_data():
                 'payment': order_data.payment,
                 'time':{
                     'from': {
-                        'hours':start.hour,
-                        'minutes':start.minute
+                        'timestamp': time.mktime(start.timetuple())
+                        # 'hours':start.hour,
+                        # 'minutes':start.minute
                     },
                     'until':{
-                        'hours':finish.hour,
-                        'minutes':finish.minute
+                        'timestamp': time.mktime(finish.timetuple())
+                        # 'hours':finish.hour,
+                        # 'minutes':finish.minute
                     }
                 }
             }
