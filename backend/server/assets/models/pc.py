@@ -3,21 +3,24 @@ from pydantic import BaseModel, Field, validator
 
 class Time(BaseModel):
     timestamp: int = Field(description="Timestamp")
-    # hours: int = Field(description="Количество часов")
-    # minutes: int = Field(description="Количество минут")
 
-    # @validator('minutes')
-    # def validator_minutes(cls, value):
-    #     if int(value) > 59:
-    #         raise ValueError("Max minutes is 59")
-    #     else:
-    #         return value
+
+class TimePlay(BaseModel):
+    hours: int = Field(description="Количество часов")
+    minutes: int = Field(description="Количество минут")
+
+    @validator('minutes')
+    def validator_minutes(cls, value):
+        if int(value) > 59:
+            raise ValueError("Max minutes is 59")
+        else:
+            return value
 
 
 class Play(BaseModel):
     id: int = Field(description="ID девайса")
     price: float = Field(description="Цена услуги")
-    time: Time = Field(description="Игровое время")
+    time: TimePlay = Field(description="Игровое время")
     payment: str = Field(description="Метод оплаты<br>cash/card")
 
     @validator('price')
