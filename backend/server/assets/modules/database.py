@@ -23,6 +23,7 @@ class Pcs(Base):
     status = Column(String)
     grid_id = Column(Integer, unique=True)
     ip = Column(String)
+    blocked = Column(Integer, default=0)
     description = Column(String)
 
 
