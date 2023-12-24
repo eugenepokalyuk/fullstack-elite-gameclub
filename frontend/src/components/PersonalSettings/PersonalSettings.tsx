@@ -27,11 +27,11 @@ export const PersonalSettings: FC = () => {
             <h3 className='whiteMessage'>Персональные изменения</h3>
             <ul>
                 <li className='mt-1'>
-                    <p>Выбери тему:</p>
+                    <p>Тема на выбор:</p>
                     <ThemeSwitch />
                 </li>
 
-                <li className='flex flexAlignCenter'>
+                {/* <li className='flex flexAlignCenter'>
                     <p>Основной цвет:</p>
                     <div style={styleMainColor}></div>
                 </li>
@@ -39,7 +39,7 @@ export const PersonalSettings: FC = () => {
                 <li className='flex flexAlignCenter'>
                     <p>Тема:</p>
                     <div style={styleMainTheme}></div>
-                </li>
+                </li> */}
             </ul>
         </>
     );

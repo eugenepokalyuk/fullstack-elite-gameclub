@@ -9,6 +9,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Modal from "../Modal/Modal";
 import ComputerDetails from "../ComputerDetails/ComputerDetails";
 import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_INFO, COMPUTER_STATUS_ONLINE, COMPUTER_STATUS_OFFLINE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_TECH, COMPUTER_STATUS_TECH_OFF } from '../../utils/constants';
+import { ReactComponent as Lock } from "../../images/lock.svg";
 
 const PlaygroundSquare: React.FC<SquareProps> = ({
     id,
@@ -78,38 +79,57 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                             ? styles.bgPause
                             : styles.bgFree
 
-    const currentTime = new Date(); // получаем текущее время
+    const endSession = computer?.details?.time.until.timestamp;
+    let articleClassName;
 
-    const untilTime = new Date(); // создаем объект для времени из переменной
-    computer?.details && untilTime.setHours(Number(computer?.details?.time.until.hours));
-    computer?.details && untilTime.setMinutes(Number(computer?.details?.time.until.minutes));
+    if (endSession) {
+        const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
 
-    const timeDifference = untilTime.getTime() - currentTime.getTime(); // разница в миллисекундах между текущим временем и временем до которого нужно подсчитывать
-
-    const timeThreshold = 15 * 60 * 1000; // пороговое значение в миллисекундах, например, 30 минут
-    const isApproaching = timeDifference <= timeThreshold; // флаг, указывающий, подходит ли время к текущему
-
-    const articleClassName = `${isApproaching ? styles.warningArticle : ''}`;
+        if (currentTimestamp >= endSession) {
+            // Если текущее время больше или равно времени окончания сессии,
+            // то сессия уже закончилась
+            console.log('Сессия уже закончилась.');
+        } else if (currentTimestamp >= endSession - 1800) {
+            // Если текущее время больше или равно времени окончания сессии минус 1800 секунд (30 минут),
+            // то время подходит к окончанию сессии примерно за 30 минут
+            console.log('Время подходит к окончанию сессии примерно за 30 минут.');
+            articleClassName = styles.warningArticle;
+        } else {
+            console.log('Сессия еще не закончилась.');
+        }
+    } else {
+        console.log('Информация о времени окончания сессии отсутствует.');
+    }
 
     return (
         <>
             <li
                 className={`
+                    ${styles.blocked}
                     ${styles.square}
                     ${styles.squareDefault}
                     ${id === computer?.grid_id && styles.squareOccupied} 
                     ${backgroundClass} 
-                    ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}`
+                    ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}
+                    `
                 }
 
                 draggable
                 onDragStart={(e) => onDragStart(e, computer?.id)}
                 onDragOver={(e) => onDragOver(e)}
                 onDrop={(e) => onDrop(e, id)}
-                onClick={() => { handleClick(computer) }}
+                onClick={() => {
+                    handleClick(computer)
+                }}
             >
+                {/* #toDo */}
+                {computer?.blocked && (
+                    <div className={styles.lockIcon}>
+                        <Lock />
+                    </div>
+                )}
                 <p>{computer && computer.name}</p>
-            </li>
+            </li >
 
             {isLoading && (
                 <Modal onClose={closeModal}>
@@ -124,17 +144,20 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                         </div>
                     </div>
                 </Modal>
-            )}
+            )
+            }
 
-            {isModalOpen && computer && (
-                <Modal onClose={closeModal} header={computer.name}>
-                    {computer ? (
-                        <ComputerDetails computer={computer} statement={statement} />
-                    ) : (
-                        <p className="text text_type_main-medium">Ошибка при создании заказа. Попробуйте еще раз.</p>
-                    )}
-                </Modal>
-            )}
+            {
+                isModalOpen && computer && (
+                    <Modal onClose={closeModal} header={computer.name}>
+                        {computer ? (
+                            <ComputerDetails computer={computer} statement={statement} />
+                        ) : (
+                            <p className="text text_type_main-medium">Ошибка при создании заказа. Попробуйте еще раз.</p>
+                        )}
+                    </Modal>
+                )
+            }
         </>
     );
 };

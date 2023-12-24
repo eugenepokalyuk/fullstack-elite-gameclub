@@ -1,7 +1,8 @@
 import { TComputer, TPlayBody, TWriteOff } from "../services/types/types";
 
+const ApiUrlPath = 'http://89.23.113.109:8084';
 // const ApiUrlPath = 'http://172.20.10.4:80';
-const ApiUrlPath = 'http://localhost:8000';
+// const ApiUrlPath = 'http://localhost:8000';
 
 const routeStore = "/store";
 const routePlayground = "/pc";
@@ -295,7 +296,7 @@ export const fetchStoreStatData = async (from: string, until: string) => {
     }
     return request(endpoint, options);
 }
-export const fetchStatSessionData = async (from?: any, until?: any) => {
+export const fetchStatSessionData = async (from?: any, until?: any, password?: string) => {
     const endpoint = routeStat + `/session`;
     const options = {
         method: "POST",
@@ -306,8 +307,33 @@ export const fetchStatSessionData = async (from?: any, until?: any) => {
         },
         body: JSON.stringify({
             From: from,
-            Until: until
+            Until: until,
+            Password: password
         })
+    }
+    return request(endpoint, options);
+}
+export const fetchAddExpenseData = async (amount: number, reason: string) => {
+    const endpoint = routeStat + `/expense`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
+        body: JSON.stringify({ amount, reason })
+    }
+    return request(endpoint, options);
+}
+export const fetchAddCashoutData = async (amount: number, password: string) => {
+    const endpoint = routeUser + `/cashout/set`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
+        body: JSON.stringify({ amount, password })
     }
     return request(endpoint, options);
 }
@@ -424,6 +450,43 @@ export const fetchStatPopularPrices = async () => {
             Authorization: localStorage.getItem('uuid'),
             SessionId: localStorage.getItem('sessionId')
         }
+    }
+    return request(endpoint, options);
+}
+export const fetchSubmitPassword = async (password: string) => {
+    const endpoint = routeUser + `/auth-admin`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid'),
+            SessionId: localStorage.getItem('sessionId')
+        },
+        body: JSON.stringify({
+            password,
+        })
+    }
+    return request(endpoint, options);
+}
+export const fetchBlockPC = async (id: any, text: string) => {
+    const endpoint = routePlayground + `/block?id=${id}&text=${text}`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
+    }
+    return request(endpoint, options);
+}
+export const fetchUnblockPC = async (id: any) => {
+    const endpoint = routePlayground + `/unblock?id=${id}`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
     }
     return request(endpoint, options);
 }

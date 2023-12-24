@@ -35,7 +35,10 @@ const InfoBadge: FC = () => {
                             background: "var(--backgorund-device-play)"
                         }}></div></li>
 
-                        <li className='flex flexAlignCenter flexBetween mt-1'>Заканчивается время пользователя <div className='square warningArticle'></div></li>
+                        <li className='flex flexAlignCenter flexBetween mt-1'>
+                            Заканчивается время пользователя
+                            <div className='square warningArticle'></div>
+                        </li>
 
                         <li className='flex flexAlignCenter flexBetween mt-1'>Техническая проблема <div className='square' style={{
                             background: "var(--backgorund-device-problems)"

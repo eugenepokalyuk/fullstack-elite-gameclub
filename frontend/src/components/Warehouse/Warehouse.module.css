@@ -40,6 +40,7 @@
 .nonHideRow:hover {
     background: var(--main-color);
     filter: brightness(1.1);
+    cursor: pointer;
 }
 
 .selectedRow {

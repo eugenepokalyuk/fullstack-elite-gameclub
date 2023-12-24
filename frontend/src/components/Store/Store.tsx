@@ -1,45 +1,29 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styles from "./Store.module.css";
 import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem } from '../../services/types/types';
-import { fetchStoreData } from '../../utils/api';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
-import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
 import { STORE_OPEN_CART } from '../../utils/constants';
 import StoreDetails from '../StoreDetails/StoreDetails';
 import Modal from '../Modal/Modal';
-import { useNavigate } from 'react-router-dom';
 
 export const Store: FC = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
+    
+    const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
+    
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
-    const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
     const [error,] = useState<boolean>(false);
     const [errorDesription,] = useState<string>('');
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [statement, setStatement] = useState<string>('');
-
     const paymentType = useAppSelector((store) => store.payment.paymentType)
 
     const closeModal = () => {
-        // navigate(0)
         setModalOpen(false)
     };
-
-    const storeRender = async () => {
-        dispatch({ type: FETCH_STORE_REQUEST });
-        await fetchStoreData()
-            .then(res => {
-                dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
-            })
-            .catch(error => {
-                dispatch({ type: FETCH_STORE_FAILURE, payload: error });
-            });
-    }
     const handleItemClick = (itemId: any) => {
         if (selectedItems.includes(itemId)) {
             setSelectedItems(selectedItems.filter((id) => id !== itemId));
@@ -70,8 +54,7 @@ export const Store: FC = () => {
             return total + product.price * count;
         }, 0);
         setTotalPrice(price);
-
-        // storeRender();
+        // eslint-disable-next-line
     }, [selectedItems, dispatch, itemCounts]);
 
     let qty = 0;
@@ -95,8 +78,8 @@ export const Store: FC = () => {
                         <thead>
                             <tr>
                                 <th>Название</th>
-                                <th>Стоимость</th>
-                                <th>Количество</th>
+                                <th>Стоимость, руб.</th>
+                                <th>Количество, шт.</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,7 +131,8 @@ export const Store: FC = () => {
 
                     <div>
                         <PaymentSwitcher />
-                        <button className='flex flexCenter buttonDefault mt-1 w-100' onClick={handleAddToCart} disabled={selectedItems.length === 0}>
+                        <button className='flex flexCenter buttonDefault mt-1 w-100' onClick={handleAddToCart} disabled={selectedItems.length === 0 || !paymentType}>
+                            {/*  */}
                             Оплатить
                             <span className='ml-1'>
                                 {totalPrice} руб.

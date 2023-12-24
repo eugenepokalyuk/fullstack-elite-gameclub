@@ -5,6 +5,7 @@ import ModalOverlay from '../ModalOverlay/ModalOverlay';
 import { ModalProps } from '../../services/types/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
+
 const Modal: FC<ModalProps> = ({ children, header, onClose }) => {
   const onCloseCallback = useCallback(onClose, [onClose]);
 

@@ -22,6 +22,9 @@ export const COMPUTER_STATUS_PAUSE = "pause";
 export const CARD = "card";
 export const CASH = "cash";
 
+export const EXPENSES = "expenses"
+export const END_SESSION = "endSession"
+
 export const ADD_ITEM = "addItem"
 export const ADD_SUPPLY = "addSupply"
 export const EDIT_ITEM = "editItem"
@@ -31,3 +34,5 @@ export const REMOVE_ITEM = "removeItem"
 export const WRITE_OFF = "writeOff"
 
 export const STORE_OPEN_CART = "storeOpenCart"
+
+

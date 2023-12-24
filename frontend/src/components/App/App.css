@@ -647,6 +647,11 @@ a {
     }
 }
 
-.textOrangeColor, .faSpinner {
+.textOrangeColor,
+.faSpinner {
     color: #ef7912;
+}
+
+.flex-col {
+    flex-direction: column;
 }

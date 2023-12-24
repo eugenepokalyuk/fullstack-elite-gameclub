@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import styles from './StoreDetails.module.css';
-import { fetchStoreSell } from '../../utils/api';
+import { fetchStoreData, fetchStoreSell } from '../../utils/api';
 import { STORE_OPEN_CART, CASH } from '../../utils/constants';
 import Modal from '../Modal/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { TStoreItem } from '../../services/types/types';
+import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
+import { useAppDispatch } from '../../services/hooks/hooks';
 
 type TStoreDetails = {
     selectedProducts: TStoreItem[],
@@ -18,7 +20,7 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
 
@@ -26,11 +28,24 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
         navigate(-1);
     };
 
+    const storeRender = async () => {
+        dispatch({ type: FETCH_STORE_REQUEST });
+        await fetchStoreData()
+            .then(res => {
+                dispatch({ type: FETCH_STORE_SUCCESS, payload: res });
+            })
+            .catch(error => {
+                dispatch({ type: FETCH_STORE_FAILURE, payload: error });
+            });
+    }
+
     const handleAcceptClick = (products: any, payment: string) => {
         isLoading(true);
         fetchStoreSell(products, payment)
             .then(res => {
                 isLoading(false);
+                storeRender();
+                
                 setFinish(true);
                 setFinishDescription("Продано!");
             })

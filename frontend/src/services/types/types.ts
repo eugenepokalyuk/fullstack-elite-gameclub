@@ -8,16 +8,15 @@ export type TComputer = {
         payment: string,
         time: {
             from: {
-                hours: number,
-                minutes: number
+                timestamp: number,
             },
             until: {
-                hours: number,
-                minutes: number
+                timestamp: number,
             }
         },
         reason: string
-    }
+    },
+    blocked: boolean
 }
 export type TStoreItem = {
     id: number,

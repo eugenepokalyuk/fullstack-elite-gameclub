@@ -6,7 +6,6 @@
 }
 
 .square:hover {
-    /* background: var(--backgorund-device-default); */
     cursor: pointer;
 }
 
@@ -28,12 +27,6 @@
 .squareOccupied {
     border: 0.4vh solid var(--main-color);
     background: var(--main-color);
-}
-
-.squareOccupied:hover {
-    /* background: var(--main-color);
-    border: 0.4vh solid var(--main-color);
-    filter: brightness(1.2); */
 }
 
 .bgOnline {
@@ -96,6 +89,18 @@
     animation: blinkAnimation 800ms infinite;
 }
 
+.lockIcon {
+    position: absolute;
+    scale: 3;
+    fill: #fff;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.squareDefault p {
+    z-index: 2;
+}
+
 @keyframes blinkAnimation {
     0% {
         background-color: var(--backgorund-device-warning-step-1);
@@ -112,7 +117,3 @@
         border-color: var(--backgorund-device-warning-step-2);
     }
 }
-
-/* .warningArticle:hover {
-    background: green;
-} */

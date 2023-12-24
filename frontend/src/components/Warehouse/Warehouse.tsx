@@ -158,10 +158,14 @@ export const Warehouse: FC = () => {
                             return (
                                 <div key={item.id}>
                                     {item.hide
-                                        ? <button className='buttonDefault restoreDefault w-100' onClick={handleShowItemClick} disabled={selectedItems.length === 0}>
-                                            Восстановить
-                                        </button>
-                                        : <button className='buttonDefault dangerDefault w-100' onClick={handleHideItemClick} disabled={selectedItems.length === 0}>
+                                        ? <>
+                                            <p className='mb-1'>Товар архивирован</p>
+                                            <button className='buttonDefault restoreDefault w-100' onClick={handleShowItemClick} disabled={selectedItems.length === 0}>
+                                                Восстановить
+                                            </button>
+                                        </>
+                                        :
+                                        <button className='buttonDefault dangerDefault w-100' onClick={handleHideItemClick} disabled={selectedItems.length === 0}>
                                             Удалить
                                         </button>
                                     }

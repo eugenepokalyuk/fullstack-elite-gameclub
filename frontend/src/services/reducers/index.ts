@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
     payment: paymentReducer,
     stat: statReducer,
     auth: authReducer,
-    session: sessionReducer
+    session: sessionReducer,
 });
 
 export default rootReducer;

@@ -4,39 +4,34 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { fetchStatSessionData } from "../../utils/api";
+import { fetchStatSessionData, fetchSubmitPassword } from "../../utils/api";
 import { FETCH_STAT_FAILURE, FETCH_STAT_REQUEST, FETCH_STAT_SUCCESS } from "../../services/actions/stat";
 import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 import { TComputerStat, TStoreStat } from "../../services/types/types";
-
-interface Data {
-    storefront: TStoreStat[];
-    devices: TComputerStat[];
-}
 
 export const StatConstructor = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const store = useAppSelector((store) => store.store.items);
     const [loading, isLoading] = useState<boolean>(false);
     const [from, setFrom] = useState<string>("");
     const [until, setUntil] = useState<string>("");
     const [data, setData] = useState<any>();
 
+    const [password, setPassword] = useState<string>("");
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState<boolean>(false);
+
+    const [error, setError] = useState<boolean>(false);
+
     const closeModal = () => {
         navigate(-1);
     };
-
-
     const handleFromDateChange = (e: any) => {
         setFrom(e.target.value);
     };
-
     const handleUntilDateChange = (e: any) => {
         setUntil(e.target.value);
     };
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -53,7 +48,7 @@ export const StatConstructor = () => {
         dispatch({ type: FETCH_STAT_REQUEST });
         isLoading(true);
 
-        fetchStatSessionData(date.from, date.until)
+        fetchStatSessionData(date.from, date.until, password)
             .then(res => {
                 isLoading(false);
                 setData(res);
@@ -62,10 +57,28 @@ export const StatConstructor = () => {
             .catch(error => {
                 dispatch({ type: FETCH_STAT_FAILURE, payload: error });
             });
-
     };
-
-    function getTotalPriceAndCountByPCId(): { name: string, pc_id: number; totalPrice: number; totalCount: number }[] {
+    const handleSecretSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (password) {
+            // todo: API calls
+            fetchSubmitPassword(password)
+                .then((res) => {
+                    if (res.success) {
+                        setIsPasswordCorrect(true);
+                    } else {
+                        setError(true);
+                    }
+                })
+                .catch((error) => {
+                    setError(true);
+                    // setError("Ой, произошла ошибка!");
+                });
+        } else {
+            alert("Incorrect password. Please try again.");
+        }
+    }
+    const getTotalPriceAndCountByPCId = (): { name: string, pc_id: number; totalPrice: number; totalCount: number }[] => {
         const pcTotals: { [key: number]: { name: string, totalPrice: number; totalCount: number } } = {};
 
         data && data.devices.forEach((purchase: TComputerStat) => {
@@ -88,7 +101,6 @@ export const StatConstructor = () => {
 
         return result;
     }
-
     const getTotalQtyByItem = () => {
         const itemTotals: { [key: number]: { name: string, qty: number; total: number } } = {};
 
@@ -112,7 +124,6 @@ export const StatConstructor = () => {
 
         return result;
     }
-
     const getQtyBySupplyItem = () => {
         const itemTotals: { [key: number]: { name: string, qty: number } } = {};
 
@@ -134,14 +145,13 @@ export const StatConstructor = () => {
 
         return result;
     }
-
-    function calculatePaymentTotals(): {
+    const calculatePaymentTotals = (): {
         cashTotalStorefront: number;
         cardTotalStorefront: number;
         cashTotalDevices: number;
         cardTotalDevices: number;
         total: number;
-    } {
+    } => {
         let cashTotalStorefront = 0;
         let cardTotalStorefront = 0;
         let cashTotalDevices = 0;
@@ -173,11 +183,39 @@ export const StatConstructor = () => {
             total,
         };
     }
+    const exponsesPositions = () => {
+        const storeUnicArray = data.expenses && Array.from(data.expenses.reduce((map: any, order: any, index: number) => {
+            const { amount } = order;
 
+            if (map.has(index)) {
+                const existingOrder = map.get(index);
+                existingOrder.qty = Number(amount);
+            } else {
+                map.set(index, { ...order });
+            }
+
+            return map;
+        }, new Map()).values());
+
+        return (
+            <>
+                {storeUnicArray && storeUnicArray?.length > 0 ? storeUnicArray?.map((item: any, index: number) => {
+                    return (
+                        <li key={index} className="mr-2 p-2">
+                            <h3 className="link">{item ? item.reason : "Ошибка"}</h3>
+                            <div>
+                                <p>Сумма: <span className="link">{item.amount}</span> руб.</p>
+                            </div>
+                        </li>
+                    )
+                }) : <p>Если ничего не продано, продай сам</p>}
+            </>
+        )
+    }
     return (
         <>
-            {!loading
-                ? <>
+            {!loading && isPasswordCorrect ? (
+                !loading ? <>
                     <article>
                         <form onSubmit={handleSubmit}>
                             <h2 className="whiteMessage">Выбери дату:</h2>
@@ -319,6 +357,23 @@ export const StatConstructor = () => {
                                     }
                                 </ul>
                             </article>
+
+                            <article className="mt-2 mb-2">
+                                <h3 className="whiteMessage">Расходы:</h3>
+                                <ul className={`${styles.cardList} grid grid-column-4 gap-2-0 mt-1`}>
+                                    {getQtyBySupplyItem().map((item) => {
+                                        return item && (
+                                            <li key={item.item_id} className="p-2">
+                                                <h3 className="link">{item.name}</h3>
+                                                <div>
+                                                    <p>Кол-во: <span className="link">{item.qty}</span> шт.</p>
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </article>
+
                         </>
                         : <article className="mt-2 mb-2">
                             <h3 className="whiteMessage">Здесь пусто!</h3>
@@ -326,19 +381,39 @@ export const StatConstructor = () => {
                         </article>
                     }
                 </>
-                :
-                <Modal onClose={closeModal} header="Загрузка данных">
-                    <div>
-                        <p>Пожалуйста подождите</p>
+                    :
+                    <Modal onClose={closeModal} header="Загрузка данных">
                         <div>
-                            <FontAwesomeIcon
-                                icon={faSpinner}
-                                spin
-                                size="5x"
-                            />
+                            <p>Пожалуйста подождите</p>
+                            <div>
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    spin
+                                    size="5x"
+                                />
+                            </div>
                         </div>
+                    </Modal>
+            ) : (
+                <form onSubmit={handleSecretSubmit} className={styles.formContainer}>
+                    <h2>Доступ ограничен, введите пароль:</h2>
+                    <div className="mt-1">
+                        <input
+                            className="inputDefault"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder={'Введите пароль...'}
+                        />
                     </div>
-                </Modal>
+                    <button
+                        className="buttonDefault mt-1"
+                        type="submit"
+                    >
+                        Submit
+                    </button>
+                </form>
+            )
             }
         </>
     )

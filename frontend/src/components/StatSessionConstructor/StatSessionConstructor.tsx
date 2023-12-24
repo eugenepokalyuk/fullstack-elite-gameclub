@@ -13,10 +13,14 @@ import { CARD } from "../../utils/constants";
 export const StatSessionConstructor = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    
     const store = useAppSelector((store) => store.store.items);
     const [storeOrders, setStoreOrders] = useState<TStoreStat[]>();
+    const [expenses, setExpenses] = useState<any[]>();
     const [computerOrders, setComputerOrders] = useState<TComputerStat[]>();
     const [cancelOrders, setCancelOrders] = useState<number>();
+    const [cashout, setCashout] = useState<number>();
+    
     const [loading, isLoading] = useState<boolean>(false);
     const closeModal = () => {
         navigate(-1);
@@ -29,8 +33,10 @@ export const StatSessionConstructor = () => {
             .then(res => {
                 isLoading(false);
                 setStoreOrders(res.storefront);
+                setExpenses(res.expenses);
                 setComputerOrders(res.devices);
                 setCancelOrders(res.canceled)
+                setCashout(res.cashout)
                 dispatch({ type: FETCH_STAT_SESSION_SUCCESS, payload: res });
             })
             .catch(error => {
@@ -131,6 +137,35 @@ export const StatSessionConstructor = () => {
             </>
         )
     }
+    const exponsesPositions = () => {
+        const storeUnicArray = expenses && Array.from(expenses.reduce((map, order, index) => {
+            const { amount } = order;
+
+            if (map.has(index)) {
+                const existingOrder = map.get(index);
+                existingOrder.qty = Number(amount);
+            } else {
+                map.set(index, { ...order });
+            }
+
+            return map;
+        }, new Map()).values());
+
+        return (
+            <>
+                {storeUnicArray && storeUnicArray?.length > 0 ? storeUnicArray?.map((item: any, index) => {
+                    return (
+                        <li key={index} className="mr-2 p-2">
+                            <h3 className="link">{item ? item.reason : "Ошибка"}</h3>
+                            <div>
+                                <p>Сумма: <span className="link">{item.amount}</span> руб.</p>
+                            </div>
+                        </li>
+                    )
+                }) : <p>Если ничего не продано, продай сам</p>}
+            </>
+        )
+    }
     const getCombinedChecks = () => {
         const checkMap: any = {};
         const combinedChecks = [];
@@ -209,7 +244,7 @@ export const StatSessionConstructor = () => {
             {!loading
                 ? <>
                     <article className="mt-2">
-                        <ul className={`${styles.cardList} grid grid-column-3 gap-0-6`}>
+                        <ul className={`${styles.cardList} grid grid-column-4 gap-0-6`}>
                             <li className="w-100 flex flexColumn flexAlignCenter p-2 mr-2">
                                 <p className="whiteMessage">Выручка компютеров: <span className="link">{calculateComputersTotal()}</span> руб.</p>
                                 <p className="whiteMessage mt-1">Выручка магазина: <span className="link">{calculateStoreTotal()}</span> руб.</p>
@@ -222,6 +257,10 @@ export const StatSessionConstructor = () => {
 
                             <li className="w-100 flex flexColumn flexCenter flexAlignCenter p-2">
                                 <p className="whiteMessage">Общая сумма: <span className="link">{calculatePCStore()?.total}</span> руб.</p>
+                            </li>
+
+                            <li className="w-100 flex flexColumn flexCenter flexAlignCenter p-2">
+                                <p className="whiteMessage">Касса <span className="link">{cashout}</span></p>
                             </li>
                         </ul>
                     </article>
@@ -237,6 +276,13 @@ export const StatSessionConstructor = () => {
                         <h3 className="whiteMessage">Продано:</h3>
                         <ul className={`${styles.cardList} grid grid-column-4 gap-2-0 mt-1`}>
                             {soldPositions()}
+                        </ul>
+                    </article>
+
+                    <article className="mt-2 mb-2">
+                        <h3 className="whiteMessage">Расходы:</h3>
+                        <ul className={`${styles.cardList} grid grid-column-4 gap-2-0 mt-1`}>
+                            {exponsesPositions()}
                         </ul>
                     </article>
 

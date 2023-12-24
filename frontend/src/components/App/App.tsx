@@ -13,11 +13,39 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 
-import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from '../../services/actions/computers';
-import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
-import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
-import { fetchComputersData, fetchStoreData, fetchStoreSell, fetchUserRefresh, fetchWarehouseAddItem, fetchWarehouseAddSupply } from '../../utils/api';
-import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH, ERROR_PATH, LOGIN_PATH, REGISTER_PATH, PROFILE_PATH, STAT_SESSION_PATH } from '../../utils/routePath';
+import {
+  FETCH_COMPUTERS_FAILURE,
+  FETCH_COMPUTERS_REQUEST,
+  FETCH_COMPUTERS_SUCCESS
+} from '../../services/actions/computers';
+
+import {
+  FETCH_STORE_FAILURE,
+  FETCH_STORE_REQUEST,
+  FETCH_STORE_SUCCESS
+} from '../../services/actions/store';
+
+import { useAppDispatch } from "../../services/hooks/hooks";
+
+import {
+  fetchComputersData,
+  fetchStoreData,
+  fetchUserRefresh,
+} from '../../utils/api';
+
+import {
+  DEFAULT_PATH,
+  SETTINGS_PATH,
+  STORE_PATH,
+  STAT_PATH,
+  WAREHOUSE_PATH,
+  ERROR_PATH,
+  LOGIN_PATH,
+  REGISTER_PATH,
+  PROFILE_PATH,
+  STAT_SESSION_PATH
+} from '../../utils/routePath';
+
 import Modal from '../Modal/Modal';
 import { ErrorPage } from '../../pages/ErrorPage/ErrorPage';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
@@ -29,6 +57,7 @@ import { StatSessionPage } from '../../pages/StatSessionPage/StatSessionPage';
 import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
 import { CARD } from '../../utils/constants';
 import { useTheme } from '../../services/hooks/useTheme';
+
 const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -48,48 +77,6 @@ const App = () => {
     localStorage.clear();
     window.location.reload()
   }
-
-  useEffect(() => {
-    // fetchWarehouseAddItem("Coca-cola", 125);
-    // fetchWarehouseAddItem("Pepsi", 125);
-    // fetchWarehouseAddItem("Fanta", 200);
-    // fetchWarehouseAddItem("Red bull", 215);
-
-    // fetchWarehouseAddSupply([{
-    //   id: 5,
-    //   qty: 100
-    // }, {
-    //   id: 1,
-    //   qty: 100
-    // }, {
-    //   id: 2,
-    //   qty: 100
-    // }, {
-    //   id: 3,
-    //   qty: 100
-    // }, {
-    //   id: 4,
-    //   qty: 100
-    // }])
-
-    // fetchStoreSell([{
-    //   id: 5,
-    //   qty: 2
-    // }, {
-    //   id: 1,
-    //   qty: 1
-    // }, {
-    //   id: 2,
-    //   qty: 1
-    // }, {
-    //   id: 3,
-    //   qty: 1
-    // }, {
-    //   id: 4,
-    //   qty: 1
-    // }], "card")
-
-  }, [])
 
   useEffect(() => {
     let userUUID = localStorage.getItem('uuid');

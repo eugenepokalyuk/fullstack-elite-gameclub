@@ -1,5 +1,4 @@
-.imageContainer {
-}
+.imageContainer {}
 
 .imageContainer img {
     border-radius: 3vh;
@@ -7,4 +6,15 @@
     height: 30vh;
     object-fit: cover;
     object-position: 0%;
+}
+
+.cardList {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 1rem;
+}
+
+.cardList li {
+    background: #222;
+    border-radius: 1rem;
 }

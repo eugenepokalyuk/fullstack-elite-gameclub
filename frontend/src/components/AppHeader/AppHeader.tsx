@@ -1,7 +1,6 @@
 import styles from './AppHeader.module.css';
 import { NavLink, useMatch } from 'react-router-dom';
 import { DEFAULT_PATH, SETTINGS_PATH, STORE_PATH, STAT_PATH, WAREHOUSE_PATH, PROFILE_PATH, STAT_SESSION_PATH } from '../../utils/routePath';
-import { useTheme } from '../../services/hooks/useTheme';
 
 const AppHeader = () => {
     const homeRoute = useMatch(DEFAULT_PATH);
