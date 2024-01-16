@@ -236,7 +236,9 @@ def block_pc(pc_id, text):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            res = requests.get(f'http://{pc.ip}/block?text={text}', timeout=3)
+            res = requests.get(f'http://{pc.ip}/block?text={text}', timeout=3, headers={
+                'Custom-Header': 'YourSecretKey'
+            })
             if res.status_code == 200:
                 pc.blocked = 1
                 db.commit()
