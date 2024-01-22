@@ -72,7 +72,7 @@ export const LoginPage: FC = () => {
                 <Modal onClose={closeModal} header="Касса новой смены">
                     <div className='flex flex-col flexCenter'>
                         <h1 className='whiteMessage'>Привет! Сверь кассу</h1>
-                        <h1 className='whiteMessage'>Касса: {cashout}</h1>
+                        <h1 className='whiteMessage'>Касса: {cashout}  руб.</h1>
 
                         <button className={`buttonDefault mt-2`} onClick={handleSubmitModal}>
                             Ознакомился
