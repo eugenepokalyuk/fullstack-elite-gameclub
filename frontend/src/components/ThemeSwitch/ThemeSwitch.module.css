@@ -1,8 +1,13 @@
 .themeContainer {
+    /* width: 30vh; */
+    width: 25%;
+}
+
+.themeContainer div {
     display: flex;
     background: #333;
     border-radius: 3vh;
-    width: 20vh;
+    width: 100%;
 }
 
 .themeButton {
@@ -21,6 +26,14 @@
     background: #008080;
 }
 
+.themePink {
+    background: hotpink;
+}
+
 .themeDark {
     background: #b35b0d;
+}
+
+.themeCustom {
+    background: red;
 }
