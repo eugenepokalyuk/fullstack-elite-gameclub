@@ -13,14 +13,14 @@ import { CARD } from "../../utils/constants";
 export const StatSessionConstructor = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    
+
     const store = useAppSelector((store) => store.store.items);
     const [storeOrders, setStoreOrders] = useState<TStoreStat[]>();
     const [expenses, setExpenses] = useState<any[]>();
     const [computerOrders, setComputerOrders] = useState<TComputerStat[]>();
     const [cancelOrders, setCancelOrders] = useState<number>();
     const [cashout, setCashout] = useState<number>();
-    
+
     const [loading, isLoading] = useState<boolean>(false);
     const closeModal = () => {
         navigate(-1);
@@ -260,7 +260,7 @@ export const StatSessionConstructor = () => {
                             </li>
 
                             <li className="w-100 flex flexColumn flexCenter flexAlignCenter p-2">
-                                <p className="whiteMessage">Касса <span className="link">{cashout}</span></p>
+                                <p className="whiteMessage">Касса <span className="link">{cashout}</span> руб.</p>
                             </li>
                         </ul>
                     </article>
@@ -299,6 +299,7 @@ export const StatSessionConstructor = () => {
                                 icon={faSpinner}
                                 spin
                                 size="5x"
+                                className="faSpinner"
                             />
                         </div>
                     </div>
