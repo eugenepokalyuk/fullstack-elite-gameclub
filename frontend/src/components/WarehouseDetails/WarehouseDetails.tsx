@@ -420,7 +420,7 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
                                     icon={faSpinner}
                                     spin
                                     size="5x"
-                                    className={`${styles.faSpinner}`}
+                                    className="faSpinner"
                                 />
                             </div>
                         </div>
