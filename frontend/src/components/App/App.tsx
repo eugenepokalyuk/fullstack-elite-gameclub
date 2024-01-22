@@ -25,7 +25,7 @@ import {
   FETCH_STORE_SUCCESS
 } from '../../services/actions/store';
 
-import { useAppDispatch } from "../../services/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 
 import {
   fetchComputersData,
@@ -57,6 +57,7 @@ import { StatSessionPage } from '../../pages/StatSessionPage/StatSessionPage';
 import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
 import { CARD } from '../../utils/constants';
 import { useTheme } from '../../services/hooks/useTheme';
+import { TComputer } from '../../services/types/types';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -66,6 +67,7 @@ const App = () => {
   const [loading, isLoading] = useState<boolean>(false);
   const [failed, isFailed] = useState<boolean>(false);
   const background = location.state && location.state.background;
+
 
   const { theme, setTheme } = useTheme();
 
@@ -120,6 +122,23 @@ const App = () => {
     }
 
   }, [dispatch]);
+
+  // const playground = useAppSelector(store => store.playground.computers);
+  // const computer: TComputer = playground?.find((item: TComputer) => item);
+  // useEffect(() => {
+
+  //   const endSession = computer?.details?.time.until.timestamp;
+  //   const interval = setInterval(() => {
+  //     if (endSession) {
+  //       const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
+  //       const timeLeft = Math.floor((endSession - currentTimestamp) / 60); // Рассчитываем время в минутах
+  //     }
+  //   }, 1000);
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   return (
     <>
