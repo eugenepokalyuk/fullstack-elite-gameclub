@@ -19,15 +19,29 @@ const PlaygroundGrid: FC = () => {
         setSquares(initialSquares);
     }, []);
 
-    useEffect(() => {
+    // Функция для загрузки данных о компьютерах
+    const loadComputersData = () => {
+        dispatch({ type: FETCH_COMPUTERS_REQUEST });
+
         fetchComputersData()
-            .then(res => {
+            .then((res) => {
                 dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
             })
-            .catch(error => {
+            .catch((error) => {
                 dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
             });
+    };
+
+    // Функция для загрузки данных о компьютерах
+    useEffect(() => {
+        loadComputersData();
     }, [dispatch])
+
+    // #toDo
+    useEffect(() => {
+        const intervalId = setInterval(loadComputersData, 60000); // 300000 миллисекунд = 5 минут
+        return () => clearInterval(intervalId); // Очистка интервала при размонтировании компонента
+    }, []); // Пустой массив зависимостей означает, что useEffect сработает только при монтировании компонента
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
         Number(e.dataTransfer.setData('text/plain', `${id}`));
