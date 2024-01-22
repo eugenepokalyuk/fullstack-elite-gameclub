@@ -45,7 +45,7 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
             .then(res => {
                 isLoading(false);
                 storeRender();
-                
+
                 setFinish(true);
                 setFinishDescription("Продано!");
             })
@@ -111,7 +111,7 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
                                     icon={faSpinner}
                                     spin
                                     size="5x"
-                                    className={`${styles.faSpinner}`}
+                                    className="faSpinner"
                                 />
                             </div>
                         </div>
