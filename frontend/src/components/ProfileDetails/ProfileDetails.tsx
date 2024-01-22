@@ -355,6 +355,7 @@ const ProfileDetails: FC = () => {
                                     icon={faSpinner}
                                     spin
                                     size="5x"
+                                    className="faSpinner"
                                 />
                             </div>
                         </div>
