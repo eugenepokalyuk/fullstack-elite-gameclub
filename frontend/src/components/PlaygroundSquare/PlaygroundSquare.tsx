@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from './PlaygroundSquare.module.css';
 import { SquareProps, TComputer } from "../../services/types/types";
 import { useAppDispatch } from '../../services/hooks/hooks';
 import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from "../../services/actions/computers";
-import { fetchComputersData } from "../../utils/api";
+import { fetchBlockPC, fetchComputersData, fetchNotificationToPc } from "../../utils/api";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Modal from "../Modal/Modal";
@@ -64,6 +64,16 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
         }
     }
 
+    const showNotification = (timeLeft: number) => {
+        const message = `Осталось ${timeLeft} минут до окончания сессии`;
+        fetchNotificationToPc(computer.id, message);
+    };
+
+    const sendExpiredNotification = () => {
+        const message = `Ваше время закончилось, пожалуйста обратитесь к администратору.`;
+        fetchBlockPC(computer.id, message);
+    }
+
     const computer: TComputer = playground?.find((item: TComputer) => item.grid_id === id);
 
     const backgroundClass =
@@ -77,29 +87,33 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                         ? styles.bgTech
                         : computer?.status === COMPUTER_STATUS_PAUSE
                             ? styles.bgPause
-                            : styles.bgFree
-
-    const endSession = computer?.details?.time.until.timestamp;
+                            : styles.bgFree;
     let articleClassName;
 
-    if (endSession) {
-        const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
+    const endSession = computer?.details?.time.until.timestamp;
 
-        if (currentTimestamp >= endSession) {
-            // Если текущее время больше или равно времени окончания сессии,
-            // то сессия уже закончилась
-            console.log('Сессия уже закончилась.');
-        } else if (currentTimestamp >= endSession - 1800) {
-            // Если текущее время больше или равно времени окончания сессии минус 1800 секунд (30 минут),
-            // то время подходит к окончанию сессии примерно за 30 минут
-            console.log('Время подходит к окончанию сессии примерно за 30 минут.');
-            articleClassName = styles.warningArticle;
-        } else {
-            console.log('Сессия еще не закончилась.');
-        }
-    } else {
-        console.log('Информация о времени окончания сессии отсутствует.');
-    }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // checkComputersStatus();
+            // console.log(1);
+        }, 1000); // Проверка каждую секунду
+
+        return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
+    }, []); // Пустой массив зависимостей, чтобы эффект запускался только один раз
+
+    // const checkComputersStatus = () => {
+    //     playground.forEach((computer: TComputer) => {
+    //         if (computer.status === COMPUTER_STATUS_PLAYING) {
+    //             const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
+    //             if (endSession) {
+    //                 const timeLeft = Math.floor((endSession - currentTimestamp) / 60); // Время до окончания сессии в минутах
+    //                 if (timeLeft === 30) {
+    //                     showNotification(timeLeft);
+    //                 }
+    //             }
+    //         }
+    //     });
+    // };
 
     return (
         <>
@@ -110,8 +124,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                     ${styles.squareDefault}
                     ${id === computer?.grid_id && styles.squareOccupied} 
                     ${backgroundClass} 
-                    ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}
-                    `
+                    ${computer?.status === COMPUTER_STATUS_PLAYING && articleClassName}`
                 }
 
                 draggable
@@ -131,24 +144,27 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                 <p>{computer && computer.name}</p>
             </li >
 
-            {isLoading && (
-                <Modal onClose={closeModal}>
-                    <div>
-                        <p>Пожалуйста подождите</p>
+            {isLoading &&
+                (
+                    <Modal onClose={closeModal}>
                         <div>
-                            <FontAwesomeIcon
-                                icon={faSpinner}
-                                spin
-                                size="5x"
-                            />
+                            <p>Пожалуйста подождите</p>
+                            <div>
+                                <FontAwesomeIcon
+                                    icon={faSpinner}
+                                    spin
+                                    size="5x"
+                                    className="faSpinner"
+                                />
+                            </div>
                         </div>
-                    </div>
-                </Modal>
-            )
+                    </Modal>
+                )
             }
 
             {
-                isModalOpen && computer && (
+                isModalOpen && computer &&
+                (
                     <Modal onClose={closeModal} header={computer.name}>
                         {computer ? (
                             <ComputerDetails computer={computer} statement={statement} />
