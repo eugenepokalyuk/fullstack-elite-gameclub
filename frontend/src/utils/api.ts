@@ -1,7 +1,7 @@
 import { TComputer, TPlayBody, TWriteOff } from "../services/types/types";
 
-const ApiUrlPath = 'http://89.23.113.109:8084';
-// const ApiUrlPath = 'http://172.20.10.4:80';
+// const ApiUrlPath = 'http://89.23.113.109:8084';
+const ApiUrlPath = 'http://172.20.10.2:80';
 // const ApiUrlPath = 'http://localhost:8000';
 
 const routeStore = "/store";
@@ -13,7 +13,6 @@ const request = (endpoint: string, options: any) => {
     const url = `${ApiUrlPath}${endpoint}`;
     return fetch(url, options).then(checkResponse);
 };
-
 const checkResponse = (res: Response) => {
     return res.ok
         ? res.json()
@@ -470,6 +469,17 @@ export const fetchSubmitPassword = async (password: string) => {
 }
 export const fetchBlockPC = async (id: any, text: string) => {
     const endpoint = routePlayground + `/block?id=${id}&text=${text}`;
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('uuid')
+        },
+    }
+    return request(endpoint, options);
+}
+export const fetchNotificationToPc = async (id: any, text: string) => {
+    const endpoint = routePlayground + `/notification?id=${id}&text=${text}`;
     const options = {
         method: "GET",
         headers: {
