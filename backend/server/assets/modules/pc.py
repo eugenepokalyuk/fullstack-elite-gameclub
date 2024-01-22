@@ -87,8 +87,9 @@ def pause(pc_id):
     db = Session()
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     if pc.status == 'playing':
-        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).first()
         order.status='pause'
+        order.pause=datetime.now().strftime(DATE_FORMAT_DEFAULT)
         pc.status='pause'
         db.commit()
     else:
@@ -99,23 +100,18 @@ def continue_play(pc_id):
     db = Session()
     pc = db.scalars(select(Pcs).where(Pcs.id == pc_id)).one()
     if pc.status == 'pause':
-        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).limit(1).all()[0]
+        order = db.query(Orders).where(Orders.pc_id == pc_id).order_by(desc(Orders.id)).first()
 
         order.status='play'
 
-        start_time = datetime.strptime(order.start, DATE_FORMAT_DEFAULT)
+        pause_start = datetime.strptime(order.pause, DATE_FORMAT_DEFAULT)
         finish_old = datetime.strptime(order.finish, DATE_FORMAT_DEFAULT)
 
         now = datetime.now()
-        delta = now - start_time
-        total_seconds = delta.total_seconds()
+        delta = now - pause_start
 
         finish_new = (finish_old + delta).strftime(DATE_FORMAT_DEFAULT)
         
-        hours = int(total_seconds // 3600)
-        minutes = int((total_seconds % 3600) // 60)
-        pause = f'h:{hours};m:{minutes}'
-        order.pause = pause
         order.finish = finish_new
         pc.status = 'playing'
         db.commit()
@@ -240,7 +236,9 @@ def block_pc(pc_id, text):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            res = requests.get(f'http://{pc.ip}/block?text={text}', timeout=3)
+            res = requests.get(f'http://{pc.ip}:8000/block?text={text}', timeout=3, headers={
+                'Custom-Header': 'YourSecretKey'
+            })
             if res.status_code == 200:
                 pc.blocked = 1
                 db.commit()
@@ -253,7 +251,7 @@ def unblock_pc(pc_id):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            res = requests.get(f'http://{pc.ip}/unblock', timeout=3)
+            res = requests.get(f'http://{pc.ip}:8000/unblock', timeout=3)
             if res.status_code == 200:
                 pc.blocked = 0
                 db.commit()
