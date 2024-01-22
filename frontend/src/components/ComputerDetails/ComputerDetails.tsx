@@ -524,6 +524,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                     icon={faSpinner}
                                     spin
                                     size="5x"
+                                    className="faSpinner"
                                 />
                             </div>
                         </div>
