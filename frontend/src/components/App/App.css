@@ -45,6 +45,23 @@ html[data-theme='light'] {
     --color-text: #000;
 }
 
+html[data-theme='pink'] {
+    --backgorund-color: #131316;
+    --main-color: rgb(181, 76, 129);
+
+    --backgorund-device-online: var(--main-color);
+    --backgorund-device-default: #333;
+    --backgorund-device-offline: #333;
+    --backgorund-device-play: #dc143c90;
+    --backgorund-device-warning-step-1: #dc143c;
+    --backgorund-device-warning-step-2: #dc143c80;
+    --backgorund-device-pause: #FFFDD090;
+    --backgorund-device-problems: #000000;
+    --backgorund-device-free: transparent;
+
+    --color-text: #000;
+}
+
 h1 {
     font-size: 3vh;
 }
@@ -625,7 +642,6 @@ a {
     user-select: none;
 }
 
-
 .warningArticle {
     animation: blinkAnimation 800ms infinite;
 }
@@ -645,11 +661,6 @@ a {
         background-color: var(--backgorund-device-warning-step-1);
         border-color: var(--backgorund-device-warning-step-2);
     }
-}
-
-.textOrangeColor,
-.faSpinner {
-    color: #ef7912;
 }
 
 .flex-col {
