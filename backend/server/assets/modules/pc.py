@@ -5,7 +5,6 @@ from uuid import uuid4
 import requests
 import time
 
-
 def get_pc_data():
     db = Session()
     data = db.query(Pcs).all()
@@ -272,3 +271,34 @@ def notification(pc_id, text: str):
                 db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')
+
+
+def device_session_checker():
+    while True:
+        now = datetime.now()
+        try:
+            with Session() as db:
+                active_sessions = db.query(Orders).filter(
+                        func.datetime(Orders.start) <= now,
+                        func.datetime(Orders.finish) >= now
+                    ).all()
+                
+                print('check',f'{len(active_sessions)}')
+                for session in active_sessions:
+                    finish = datetime.strptime(session.finish, DATE_FORMAT_DEFAULT)
+                    delta = finish - now
+                    minutes_remaining = int(delta.total_seconds() / 60)
+                    
+                    if minutes_remaining in [20, 10, 5]:
+                        notification(pc_id=session.pc_id, text=f"Осталось {minutes_remaining} минут")
+
+                    if minutes_remaining == 0:
+                        block_pc(pc_id=session.pc_id, text="Ваше время закончилось")
+        
+        except Exception as e:
+            print(f'Error: {e}')
+        except KeyboardInterrupt:
+            break
+        finally:
+            time.sleep(55)
+    
