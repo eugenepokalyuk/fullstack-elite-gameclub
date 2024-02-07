@@ -1,156 +1,53 @@
-li {
-    list-style-type: none;
-}
-
-.cart {
-    width: 40%;
-    background: #333;
-    color: #fff;
-    padding: 8px;
-    border-radius: 8px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-.cartHeader {
-    height: 10%;
-}
-
-.cartBody {
-    height: 80%;
-}
-
-.cartFooter {
-    padding: 8px 0px;
-    height: 20%;
-}
-
-.cartFooter .submitButton {
-    width: 100%;
+.container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    min-height: 80vh;
+    gap: 3vh;
 }
 
-.cart li {
-    color: #ddd;
-}
-
-.card {
-    width: 60%;
+.card:first-child {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 70%;
+    width: 70%;
+    padding: 1vh;
     background: #333;
-    color: #fff;
-    padding: 8px 0px;
-    border-radius: 8px;
+    border-radius: 1vh;
 }
 
-.cart h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
+.card:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 30%;
+    width: 30%;
+    padding: 1vh;
+    background: #333;
+    border-radius: 1vh;
+
+    justify-content: space-between;
 }
 
 .selectedRow {
-    background-color: #ef7912;
-    /* Ваш выбранный цвет фона */
+    border-radius: 1vh;
+    background: var(--main-color);
 }
 
-.table {
-    border-collapse: collapse;
-    width: 100%;
+/* .selectedRow:nth-child(odd) {
+    background: var(--main-color);
+    filter: brightness(0.8);
 }
 
-.storeContainer {
-    display: flex;
-    gap: 16px;
-}
+.selectedRow:nth-child(even) {
+    background: var(--main-color);
+    filter: brightness(0.6);
+} */
 
-th,
-td {
-    padding: 8px;
-    /* border-bottom: 1px solid #ddd; */
-}
-
-th {
-    text-align: left;
-    font-weight: bold;
-    border-bottom: 1px solid #ef7912;
-}
-
-button {
-    padding: 8px;
-    border-radius: 8px;
-    background-color: #ef7912;
-    /* Ваш цвет кнопки */
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #1c1c21;
-    /* Ваш цвет отключенной кнопки */
-    cursor: not-allowed;
-}
-
-.ml2 {
-    margin-left: calc(2 * 4px);
-}
-
-.mb2 {
-    margin-bottom: calc(2 * 4px);
-}
-
-.mt2 {
-    margin-top: calc(2 * 4px);
-}
-
-.mt4 {
-    margin-top: calc(4 * 4px);
-}
-
-.switcher {
+.cardList {
     display: flex;
     align-items: center;
-    background: #ef7912;
-    border-radius: 8px;
-    gap: 16px;
+    justify-content: space-between;
 }
 
-.paymentButton {
-    background-color: transparent;
-    border: none;
-    padding: 5px;
-    /* margin-right: 10px; */
-    cursor: pointer;
-
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-}
-
-.paymentButton:focus {
-    outline: none;
-}
-
-.paymentButton>svg {
-    font-size: 20px;
-}
-
-/*  */
-.activeButton {
-    color: #fff;
-    background: #b85c0c;
-}
-
-.nonActiveButton {
-    color: #b85c0c;
-}
-
-.activeButton>svg {
-    color: inherit;
+.minHeight50 {
+    min-height: 60vh;
 }

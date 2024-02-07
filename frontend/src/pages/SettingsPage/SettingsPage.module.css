@@ -1,9 +1,23 @@
 .container {
-    max-width: 1000px;
+    max-width: 80%;
     margin: 0 auto;
 }
 
 .container h1,
 p {
     color: #fff;
+}
+
+.container h1 {
+    font-size: 3vh;
+    margin-bottom: 2vh;
+}
+
+.container h3 {
+    font-size: 3vh;
+}
+
+.container h3,
+p {
+    font-size: 2vh;
 }

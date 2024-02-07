@@ -1,21 +1,29 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styles from "./Store.module.css";
-import data from "../../utils/store.json";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCreditCard, faCoins } from '@fortawesome/free-solid-svg-icons';
+import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
+import { TStoreItem } from '../../services/types/types';
+import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
+import { STORE_OPEN_CART } from '../../utils/constants';
+import StoreDetails from '../StoreDetails/StoreDetails';
+import Modal from '../Modal/Modal';
 
 export const Store: FC = () => {
+    const dispatch = useAppDispatch();
+    
+    const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
+    
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
-    const [paymentType, setPaymentType] = useState<string>("card");
+    const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
+    const [error,] = useState<boolean>(false);
+    const [errorDesription,] = useState<string>('');
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+    const [statement, setStatement] = useState<string>('');
+    const paymentType = useAppSelector((store) => store.payment.paymentType)
 
-    useEffect(() => {
-        // При изменении выбранных товаров пересчитываем общую стоимость
-        const selectedProducts = data.filter((item) => selectedItems.includes(item._id));
-        const price = selectedProducts.reduce((total, product) => total + product.price, 0);
-        setTotalPrice(price);
-    }, [selectedItems]);
-
+    const closeModal = () => {
+        setModalOpen(false)
+    };
     const handleItemClick = (itemId: any) => {
         if (selectedItems.includes(itemId)) {
             setSelectedItems(selectedItems.filter((id) => id !== itemId));
@@ -23,89 +31,123 @@ export const Store: FC = () => {
             setSelectedItems([...selectedItems, itemId]);
         }
     };
-
-    const handlePaymentTypeChange = (type: string) => {
-        setPaymentType(type);
+    const handleIncrement = (itemId: any) => {
+        setItemCounts((prevCounts) => ({
+            ...prevCounts,
+            [itemId]: (prevCounts[itemId] || 0) + 1
+        }));
     };
-
-    const handleAddToCart = () => {
-        const selectedProducts = data.filter((item) => selectedItems.includes(item._id));
-        // Здесь вы можете выполнить действие добавления выбранных товаров в корзину, например, вызвать функцию или отправить данные на сервер.
-        console.log("Выбранные товары:", selectedProducts);
-        console.log("Тип оплаты:", paymentType);
-
+    const handleDecrement = (itemId: number) => {
+        setItemCounts((prevCounts) => {
+            const currentCount = prevCounts[itemId] || 0;
+            const updatedCount = Math.max(0, currentCount - 1);
+            return {
+                ...prevCounts,
+                [itemId]: updatedCount
+            };
+        });
     };
+    useEffect(() => {
+        const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id));
+        const price = selectedProducts.reduce((total: number, product: TStoreItem) => {
+            const count = itemCounts[product.id] || 1;
+            return total + product.price * count;
+        }, 0);
+        setTotalPrice(price);
+        // eslint-disable-next-line
+    }, [selectedItems, dispatch, itemCounts]);
+
+    let qty = 0;
+
+    const selectedProducts = storeItems.filter((item: TStoreItem) => selectedItems.includes(item.id))
+        .map((item: TStoreItem) => {
+            qty = itemCounts[item.id] || 1;
+            return { ...item, qty };
+        });
+
+    const handleAddToCart = async () => {
+        setModalOpen(true);
+        setStatement(STORE_OPEN_CART);
+    }
 
     return (
-        <article className={`${styles.storeContainer} ${styles.mt4}`}>
-            <div className={styles.card}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Стоимость</th>
-                            <th>Количество</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item) => (
-                            <tr
-                                key={item._id}
-                                className={selectedItems.includes(item._id) ? styles.selectedRow : ""}
-                                onClick={() => handleItemClick(item._id)}
-                            >
-                                <td>{item.name}</td>
-                                <td>{item.price}</td>
-                                <td>{item.psc}</td>
+        <>
+            <article className={styles.container}>
+                <div className={`${styles.card}`}>
+                    <table className={`${styles.table} table`}>
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Стоимость, руб.</th>
+                                <th>Количество, шт.</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className={styles.cart}>
-                <div className={styles.cartHeader}>
-                    <h2>Корзина</h2>
+                        </thead>
+                        <tbody>
+                            {storeItems.map((item: TStoreItem) => (
+                                <tr
+                                    key={item.id}
+                                    className={selectedItems.includes(item.id) ? styles.selectedRow : ""}
+                                    onClick={() => handleItemClick(item.id)}
+                                >
+                                    <td>{item.name}</td>
+                                    <td>{item.price}</td>
+                                    <td>{item.qty}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div className={styles.cartBody}>
-                    {selectedItems.length > 0 ? (
-                        <ul>
-                            {selectedItems.map((itemId) => {
-                                const item1 = data.find((item) => item._id === itemId);
-                                return <li className={styles.listRow} key={itemId}>{item1?.name}</li>;
-                            })}
-                        </ul>
-                    ) : (
-                        <p>Корзина пуста</p>
-                    )}
-                </div>
+                <div className={`${styles.card}`}>
+                    <div>
+                        <h3 className='whiteMessage'>Корзина</h3>
+                        {selectedItems.length > 0 ? (
+                            <ul className={`${styles.minHeight50} scrollable`}>
+                                {selectedItems.map((itemId) => {
+                                    const item = storeItems.find((item: TStoreItem) => item.id === itemId);
+                                    return (
+                                        <li key={itemId} className={`${styles.cardList} mt-1 whiteMessage activeLink`}>
+                                            {item.name}
+                                            <div>
+                                                <button className='smallIncrementButton' onClick={() => handleDecrement(item.id)}>
+                                                    -
+                                                </button>
 
-                <div className={styles.cartFooter}>
+                                                {itemCounts[item.id] || 1}
 
-                    <div className={`${styles.switcher}`}>
-                        <button
-                            className={`${styles.paymentButton} ${paymentType === "card" ? styles.activeButton : styles.nonActiveButton}`}
-                            onClick={() => handlePaymentTypeChange("card")}
-                        >
-                            <FontAwesomeIcon icon={faCreditCard} /> Безналичный
-                        </button>
-                        <button
-                            className={`${styles.paymentButton} ${paymentType === "cash" ? styles.activeButton : styles.nonActiveButton}`}
-                            onClick={() => handlePaymentTypeChange("cash")}
-                        >
-                            <FontAwesomeIcon icon={faCoins} /> Наличный
-                        </button>
+                                                <button className='smallIncrementButton' onClick={() => handleIncrement(item.id)}>
+                                                    +
+                                                </button>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        )
+                            : error
+                                ? <p className='errorMessage'>{errorDesription}</p> : <p className='mt-2'>Корзина пуста</p>
+                        }
                     </div>
 
-                    <button className={`${styles.submitButton} ${styles.mt2}`} onClick={handleAddToCart} disabled={selectedItems.length === 0}>
-                        Оплатить
-                        <span>
-                            {totalPrice} руб.
-                        </span>
-                    </button>
+                    <div>
+                        <PaymentSwitcher />
+                        <button className='flex flexCenter buttonDefault mt-1 w-100' onClick={handleAddToCart} disabled={selectedItems.length === 0 || !paymentType}>
+                            {/*  */}
+                            Оплатить
+                            <span className='ml-1'>
+                                {totalPrice} руб.
+                            </span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </article>
+            </article >
+
+            {isModalOpen && storeItems && (
+                <Modal onClose={closeModal} header={"Корзина"}>
+                    <StoreDetails statement={statement} selectedProducts={selectedProducts} payment={paymentType} />
+                </Modal>
+            )
+            }
+        </>
     );
 };

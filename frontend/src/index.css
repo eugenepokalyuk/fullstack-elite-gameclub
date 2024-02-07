@@ -3,10 +3,8 @@ body {
   font-family: -apple-system, 'Ubuntu', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #131316;
 }
 
-code {
-  /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace; */
+li {
+  list-style-type: none;
 }

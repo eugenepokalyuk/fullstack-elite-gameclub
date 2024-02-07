@@ -1,0 +1,29 @@
+.button {
+    padding: 1vh;
+    border-radius: 1vh;
+    background-color: var(--main-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 2vh;
+}
+
+.cartBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 20vh;
+}
+
+.cartItem {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    /* background: #111; */
+}
+
+.selectedText {
+    color: var(--main-color);
+    font-weight: 600;
+}

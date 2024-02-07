@@ -1,0 +1,23 @@
+.switch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1vh;
+    gap: .5vh;
+    background: var(--main-color);
+    filter: brightness(1);
+}
+
+.switch button {
+    width: 50%;
+}
+
+.activeButton {
+    background: var(--main-color);
+    filter: brightness(1.2);
+}
+
+.nonActiveButton {
+    background: var(--main-color);
+    filter: brightness(1);
+}

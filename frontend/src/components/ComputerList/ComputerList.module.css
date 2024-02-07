@@ -1,0 +1,31 @@
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.listItem {
+    width: 20vh;
+    height: 5vh;
+
+    background: var(--main-color);
+    padding: 0.5vh;
+    margin: 0.5vh;
+
+    font-size: 2vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000;
+    font-weight: 900;
+
+    border-radius: 1vh;
+}
+
+.listItem:hover {
+    cursor: pointer;
+    background: var(--main-color);
+    filter: brightness(1.2);
+}
