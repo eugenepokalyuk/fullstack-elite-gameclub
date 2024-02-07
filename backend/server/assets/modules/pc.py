@@ -5,7 +5,6 @@ from uuid import uuid4
 import requests
 import time
 
-
 def get_pc_data():
     db = Session()
     data = db.query(Pcs).all()
@@ -19,12 +18,12 @@ def get_pc_data():
             'blocked': row.blocked == 1
         }
 
-        if row.ip != None and row.ip != "":
-            if not ping_pc(row.ip):
-                pc_obj["status"] = 'offline'
+        # if row.ip != None and row.ip != "":
+        #     if not ping_pc(row.ip):
+        #         pc_obj["status"] = 'offline'
                 
         if row.status == 'playing' or row.status == 'pause':
-            order_data = db.query(Orders).where(Orders.pc_id == row.id).all()[0]
+            order_data = db.query(Orders).where(Orders.pc_id == row.id).order_by(Orders.id.desc()).all()[0]
             start = datetime.strptime(order_data.start, DATE_FORMAT_DEFAULT)
             finish = datetime.strptime(order_data.finish, DATE_FORMAT_DEFAULT)
             pc_obj['details'] = {
@@ -53,7 +52,7 @@ def get_pc_data():
 
 def ping_pc(ip):
     try:
-        response = requests.get(f'http://{ip}/ping', timeout=3)
+        response = requests.get(f'http://{ip}:8000/ping', timeout=3)
         if response.status_code == 200:
             return True
         else:
@@ -244,6 +243,8 @@ def block_pc(pc_id, text):
                 db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')
+        except Exception as e:
+            print(e)
 
 
 def unblock_pc(pc_id):
@@ -251,9 +252,65 @@ def unblock_pc(pc_id):
     pc = db.query(Pcs).where(Pcs.id == pc_id).one()
     if pc.ip != None and pc.ip != "":
         try:
-            res = requests.get(f'http://{pc.ip}:8000/unblock', timeout=3)
+            res = requests.get(f'http://{pc.ip}:8000/unblock', timeout=3, headers={
+                'Custom-Header': 'YourSecretKey'
+            })
             if res.status_code == 200:
                 pc.blocked = 0
                 db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')
+        except Exception as e:
+            print(e)
+
+
+def notification(pc_id, text: str):
+    db = Session()
+    pc = db.query(Pcs).where(Pcs.id == pc_id).one()
+    if pc.ip != None and pc.ip != "":
+        try:
+            res = requests.get(f'http://{pc.ip}:8000/notification?text={text}', timeout=3, headers={
+                'Custom-Header': 'YourSecretKey'
+            })
+            if res.status_code == 200:
+                pc.blocked = 1
+                db.commit()
+        except requests.exceptions.Timeout:
+            print('PC недоступен')
+        except Exception as e:
+            print(e)
+
+
+def device_session_checker():
+    while True:
+        now = datetime.now()
+        try:
+            with Session() as db:
+                active_sessions = db.query(Orders).filter(
+                        func.datetime(Orders.start) <= now,
+                        func.datetime(Orders.finish) >= now
+                    ).all()
+                
+                print('check',f'{len(active_sessions)}')
+                for session in active_sessions:
+                    pc = db.query(Pcs).filter(Pcs.id == session.pc_id).one_or_none()
+                    if pc.status == 'playing':
+                        finish = datetime.strptime(session.finish, DATE_FORMAT_DEFAULT)
+                        delta = finish - now
+                        minutes_remaining = int(delta.total_seconds() / 60)
+                        
+                        if minutes_remaining in [20, 10, 5]:
+                            print(f"Осталось {minutes_remaining} минут y {session.pc_id}")
+                            notification(pc_id=session.pc_id, text=f"Осталось {minutes_remaining} минут")
+
+                        if minutes_remaining == 0:
+                            print(f'block pc id {session.pc_id}')
+                            block_pc(pc_id=session.pc_id, text="Ваше время закончилось")
+        
+        except Exception as e:
+            print(f'Error: {e}')
+        except KeyboardInterrupt:
+            break
+        finally:
+            time.sleep(55)
+    

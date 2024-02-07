@@ -156,7 +156,7 @@ def block_pc_display_with_msg(text: str = Query(description="Текст для �
 
 
 @router.get('/unblock', dependencies=[Depends(auth)])
-def ubblock_pc_display(id: int = Query(description="ID Девайса для разблокировки")):
+def unblock_pc_display(id: int = Query(description="ID Девайса для разблокировки")):
     """ Разблокировать дисплей и клавиатуру """
     try:
         pc.unblock_pc(id)
@@ -164,3 +164,11 @@ def ubblock_pc_display(id: int = Query(description="ID Девайса для р�
     except Exception:
         return JSONResponse(content='Failed', status_code=400)
     
+
+@router.get('/notification', dependencies=[Depends(auth)])
+def send_notification_to_pc(id: int = Query(description="ID девайса для уведомления"), text: str = Query(description="Текст уведомления")):
+    """Отправить уведомление на игровой девайс"""
+    try:
+        pc.notification(id, text)
+    except Exception:
+        return JSONResponse(content='Failed', status_code=400)
