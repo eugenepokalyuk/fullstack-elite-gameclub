@@ -40,7 +40,7 @@ if __name__ == '__main__':
     process1 = multiprocessing.Process(target=device_session_checker)
     process1.start()
 
-    # uvicorn.run("main:app", host="172.20.10.2", port=80, log_level="info")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
+    uvicorn.run(app=app, host="172.20.10.2", port=80, log_level="info")
+    # uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")
     # 172.20.10.4
     # uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", log_config='./log.ini')
