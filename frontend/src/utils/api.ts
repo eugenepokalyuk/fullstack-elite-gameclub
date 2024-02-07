@@ -2,7 +2,7 @@ import { TComputer, TPlayBody, TWriteOff } from "../services/types/types";
 
 // const ApiUrlPath = 'http://89.23.113.109:8084';
 const ApiUrlPath = 'http://172.20.10.2:80';
-// const ApiUrlPath = 'http://localhost:8000';
+// const ApiUrlPath = 'http://localhost:80';
 
 const routeStore = "/store";
 const routePlayground = "/pc";

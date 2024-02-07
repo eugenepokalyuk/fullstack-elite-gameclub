@@ -140,6 +140,33 @@ const App = () => {
   //   };
   // }, []);
 
+  useEffect(() => {
+    // Функция для запроса данных
+    const fetchData = () => {
+      dispatch({ type: FETCH_STORE_REQUEST });
+
+      fetchComputersData()
+        .then(res => {
+          dispatch({ type: FETCH_COMPUTERS_SUCCESS, payload: res });
+        })
+        .catch(error => {
+          dispatch({ type: FETCH_COMPUTERS_FAILURE, payload: error });
+        });
+    };
+
+    // Запуск функции при монтировании компонента
+    fetchData();
+
+    // Настройка интервала
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000); // 30 секунд
+
+    // Функция очистки, вызываемая при размонтировании компонента
+    return () => clearInterval(interval);
+
+  }, [dispatch]); // Зависимости useEffect
+
   return (
     <>
       <AppHeader />

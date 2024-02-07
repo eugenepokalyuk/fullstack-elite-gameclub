@@ -12,11 +12,13 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 1vh;
+    /* margin: 0 auto; */
 }
 
 .cardList li {
-    width: 20%;
+    /* width: 20%; */
     background: #333;
     border-radius: 1vh;
     padding: 1vh;
@@ -32,4 +34,13 @@
     align-items: center;
     justify-content: center;
     gap: 1vh;
+}
+
+.textarea {
+    border-radius: 16px;
+    background: #ffffff24;
+    color: #dddd;
+    border: none;
+    outline: none;
+    resize: none;
 }

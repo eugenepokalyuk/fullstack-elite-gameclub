@@ -91,9 +91,9 @@
 
 .lockIcon {
     position: absolute;
-    scale: 3;
+    scale: 1.5;
     fill: #fff;
-    opacity: 0.15;
+    opacity: 0.16;
     z-index: 1;
 }
 

@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, ChangeEvent, FC, HTMLAttributes, useEffect, useState } from 'react';
 import styles from './ComputerDetails.module.css';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
-import { fetchBlockPC, fetchCancel, fetchContinue, fetchEditComputerName, fetchFinish, fetchPause, fetchPlay, fetchRemoveComputer, fetchStatPopularPrices, fetchSwap, fetchUnblockPC } from '../../utils/api';
+import { fetchBlockPC, fetchCancel, fetchContinue, fetchEditComputerName, fetchFinish, fetchNotificationToPc, fetchPause, fetchPlay, fetchRemoveComputer, fetchStatPopularPrices, fetchSwap, fetchUnblockPC } from '../../utils/api';
 import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, CARD } from '../../utils/constants';
 import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { useAppSelector } from '../../services/hooks/hooks';
@@ -14,7 +14,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const navigate = useNavigate();
     const paymentType = useAppSelector((store) => store.payment.paymentType);
     const computers = useAppSelector((store) => store.playground.computers);
-
+    const [message, setMessage] = useState<string>('');
     const [name, setName] = useState<string>('');
 
     const [price, setPrice] = useState<number>(0);
@@ -36,6 +36,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const [popularPrices, setPopularPrices] = useState<number[]>([]);
 
     const isButtonDisabled = !hours && !minutes || !price || !paymentType;
+
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(event.target.value);
+    };
 
     const closeModal = () => {
         navigate(-1);
@@ -111,6 +115,19 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                 isLoading(false);
                 setFinish(true);
                 setFinishDescription("Устройство разблокировано");
+                setModal(false);
+            })
+            .catch(error => {
+                setError(true)
+            });
+    }
+    const handleSendMessage = (computer: TComputer, message: string) => {
+        isLoading(true);
+        fetchNotificationToPc(computer.id, 'Привет!')
+            .then(res => {
+                isLoading(false);
+                setFinish(true);
+                setFinishDescription("Сообщение отправлено на устройство");
                 setModal(false);
             })
             .catch(error => {
@@ -206,16 +223,28 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
         return `${hours}:${minutes}`
     }
 
-    const calculateTimeDifference = (startTime: any, endTime: any) => {
-        const startTimestamp = startTime * 1000;
-        const endTimestamp = endTime * 1000;
-        const timeDifference = endTimestamp - startTimestamp;
+    const calculateTimeDifference = (endTime: any) => {
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+        if (!endTime) {
+            return 'Неверное время окончания';
+        }
 
-        const hours = Math.floor(timeDifference / 3600000); // 1 час = 3600000 миллисекунд
-        const minutes = Math.floor((timeDifference % 3600000) / 60000); // 1 минута = 60000 миллисекунд
+        const differenceInSeconds = endTime - currentTime;
+        if (differenceInSeconds < 0) {
+            return 'Время уже прошло';
+        }
 
-        return `${hours} часов ${minutes} минут`;
+        const hours = Math.floor(differenceInSeconds / 3600);
+        const minutes = Math.floor((differenceInSeconds % 3600) / 60);
+
+        if (hours > 0) {
+            return `${hours} часов ${minutes} минут`;
+        } else {
+            return `${minutes} минут`;
+        }
     }
+
+
 
     const handleSetPrice = (e: any) => {
         setPrice(e.target.value);
@@ -292,9 +321,10 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
             case COMPUTER_STATUS_PLAYING:
                 let startTime = computer.details?.time.from.timestamp;
                 let endTime = computer.details?.time.until.timestamp;
-                let difference = calculateTimeDifference(startTime, endTime);
+                let difference = calculateTimeDifference(endTime);
                 const formattedStartTime = formatTime(startTime);
                 const formattedEndTime = formatTime(endTime);
+
 
                 return (
                     <>
@@ -305,7 +335,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             <li className='whiteMessage'>Тип оплаты: <span className='link'>{computer.details?.payment === CARD ? "Безналичный" : "Наличный"}</span></li>
                         </ul>
 
-                        <ul className={`${styles.cardList} mt-2 mb-1`}>
+                        <ul className={`${styles.cardList} mb-1`}>
                             <li className='whiteMessage'>
                                 Начало <span className='link'>{formattedStartTime}</span>
                             </li>
@@ -316,7 +346,7 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             <li className='whiteMessage'>Осталось времени: <span className='link'>{difference}</span></li>
                         </ul >
 
-                        <ul className={`${styles.cardButtons} mb-1`}>
+                        <ul className={`${styles.cardButtons} mt-2 mb-1`}>
                             <li>
                                 <button
                                     className='buttonDefault'
@@ -363,6 +393,16 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                                     onClick={() => handleClickInnerModal(computer.blocked ? "UNBAN" : "BAN")}
                                 >
                                     {computer.blocked ? 'Разблокировать' : 'Заблокировать'}
+                                </button>
+                            </li>
+
+                            <li>
+                                <button
+                                    className='buttonDefault'
+                                    onClick={() => handleClickInnerModal("MESSAGE")}
+                                >
+                                    Отправить сообщение
+                                    {/* {computer.blocked ? 'Разблокировать' : 'Заблокировать'} */}
                                 </button>
                             </li>
                         </ul>
@@ -490,6 +530,26 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                     <div>
                         <h3>Отменить сеанс</h3>
                         <button className='buttonDefault mt-2' onClick={() => handleCancelClick(computer)}>Подтвердить</button>
+                    </div>
+                );
+            case "MESSAGE":
+                // const [message, setMessage] = useState<string>('');
+                return (
+                    <div className='flex flex-col'>
+                        <h3>Напиши сообщение</h3>
+                        <textarea
+                            className={`${styles.textarea} p-2 mt-2`}
+                            cols={30}
+                            rows={10}
+                            value={message}
+                            onChange={handleChange}
+                        ></textarea>
+                        <button
+                            className='buttonDefault mt-2 w-100'
+                            onClick={() => handleSendMessage(computer, message)}
+                        >
+                            Отправить
+                        </button>
                     </div>
                 );
             case "BAN":
