@@ -22,6 +22,7 @@ def ping():
         data = pc.get_pc_data()
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
+        print(e)
         return JSONResponse(content='', status_code=400)
     
 
@@ -167,7 +168,7 @@ def unblock_pc_display(id: int = Query(description="ID Девайса для р�
 
 @router.get('/notification', dependencies=[Depends(auth)])
 def send_notification_to_pc(id: int = Query(description="ID девайса для уведомления"), text: str = Query(description="Текст уведомления")):
-    """Отправить уведомление на игровой девайс"""
+    """ Отправить уведомление на игровой девайс """
     try:
         pc.notification(id, text)
     except Exception:

@@ -8,7 +8,6 @@ DATE_FORMAT_DEFAULT = '%Y-%m-%d %H:%M:%S'
 
 
 DATABASE_URL = "sqlite:///./utils/data.db"  # Используем SQLite в качестве базы данных
-# engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=-1, echo=True)
 engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=-1)
 
 

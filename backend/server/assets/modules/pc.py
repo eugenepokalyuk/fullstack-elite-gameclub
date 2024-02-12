@@ -19,8 +19,8 @@ def get_pc_data():
         }
 
         # if row.ip != None and row.ip != "":
-        #     if not ping_pc(row.ip):
-        #         pc_obj["status"] = 'offline'
+          #  if not ping_pc(row.ip):
+           #     pc_obj["status"] = 'offline'
                 
         if row.status == 'playing' or row.status == 'pause':
             order_data = db.query(Orders).where(Orders.pc_id == row.id).order_by(Orders.id.desc()).all()[0]
@@ -59,6 +59,8 @@ def ping_pc(ip):
             return False
     except requests.exceptions.Timeout:
         return False
+    except Exception as e:
+        print(e)
 
 
 def play(time, price, pc_id, payment_type):
@@ -272,9 +274,6 @@ def notification(pc_id, text: str):
             res = requests.get(f'http://{pc.ip}:8000/notification?text={text}', timeout=3, headers={
                 'Custom-Header': 'YourSecretKey'
             })
-            if res.status_code == 200:
-                pc.blocked = 1
-                db.commit()
         except requests.exceptions.Timeout:
             print('PC недоступен')
         except Exception as e:
@@ -293,18 +292,16 @@ def device_session_checker():
                 
                 print('check',f'{len(active_sessions)}')
                 for session in active_sessions:
-                    pc = db.query(Pcs).filter(Pcs.id == session.pc_id).one_or_none()
+                    pc = db.query(Pcs).where(Pcs.id == session.pc_id).one()
                     if pc.status == 'playing':
                         finish = datetime.strptime(session.finish, DATE_FORMAT_DEFAULT)
                         delta = finish - now
                         minutes_remaining = int(delta.total_seconds() / 60)
                         
                         if minutes_remaining in [20, 10, 5]:
-                            print(f"Осталось {minutes_remaining} минут y {session.pc_id}")
                             notification(pc_id=session.pc_id, text=f"Осталось {minutes_remaining} минут")
 
                         if minutes_remaining == 0:
-                            print(f'block pc id {session.pc_id}')
                             block_pc(pc_id=session.pc_id, text="Ваше время закончилось")
         
         except Exception as e:
