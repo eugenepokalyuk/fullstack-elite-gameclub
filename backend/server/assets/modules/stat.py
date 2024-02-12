@@ -45,7 +45,7 @@ def get_stat(sessionId, start=None, finish=None):
     }
 
     if start is None and finish is None:
-        response_obj['start_time']: start_time
+        response_obj['start_time'] = start_time
     
     return response_obj
 
@@ -96,7 +96,9 @@ def get_supply_stat(start, finish, db):
 def get_device_stat(start, db):
     device_data = db.query(Orders, Pcs.name)\
         .join(Pcs, Orders.pc_id == Pcs.id)\
-        .filter(Orders.start >= start).all()
+        .filter(Orders.start >= start)\
+        .filter(Orders.status != 'canceled')\
+            .all()
         # .filter((Orders.start >= start) & (Orders.status != 'canceled')).all()
     return [
         {
