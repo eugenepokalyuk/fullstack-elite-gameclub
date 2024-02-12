@@ -1,0 +1,19 @@
+.container {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.container h1 {
+    font-size: 3vh;
+    margin-bottom: 2vh;
+}
+
+.container h1,
+p {
+    color: #fff;
+}
+
+.chartContainer {
+    width: 80%;
+    margin: 2vh auto;
+}

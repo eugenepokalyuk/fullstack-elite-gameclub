@@ -1,0 +1,39 @@
+.themeContainer {
+    /* width: 30vh; */
+    width: 25%;
+}
+
+.themeContainer div {
+    display: flex;
+    background: #333;
+    border-radius: 3vh;
+    width: 100%;
+}
+
+.themeButton {
+    border: none;
+    /* width: 50%; */
+    border-radius: 3vh;
+    width: 100%;
+}
+
+.themeButton:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+}
+
+.themeLight {
+    background: #008080;
+}
+
+.themePink {
+    background: hotpink;
+}
+
+.themeDark {
+    background: #b35b0d;
+}
+
+.themeCustom {
+    background: red;
+}

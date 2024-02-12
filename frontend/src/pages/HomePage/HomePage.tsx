@@ -1,9 +1,11 @@
-import Constructor from '../../components/Constructor/Constructor';
-
-import styles from "./HomePage.module.css";
+import Clock from '../../components/Clock/Clock';
+import InfoBadge from '../../components/InfoBadge/InfoBadge';
+import PlaygroundGrid from '../../components/PlaygroundGrid/PlaygroundGrid';
 
 export const HomePage = () => (
-    <section className={styles.container}>
-        <Constructor />
+    <section>
+        <PlaygroundGrid />
+        <Clock />
+        <InfoBadge />
     </section>
 );

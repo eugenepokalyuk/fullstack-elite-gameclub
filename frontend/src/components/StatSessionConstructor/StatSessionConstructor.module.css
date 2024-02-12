@@ -1,0 +1,20 @@
+.cardList {
+    width: 100%;
+}
+
+.cardList li {
+    background: #333333;
+    border-radius: 1vh;
+    opacity: 0.9;
+}
+
+.combinedChecksItem {
+    width: 100%;
+    transition: 200ms;
+}
+
+.combinedChecksItem:hover {
+    background: #333333;
+    scale: 1.05;
+    opacity: 1;
+}

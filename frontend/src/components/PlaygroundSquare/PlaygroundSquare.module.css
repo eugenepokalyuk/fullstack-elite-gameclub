@@ -1,0 +1,119 @@
+.square {
+    border: 0.4vh solid var(--main-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.square:hover {
+    cursor: pointer;
+}
+
+.squareDefault {
+    width: 6vh;
+    height: 6vh;
+
+    border-radius: 1vh;
+    user-select: none;
+}
+
+.square p {
+    color: #000;
+    font-size: 2vh;
+    text-wrap: nowrap;
+    font-weight: 600;
+}
+
+.squareOccupied {
+    border: 0.4vh solid var(--main-color);
+    background: var(--main-color);
+}
+
+.bgOnline {
+    background: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.bgOnline:hover {
+    background: var(--main-color);
+    border-color: --main-color;
+    filter: brightness(1.2);
+}
+
+.bgOffline {
+    background: var(--backgorund-device-offline);
+    border-color: var(--backgorund-device-offline);
+}
+
+.bgOffline:hover {
+    filter: brightness(1.2);
+}
+
+.bgPlay {
+    background: var(--backgorund-device-play);
+    border-color: var(--backgorund-device-play);
+}
+
+.bgPlay:hover {
+    filter: brightness(1.2);
+}
+
+.bgTech {
+    background: var(--backgorund-device-problems);
+    border-color: var(--backgorund-device-problems);
+}
+
+.bgTech:hover {
+    filter: brightness(1.2);
+}
+
+.bgPause {
+    background: var(--backgorund-device-pause);
+    border-color: var(--backgorund-device-pause);
+}
+
+.bgPause:hover {
+    filter: brightness(1.2);
+}
+
+.bgFree {
+    background: var(--backgorund-device-free);
+    opacity: 0.1;
+}
+
+.bgFree:hover {
+    cursor: default;
+}
+
+.warningArticle {
+    animation: blinkAnimation 800ms infinite;
+}
+
+.lockIcon {
+    position: absolute;
+    scale: 1.5;
+    fill: #fff;
+    opacity: 0.16;
+    z-index: 1;
+}
+
+.squareDefault p {
+    z-index: 2;
+}
+
+@keyframes blinkAnimation {
+    0% {
+        background-color: var(--backgorund-device-warning-step-1);
+        border-color: var(--backgorund-device-warning-step-2);
+    }
+
+    50% {
+        background-color: var(--backgorund-device-warning-step-2);
+        border-color: var(--backgorund-device-warning-step-1);
+    }
+
+    100% {
+        background-color: var(--backgorund-device-warning-step-1);
+        border-color: var(--backgorund-device-warning-step-2);
+    }
+}

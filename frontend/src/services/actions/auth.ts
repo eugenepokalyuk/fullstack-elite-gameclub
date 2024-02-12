@@ -1,0 +1,16 @@
+export const REFRESH_TOKEN_SUCCESS: 'REFRESH_TOKEN_SUCCESS' = 'REFRESH_TOKEN_SUCCESS';
+export const REFRESH_TOKEN_FAILURE: 'REFRESH_TOKEN_FAILURE' = 'REFRESH_TOKEN_FAILURE';
+
+export const CLEAR_USER_CREDS: 'CLEAR_USER_CREDS' = 'CLEAR_USER_CREDS';
+export const USER_STATEMENT: 'USER_STATEMENT' = 'USER_STATEMENT';
+
+export const GET_USER_SUCCESS: 'GET_USER_SUCCESS' = 'GET_USER_SUCCESS';
+export const CHECK_USER_FAILURE: 'CHECK_USER_FAILURE' = 'CHECK_USER_FAILURE';
+
+export interface IClearUserCredsAction {
+    readonly type: typeof CLEAR_USER_CREDS;
+}
+
+export const clearUser = (): IClearUserCredsAction => ({
+    type: CLEAR_USER_CREDS,
+});

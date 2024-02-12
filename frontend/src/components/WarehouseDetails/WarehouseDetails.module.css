@@ -1,0 +1,13 @@
+.suppliesList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.suppliesList input {
+    width: 10vh;
+}
+
+.suppliesList input::placeholder {
+    font-size: 1.5vh;
+    /* text-align: center; */
+}
