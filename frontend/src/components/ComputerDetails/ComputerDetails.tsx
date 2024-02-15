@@ -1,14 +1,14 @@
-import { ButtonHTMLAttributes, ChangeEvent, FC, HTMLAttributes, useEffect, useState } from 'react';
-import styles from './ComputerDetails.module.css';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FC, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../services/hooks/hooks';
 import { ComputerDetailsProps, TComputer } from '../../services/types/types';
 import { fetchBlockPC, fetchCancel, fetchContinue, fetchEditComputerName, fetchFinish, fetchNotificationToPc, fetchPause, fetchPlay, fetchRemoveComputer, fetchStatPopularPrices, fetchSwap, fetchUnblockPC } from '../../utils/api';
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS, CARD } from '../../utils/constants';
-import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
-import { useAppSelector } from '../../services/hooks/hooks';
+import { CARD, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_SETTINGS } from '../../utils/constants';
 import Modal from '../Modal/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
+import styles from './ComputerDetails.module.css';
 
 const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     const navigate = useNavigate();
@@ -274,17 +274,54 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                         <ul>
                             <li className={`${styles.cardButtons} mt-1`}>
                                 <p>Часов:</p>
-                                <input className='inputDefault' type="text" value={hours} onChange={(event) => setHours(Number(event.target.value))} placeholder='Час' />
+                                <input
+                                    className='inputDefault'
+                                    type="text"
+                                    value={hours}
+                                    // onChange={(event) => setHours(Number(event.target.value))}
+                                    onChange={(event) => {
+                                        const value: number = Number(event.target.value);
+                                        if (!isNaN(value)) {
+                                            setHours(Number(value));
+                                        }
+                                    }}
+                                    placeholder='Час'
+                                />
                             </li>
 
                             <li className={`${styles.cardButtons} mt-1`}>
                                 <p>Минут:</p>
-                                <input className='inputDefault' type="text" value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} placeholder='Минута' />
+                                <input
+                                    className='inputDefault'
+                                    type="text"
+                                    value={minutes}
+                                    // onChange={(event) => setMinutes(Number(event.target.value))}
+                                    onChange={(event) => {
+                                        const value: number = Number(event.target.value);
+                                        if (!isNaN(value)) {
+                                            setMinutes(Number(value));
+                                        }
+                                    }}
+                                    placeholder='Минута'
+                                />
                             </li>
 
                             <li className={`${styles.cardButtons} mt-1`}>
                                 <p>Сумма:</p>
-                                <input className='inputDefault' type="text" value={price} onChange={(event) => setPrice(Number(event.target.value))} placeholder='Сумма в рублях' maxLength={6} />
+                                <input
+                                    className='inputDefault'
+                                    type="text"
+                                    value={price}
+                                    // onChange={(event) => setPrice(Number(event.target.value))}
+                                    onChange={(event) => {
+                                        const value: number = Number(event.target.value);
+                                        if (!isNaN(value)) {
+                                            setPrice(Number(value));
+                                        }
+                                    }}
+                                    placeholder='Сумма в рублях'
+                                    maxLength={6}
+                                />
                             </li>
 
                             {popularPrices
@@ -296,15 +333,6 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
                             }
 
                             <PaymentSwitcher />
-
-                            {/* <li className={`${styles.cardButtons} mt-1`}>
-                                <button
-                                    className='buttonDefault'
-                                    onClick={() => handleClickInnerModal(computer.blocked ? "UNBAN" : "BAN")}
-                                >
-                                    {computer.blocked ? 'Разблокировать' : 'Заблокировать'}
-                                </button>
-                            </li> */}
 
                             <li className={`${styles.cardButtons} mt-1`}>
                                 <button

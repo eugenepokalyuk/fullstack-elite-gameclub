@@ -1,15 +1,29 @@
-import React, { useState, useEffect } from "react";
-import styles from './PlaygroundSquare.module.css';
-import { SquareProps, TComputer } from "../../services/types/types";
-import { useAppDispatch } from '../../services/hooks/hooks';
-import { FETCH_COMPUTERS_FAILURE, FETCH_COMPUTERS_REQUEST, FETCH_COMPUTERS_SUCCESS } from "../../services/actions/computers";
-import { fetchBlockPC, fetchComputersData, fetchNotificationToPc } from "../../utils/api";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import Modal from "../Modal/Modal";
-import ComputerDetails from "../ComputerDetails/ComputerDetails";
-import { COMPUTER_STATUS_PLAY, COMPUTER_STATUS_PAUSE, COMPUTER_STATUS_CONTINUE, COMPUTER_STATUS_INFO, COMPUTER_STATUS_ONLINE, COMPUTER_STATUS_OFFLINE, COMPUTER_STATUS_PLAYING, COMPUTER_STATUS_TECH, COMPUTER_STATUS_TECH_OFF } from '../../utils/constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from "react";
 import { ReactComponent as Lock } from "../../images/lock.svg";
+import {
+    FETCH_COMPUTERS_FAILURE,
+    FETCH_COMPUTERS_REQUEST,
+    FETCH_COMPUTERS_SUCCESS
+} from "../../services/actions/computers";
+import { useAppDispatch } from '../../services/hooks/hooks';
+import { SquareProps, TComputer } from "../../services/types/types";
+import { fetchComputersData } from "../../utils/api";
+import {
+    COMPUTER_STATUS_CONTINUE,
+    COMPUTER_STATUS_INFO,
+    COMPUTER_STATUS_OFFLINE,
+    COMPUTER_STATUS_ONLINE,
+    COMPUTER_STATUS_PAUSE,
+    COMPUTER_STATUS_PLAY,
+    COMPUTER_STATUS_PLAYING,
+    COMPUTER_STATUS_TECH,
+    COMPUTER_STATUS_TECH_OFF
+} from '../../utils/constants';
+import ComputerDetails from "../ComputerDetails/ComputerDetails";
+import Modal from "../Modal/Modal";
+import styles from './PlaygroundSquare.module.css';
 
 const PlaygroundSquare: React.FC<SquareProps> = ({
     id,
@@ -64,18 +78,7 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
         }
     }
 
-    const showNotification = (timeLeft: number) => {
-        const message = `Осталось ${timeLeft} минут до окончания сессии`;
-        fetchNotificationToPc(computer.id, message);
-    };
-
-    const sendExpiredNotification = () => {
-        const message = `Ваше время закончилось, пожалуйста обратитесь к администратору.`;
-        fetchBlockPC(computer.id, message);
-    }
-
     const computer: TComputer = playground?.find((item: TComputer) => item.grid_id === id);
-
     const backgroundClass =
         computer?.status === COMPUTER_STATUS_ONLINE
             ? styles.bgOnline
@@ -88,32 +91,30 @@ const PlaygroundSquare: React.FC<SquareProps> = ({
                         : computer?.status === COMPUTER_STATUS_PAUSE
                             ? styles.bgPause
                             : styles.bgFree;
-    let articleClassName;
 
-    const endSession = computer?.details?.time.until.timestamp;
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // checkComputersStatus();
-            // console.log(1);
-        }, 1000); // Проверка каждую секунду
 
-        return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
-    }, []); // Пустой массив зависимостей, чтобы эффект запускался только один раз
 
-    // const checkComputersStatus = () => {
-    //     playground.forEach((computer: TComputer) => {
-    //         if (computer.status === COMPUTER_STATUS_PLAYING) {
-    //             const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
-    //             if (endSession) {
-    //                 const timeLeft = Math.floor((endSession - currentTimestamp) / 60); // Время до окончания сессии в минутах
-    //                 if (timeLeft === 30) {
-    //                     showNotification(timeLeft);
-    //                 }
-    //             }
-    //         }
-    //     });
-    // };
+    // Определите функцию для расчета оставшегося времени в минутах
+    const calculateRemainingTime = (fromTimestamp: any, untilTimestamp: any) => {
+        const currentTime = Math.floor(Date.now() / 1000); // текущее время в секундах
+        const remainingTime = (untilTimestamp - currentTime) / 60; // оставшееся время до завершения в минутах
+        return remainingTime;
+    };
+
+    // Определите функцию для определения класса подсветки на основе оставшегося времени
+    const getHighlightClass = (remainingTime: any) => {
+        if (remainingTime < 10) {
+            return 'highlightClass'; // Здесь подставьте класс для подсветки
+        }
+        return ''; // Пустая строка, если нет подсветки
+    };
+
+    // Добавьте проверку на существование объекта computer и его свойства details
+    const remainingTime = computer && computer.details ? calculateRemainingTime(computer.details.time.from.timestamp, computer.details.time.until.timestamp) : 0;
+    const highlightClass = remainingTime < 10 ? 'warningArticle' : '';
+
+    const articleClassName = `${backgroundClass} ${highlightClass}`;
 
     return (
         <>
