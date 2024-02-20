@@ -1,22 +1,23 @@
-import { FC, useState } from 'react';
-import styles from './StoreDetails.module.css';
-import { fetchStoreData, fetchStoreSell } from '../../utils/api';
-import { STORE_OPEN_CART, CASH } from '../../utils/constants';
-import Modal from '../Modal/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TStoreItem } from '../../services/types/types';
 import { FETCH_STORE_FAILURE, FETCH_STORE_REQUEST, FETCH_STORE_SUCCESS } from '../../services/actions/store';
 import { useAppDispatch } from '../../services/hooks/hooks';
+import { TStoreItem } from '../../services/types/types';
+import { fetchStoreData, fetchStoreSell } from '../../utils/api';
+import { CASH, STORE_OPEN_CART } from '../../utils/constants';
+import Modal from '../Modal/Modal';
+import styles from './StoreDetails.module.css';
 
 type TStoreDetails = {
     selectedProducts: TStoreItem[],
     payment: string,
-    statement: string
+    statement: string,
+    setSelectedItems: any
 }
 
-const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment }) => {
+const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment, setSelectedItems }) => {
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
@@ -48,6 +49,7 @@ const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment 
 
                 setFinish(true);
                 setFinishDescription("Продано!");
+                setSelectedItems([]);
             })
             .catch(error => {
                 setError(true);

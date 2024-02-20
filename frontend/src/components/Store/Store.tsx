@@ -1,17 +1,17 @@
-import { FC, useState, useEffect } from 'react';
-import styles from "./Store.module.css";
+import { FC, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem } from '../../services/types/types';
-import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
 import { STORE_OPEN_CART } from '../../utils/constants';
-import StoreDetails from '../StoreDetails/StoreDetails';
 import Modal from '../Modal/Modal';
+import { PaymentSwitcher } from '../PaymentSwitcher/PaymentSwitcher';
+import StoreDetails from '../StoreDetails/StoreDetails';
+import styles from "./Store.module.css";
 
 export const Store: FC = () => {
     const dispatch = useAppDispatch();
-    
+
     const storeItems = useAppSelector((store) => store.store.items.filter((item: any) => item.qty > 0 && item.hide === false));
-    
+
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [itemCounts, setItemCounts] = useState<Record<number, number>>({});
@@ -68,6 +68,7 @@ export const Store: FC = () => {
     const handleAddToCart = async () => {
         setModalOpen(true);
         setStatement(STORE_OPEN_CART);
+        // setSelectedItems([]);
     }
 
     return (
@@ -144,7 +145,7 @@ export const Store: FC = () => {
 
             {isModalOpen && storeItems && (
                 <Modal onClose={closeModal} header={"Корзина"}>
-                    <StoreDetails statement={statement} selectedProducts={selectedProducts} payment={paymentType} />
+                    <StoreDetails statement={statement} selectedProducts={selectedProducts} payment={paymentType} setSelectedItems={setSelectedItems} />
                 </Modal>
             )
             }
