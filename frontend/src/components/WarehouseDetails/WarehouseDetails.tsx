@@ -1,13 +1,13 @@
+import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import styles from './WarehouseDetails.module.css';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../services/hooks/hooks';
 import { TStoreItem, TWriteOff, WarehouseDetailsProps } from '../../services/types/types';
 import { fetchGetUsers, fetchStoreWriteOff, fetchWarehouseAddItem, fetchWarehouseAddSupply, fetchWarehouseEditItemName, fetchWarehouseEditItemPrice, fetchWarehouseHideItem, fetchWarehouseItem, fetchWarehouseShowItem } from '../../utils/api';
-import { useNavigate } from 'react-router-dom';
-import Modal from '../Modal/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { ADD_ITEM, ADD_SUPPLY, EDIT_ITEM, HIDE_ITEM, SHOW_ITEM, WRITE_OFF } from '../../utils/constants';
+import Modal from '../Modal/Modal';
+import styles from './WarehouseDetails.module.css';
 
 interface TEmployee {
     name: string;
@@ -38,6 +38,7 @@ const WarehouseDetails: FC<WarehouseDetailsProps> = ({ statement }) => {
     const closeModal = () => {
         navigate(-1);
     };
+    
     useEffect(() => {
         isLoading(true);
         fetchWarehouseItem(warehouseSelectedItem)

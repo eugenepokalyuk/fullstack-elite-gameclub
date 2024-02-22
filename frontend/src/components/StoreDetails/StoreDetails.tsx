@@ -18,11 +18,11 @@ type TStoreDetails = {
 }
 
 const StoreDetails: FC<TStoreDetails> = ({ statement, selectedProducts, payment, setSelectedItems }) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [finish, setFinish] = useState<boolean>(false);
     const [finishDescription, setFinishDescription] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const [loading, isLoading] = useState<boolean>(false);
 
     const closeModal = () => {

@@ -1,13 +1,13 @@
-import styles from "./StatConstructor.module.css";
-import React, { HTMLInputTypeAttribute, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Modal from "../Modal/Modal";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { fetchStatSessionData, fetchSubmitPassword } from "../../utils/api";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FETCH_STAT_FAILURE, FETCH_STAT_REQUEST, FETCH_STAT_SUCCESS } from "../../services/actions/stat";
-import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
+import { useAppDispatch } from "../../services/hooks/hooks";
 import { TComputerStat, TStoreStat } from "../../services/types/types";
+import { fetchStatSessionData, fetchSubmitPassword } from "../../utils/api";
+import Modal from "../Modal/Modal";
+import styles from "./StatConstructor.module.css";
 
 export const StatConstructor = () => {
     const navigate = useNavigate();

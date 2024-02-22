@@ -42,7 +42,8 @@ const ComputerDetails: FC<ComputerDetailsProps> = ({ computer, statement }) => {
     };
 
     const closeModal = () => {
-        navigate(-1);
+        // navigate(-1);
+        setModal(false);
     };
 
     const handleAcceptClick = (computer: TComputer) => {

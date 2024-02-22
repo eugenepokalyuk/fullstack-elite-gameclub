@@ -1,13 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
-import styles from "./InfoBadge.module.css"
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal';
+import styles from "./InfoBadge.module.css";
 const InfoBadge: FC = () => {
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const closeModal = () => {
-        navigate(-1);
+        // navigate(-1);
+        setModal(false);
     };
 
     const handleClickButton = () => {

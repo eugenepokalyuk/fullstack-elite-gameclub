@@ -1,14 +1,14 @@
-import styles from "./StatSessionConstructor.module.css";
-import { fetchStatSessionData } from "../../utils/api";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
-import { TStoreStat, TComputerStat } from "../../services/types/types";
-import { useNavigate } from "react-router-dom";
-import Modal from "../Modal/Modal";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FETCH_STAT_SESSION_FAILURE, FETCH_STAT_SESSION_REQUEST, FETCH_STAT_SESSION_SUCCESS } from "../../services/actions/session";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
+import { TComputerStat, TStoreStat } from "../../services/types/types";
+import { fetchStatSessionData } from "../../utils/api";
 import { CARD } from "../../utils/constants";
+import Modal from "../Modal/Modal";
+import styles from "./StatSessionConstructor.module.css";
 
 export const StatSessionConstructor = () => {
     const dispatch = useAppDispatch();
@@ -20,11 +20,12 @@ export const StatSessionConstructor = () => {
     const [computerOrders, setComputerOrders] = useState<TComputerStat[]>();
     const [cancelOrders, setCancelOrders] = useState<number>();
     const [cashout, setCashout] = useState<number>();
-
     const [loading, isLoading] = useState<boolean>(false);
+    
     const closeModal = () => {
         navigate(-1);
     };
+    
     useEffect(() => {
         dispatch({ type: FETCH_STAT_SESSION_REQUEST });
         isLoading(true);

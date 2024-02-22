@@ -1,15 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import styles from './ProfileDetails.module.css';
-import Modal from '../Modal/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { clearUser } from '../../services/actions/auth';
-import { fetchAddCashoutData, fetchAddExpenseData, fetchStatSessionData, fetchSubmitPassword, fetchUserFinish } from '../../utils/api';
+import { useAppDispatch, useAppSelector } from '../../services/hooks/hooks';
 import { TComputerStat, TStoreStat, TUser } from '../../services/types/types';
+import { fetchAddCashoutData, fetchAddExpenseData, fetchStatSessionData, fetchSubmitPassword, fetchUserFinish } from '../../utils/api';
 import { END_SESSION, EXPENSES } from '../../utils/constants';
-import { FETCH_STAT_SESSION_FAILURE, FETCH_STAT_SESSION_REQUEST, FETCH_STAT_SESSION_SUCCESS } from '../../services/actions/session';
+import Modal from '../Modal/Modal';
+import styles from './ProfileDetails.module.css';
 
 const ProfileDetails: FC = () => {
     const user: TUser = useAppSelector((store) => store.auth.user);
@@ -19,7 +18,6 @@ const ProfileDetails: FC = () => {
     const [password, setPassword] = useState<string>(''); // New state for password
     const [IsPasswordCorrect, setIsPasswordCorrect] = useState<boolean>(false);
     const [isEndSessionModalOpen, setIsEndSessionModalOpen] = useState(false);
-
 
     const [loading, isLoading] = useState<boolean>(false);
     const [modal, isModal] = useState<boolean>(false);
@@ -40,7 +38,8 @@ const ProfileDetails: FC = () => {
     const [cancelOrders, setCancelOrders] = useState<number>();
 
     const closeModal = () => {
-        navigate(-1);
+        // navigate(-1);
+        isModal(false)
     };
 
     const handlePassword = () => {

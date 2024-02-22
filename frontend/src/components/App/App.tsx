@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // import styles from './App.module.css';
-import './App.css';
 import AppHeader from '../AppHeader/AppHeader';
+import './App.css';
 
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { HomePage } from '../../pages/HomePage/HomePage';
+import { SettingsPage } from '../../pages/SettingsPage/SettingsPage';
+import { StatPage } from '../../pages/StatPage/StatPage';
 import { StorePage } from '../../pages/StorePage/StorePage';
 import { WarehousePage } from '../../pages/WarehousePage/WarehousePage';
-import { StatPage } from '../../pages/StatPage/StatPage';
-import { SettingsPage } from '../../pages/SettingsPage/SettingsPage';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
   FETCH_COMPUTERS_FAILURE,
@@ -25,7 +25,7 @@ import {
   FETCH_STORE_SUCCESS
 } from '../../services/actions/store';
 
-import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
+import { useAppDispatch } from "../../services/hooks/hooks";
 
 import {
   fetchComputersData,
@@ -35,29 +35,28 @@ import {
 
 import {
   DEFAULT_PATH,
-  SETTINGS_PATH,
-  STORE_PATH,
-  STAT_PATH,
-  WAREHOUSE_PATH,
   ERROR_PATH,
   LOGIN_PATH,
-  REGISTER_PATH,
   PROFILE_PATH,
-  STAT_SESSION_PATH
+  REGISTER_PATH,
+  SETTINGS_PATH,
+  STAT_PATH,
+  STAT_SESSION_PATH,
+  STORE_PATH,
+  WAREHOUSE_PATH
 } from '../../utils/routePath';
 
-import Modal from '../Modal/Modal';
 import { ErrorPage } from '../../pages/ErrorPage/ErrorPage';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { LoginPage } from '../../pages/LoginPage/LoginPage';
-import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
-import { CHECK_USER_FAILURE, GET_USER_SUCCESS } from '../../services/actions/auth';
 import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
+import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { StatSessionPage } from '../../pages/StatSessionPage/StatSessionPage';
+import { CHECK_USER_FAILURE, GET_USER_SUCCESS } from '../../services/actions/auth';
 import { SWITCH_PAYMENT_REQUEST } from '../../services/actions/payment';
-import { CARD } from '../../utils/constants';
 import { useTheme } from '../../services/hooks/useTheme';
-import { TComputer } from '../../services/types/types';
+import { CARD } from '../../utils/constants';
+import Modal from '../Modal/Modal';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -67,7 +66,6 @@ const App = () => {
   const [loading, isLoading] = useState<boolean>(false);
   const [failed, isFailed] = useState<boolean>(false);
   const background = location.state && location.state.background;
-
 
   const { theme, setTheme } = useTheme();
 
@@ -122,23 +120,6 @@ const App = () => {
     }
 
   }, [dispatch]);
-
-  // const playground = useAppSelector(store => store.playground.computers);
-  // const computer: TComputer = playground?.find((item: TComputer) => item);
-  // useEffect(() => {
-
-  //   const endSession = computer?.details?.time.until.timestamp;
-  //   const interval = setInterval(() => {
-  //     if (endSession) {
-  //       const currentTimestamp = Date.now() / 1000; // Текущее время в секундах
-  //       const timeLeft = Math.floor((endSession - currentTimestamp) / 60); // Рассчитываем время в минутах
-  //     }
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
 
   useEffect(() => {
     // Функция для запроса данных
