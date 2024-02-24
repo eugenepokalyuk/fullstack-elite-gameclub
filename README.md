@@ -11,3 +11,8 @@
   2. Управление игровыми местами: Панель будет отображать список из 30 игровых компьютеров, а также PlayStation 5. Для каждого устройства можно будет задать доступное время для игры/работы и установить цену за этот период. Кроме того, сотрудники смогут предоставлять скидки в процентах для определенных устройств или периодов времени.
 
   3. Управление товарами: Панель будет предоставлять возможность добавлять, продавать и списывать различные товары, такие как напитки и еда. Это позволит управлять запасами, отслеживать продажи и поддерживать актуальные данные о наличии товаров.
+
+![image](https://github.com/eugenepokalyuk/fullstack-elite-gameclub/assets/111701135/b4cbdf17-a1e8-4dfe-aab3-052a31325fe4)
+![image](https://github.com/eugenepokalyuk/fullstack-elite-gameclub/assets/111701135/9988e6ea-b806-426e-a82d-433e1399f3f3)
+![image](https://github.com/eugenepokalyuk/fullstack-elite-gameclub/assets/111701135/68ad430a-f9f7-4c0d-b8f4-af55eac57523)
+![image](https://github.com/eugenepokalyuk/fullstack-elite-gameclub/assets/111701135/5cdb353f-52ea-455d-887f-bfa021538830)
