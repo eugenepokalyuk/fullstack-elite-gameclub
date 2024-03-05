@@ -34,7 +34,7 @@ export const Store: FC = () => {
     const handleIncrement = (itemId: any) => {
         setItemCounts((prevCounts) => ({
             ...prevCounts,
-            [itemId]: (prevCounts[itemId] || 0) + 1
+            [itemId]: (prevCounts[itemId] || 1) + 1
         }));
     };
     const handleDecrement = (itemId: number) => {
